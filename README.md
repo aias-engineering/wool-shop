@@ -11,12 +11,14 @@ They would like to have a small website  to refer their customers to.
 The website should provide:
  * the product catalog to browse through
  * an ordering mechanism
+  
 So it's pretty much a small online shop.
 
 Their customers are mainly poeple from
 * Jordan
 * the Nederlands
 * the USA
+
 So payments should be possible in
 * Jordanian Dinars
 * Euro
