@@ -1,0 +1,22 @@
+name: Docker Image CI
+
+on:
+  workflow_run:
+    workflows: ["Node.js CI"]
+    types:
+      - completed
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./frontend.react/app
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag woolshop.frontend.react-dev:$(date +%s)
