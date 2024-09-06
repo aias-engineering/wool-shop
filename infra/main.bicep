@@ -1,9 +1,11 @@
-// @allowed(['prod', 'test'])
-// param environmentType string = 'test'
+@allowed(['prod', 'test'])
+param environmentType string = 'test'
 
-var storageAccountName = 'stacc4wlsp0${uniqueString(resourceGroup().id)}'
+var resourceGroupId = uniqueString(resourceGroup().id)
+var envPrefix = environmentType == 'prod' ? 'p' : 't'
+var storageAccountName = '${envPrefix}sa0${resourceGroupId}'
 var appServicePlanName = 'plan4wlsp'
-var appServiceAppName = 'app4wlsp0${uniqueString(resourceGroup().id)}'
+var appServiceAppName = '${envPrefix}as0${uniqueString(resourceGroup().id)}'
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2023-05-01' = {
   name: storageAccountName
