@@ -1,7 +1,7 @@
 @allowed(['prod', 'test'])
 param environmentType string
 
-var storageAccountName = 'wlsp-stacc-${uniqueString(resourceGroup().id)}'
+var storageAccountName = 'stacc4wlsp0${uniqueString(resourceGroup().id)}'
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2023-05-01' = {
   name: storageAccountName
