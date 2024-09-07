@@ -1,10 +1,11 @@
 name: Deploy to Test
 
 on:
-  workflow_run:
-    workflows: ['Node.js CI']
-    types:
-      - completed
+  push:
+    paths:
+      - 'infra/**'
+      - '.github/workflows/*infra*.yml'
+    branches: 'main'
 
 permissions:
   id-token: write
@@ -12,7 +13,7 @@ permissions:
 
 jobs:
   deploy:
-    uses: ./.github/workflows/deploy.yml
+    uses: ./.github/workflows/deploy-infra.yml
     with:
       environmentType: test
       resourceGroupName: wool-shop
