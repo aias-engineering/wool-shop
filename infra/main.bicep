@@ -51,6 +51,7 @@ resource appServiceApp 'Microsoft.Web/sites@2023-12-01' = {
       globalValidation: {
         requireAuthentication: true
         unauthenticatedClientAction: 'RedirectToLoginPage'
+        redirectToProvider: 'google'
       }
       identityProviders: {
         google: {
