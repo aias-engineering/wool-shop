@@ -43,6 +43,18 @@ resource appServiceApp 'Microsoft.Web/sites@2023-12-01' = {
       ]
     }
   }
+
+  resource authSettings 'config' = {
+    name: 'authsettingsV2'
+    kind: 'string'
+    // properties: {
+    //   identityProviders: {
+    //     google: {
+    //       enabled: true
+    //     }
+    //   }
+    // }
+  }
 }
 
 resource apiServiceApp 'Microsoft.Web/sites@2023-12-01' = {
