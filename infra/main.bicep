@@ -34,6 +34,7 @@ resource appServiceApp 'Microsoft.Web/sites@2023-12-01' = {
     httpsOnly: true
     siteConfig: {
       ftpsState: 'Disabled'
+      detailedErrorLoggingEnabled: environmentType == 'prod' ? false : true
     }
   }
 }
