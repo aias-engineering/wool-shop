@@ -64,6 +64,5 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'Wool-Shop backend.net API'
+          app-name: 'tas0jxc3reuapiywm'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: ./dist
