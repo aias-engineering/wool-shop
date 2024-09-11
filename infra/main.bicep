@@ -5,7 +5,8 @@ var resourceGroupId = uniqueString(resourceGroup().id)
 var envPrefix = environmentType == 'prod' ? 'p' : 't'
 var storageAccountName = '${envPrefix}sa0${resourceGroupId}'
 var appServicePlanName = 'plan4wlsp'
-var appServiceAppName = '${envPrefix}as0${uniqueString(resourceGroup().id)}'
+var apiServiceAppName = '${envPrefix}api0${resourceGroupId}'
+var appServiceAppName = '${envPrefix}as0${resourceGroupId}'
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2023-05-01' = {
   name: storageAccountName
@@ -27,6 +28,18 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2023-12-01' = {
 
 resource appServiceApp 'Microsoft.Web/sites@2023-12-01' = {
   name: appServiceAppName
+  location: resourceGroup().location
+  properties: {
+    serverFarmId: appServicePlan.id
+    httpsOnly: true
+    siteConfig: {
+      ftpsState: 'Disabled'
+    }
+  }
+}
+
+resource apiServiceApp 'Microsoft.Web/sites@2023-12-01' = {
+  name: apiServiceAppName
   location: resourceGroup().location
   properties: {
     serverFarmId: appServicePlan.id
