@@ -49,13 +49,12 @@ resource appServiceApp 'Microsoft.Web/sites@2023-12-01' = {
     kind: 'string'
     properties: {
       globalValidation: {
-        requireAuthentication: true
+        requireAuthentication: false
         unauthenticatedClientAction: 'RedirectToLoginPage'
-        redirectToProvider: 'google'
       }
       identityProviders: {
-        google: {
-          enabled: true
+        azureActiveDirectory: {
+          enabled: false
         }
       }
     }
