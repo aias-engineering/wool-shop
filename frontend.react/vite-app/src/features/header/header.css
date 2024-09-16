@@ -1,0 +1,8 @@
+.main {
+    width: 100dvw;
+    display: flex;
+}
+
+.logo {
+    padding: 1rem;
+}
