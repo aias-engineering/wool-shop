@@ -1,50 +1,37 @@
-import { createAsyncThunk, createSlice, SerializedError } from "@reduxjs/toolkit"
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+import { ProductServiceStub } from "./products.service"
 import { Product } from "./products.types"
-import { fetchProducts } from "./products.service"
 
-export interface ProductsState {
-    status: ProductsStatus
-}
-
-export abstract class ProductsStatus {}
-export class ProductStatus_Loading extends ProductsStatus {}
-export class ProductStatus_Loaded extends ProductsStatus {
-    constructor(public products: Product[]) { 
-        super()
-    }
-}
-export class ProductsStatus_LoadFailed extends ProductsStatus {
-    constructor(public error: SerializedError){
-        super()
-    }
+const productService = new ProductServiceStub()
+interface ProductsState {
+    fetchState: 
+        | { status: 'fetching' }
+        | { status: 'fetched', products: Product[] }
 }
 
 const initialState: ProductsState = {
-    status: new ProductStatus_Loaded([])
-}
+    fetchState: {status: 'fetched', products: [] }
+ }
 
 export const fetchProductsAsync = createAsyncThunk(
     'products/fetchProducts',
     async () => {
-        return await fetchProducts()
+        return await productService.fetchProducts()
     }
 )
 
 export const productsSlice = createSlice({
     name: 'products',
-    initialState: initialState,
+    initialState,
     reducers: {   
     },
     extraReducers: builder => {
         builder
         .addCase(fetchProductsAsync.pending, state => {
-            state.status = new ProductStatus_Loading()
+            state.fetchState = { status: 'fetching' }
         })
         .addCase(fetchProductsAsync.fulfilled, (state, action) => {
-            state.status = new ProductStatus_Loaded(action.payload)
-        })
-        .addCase(fetchProductsAsync.rejected, (state, action) => {
-            state.status = new ProductsStatus_LoadFailed(action.error)
+            state.fetchState = {status: 'fetched', products: action.payload }
         })
     }
 })

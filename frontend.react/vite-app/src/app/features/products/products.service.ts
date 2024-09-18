@@ -1,7 +1,15 @@
 import { Product } from "./products.types";
 
-export async function fetchProducts(): Promise<Product[]> {
-    return [];
+export default interface ProductService {
+    fetchProducts(): Promise<Product[]>
 }
 
-export default { fetchProducts }
+export class ProductServiceStub implements ProductService {
+    
+    products = []
+    
+    async fetchProducts(): Promise<Product[]> {
+        return this.products
+    }
+
+}
