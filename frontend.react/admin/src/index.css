@@ -13,6 +13,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+#root {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -27,7 +33,6 @@ body {
   display: flex;
   place-items: center;
   min-width: 320px;
-  min-height: 100vh;
 }
 
 h1 {

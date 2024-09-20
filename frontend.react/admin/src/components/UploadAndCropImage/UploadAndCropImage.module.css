@@ -1,0 +1,12 @@
+.container {
+    padding: 0dvh 4dvw;
+    display: grid;
+    grid-template-rows: 88dvw 20dvw;
+    grid-template-columns: repeat(4, 20dvw);
+    grid-row-gap: 2dvw;
+    grid-column-gap: 2dvw;
+}
+
+.showCase {
+    grid-column: 1 / span 4;
+}
