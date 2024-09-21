@@ -1,0 +1,10 @@
+.buttonList {
+  display: grid;
+  grid-template-columns: 50dvw 50dvw;
+}
+
+.nextButton {
+  display: flex;
+  justify-content: end;
+  grid-column: 2;
+}

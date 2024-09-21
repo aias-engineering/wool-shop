@@ -6,15 +6,7 @@ import Cropper, { Area, Point } from 'react-easy-crop'
 import cropImage from './cropUtils'
 
 export interface UploadAndCropImageProps {
-  onImageCroped: (image: string) => void
-}
-
-export interface UploadAndCropState {
-  status: 
-    | { step: 'showOnlyUpload' }
-    | { step: 'showCrop', image: ImageType, imageName: string }
-    | { step: 'showUploadWithUploaded' }
-    | { step: 'error', message: string }
+  onImagesCroped: (images: Image[]) => void
 }
 
 export interface Image {
@@ -22,7 +14,15 @@ export interface Image {
   dataURL: string
 }
 
-const UploadAndCropImage = () => {
+interface UploadAndCropState {
+  status: 
+    | { step: 'showOnlyUpload' }
+    | { step: 'showCrop', image: ImageType, imageName: string }
+    | { step: 'showUploadWithUploaded' }
+    | { step: 'error', message: string }
+}
+
+const UploadAndCropImage = ({onImagesCroped}: UploadAndCropImageProps) => {
   const maxImages = 5
   const [state, setState] = useState<UploadAndCropState>({status: {step: 'showOnlyUpload'}})
   const [uploadedImages, setUploadedImages] = useState<ImageListType>([])
@@ -31,7 +31,7 @@ const UploadAndCropImage = () => {
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
   const [croppedImages, setCroppedImages] = useState<Image[]>([])
 
-  function handleChange(value: ImageListType): void {
+  function handleImageUpload(value: ImageListType): void {
     setUploadedImages(value)
     const image = value.at(0);
     if (image) {
@@ -45,11 +45,18 @@ const UploadAndCropImage = () => {
       setState({status: { step: 'error', message: 'when accessing uploaded image nothing happened'}})
   }
 
+  async function handleImageCrop(image: ImageType, imageName: string) {
+    const croppedImage = await cropImage(image.dataURL!, croppedAreaPixels!)
+    await setCroppedImages([...croppedImages, { name: imageName, dataURL: croppedImage }])
+    await setState({status: {step: 'showUploadWithUploaded'}})
+    onImagesCroped(croppedImages)
+  }
+
   return (
     <div className={styles.container}>
       {match(state.status)
         .with({step: 'showOnlyUpload'}, () => (
-          <ReactImageUploading value={uploadedImages} onChange={handleChange}>
+          <ReactImageUploading value={uploadedImages} onChange={handleImageUpload}>
               {({onImageUpload, onImageUpdate}) => (
                 <button className={styles.showCase} 
                         onClick={uploadedImages ? onImageUpload : () => onImageUpdate(0)}>
@@ -69,11 +76,7 @@ const UploadAndCropImage = () => {
                 onCropComplete={(_, croppedAreaPixels) => setCroppedAreaPixels(croppedAreaPixels)}
                 onZoomChange={setZoom} />
             </div>
-            <button onClick={async () => {
-                  const croppedImage = await cropImage(image.dataURL!, croppedAreaPixels!)
-                  await setCroppedImages([...croppedImages, { name: imageName, dataURL: croppedImage }])
-                  await setState({status: {step: 'showUploadWithUploaded'}})
-                }} >
+            <button onClick={async () => { await handleImageCrop(image, imageName) } } >
               Finish!
             </button>
           </div>
@@ -90,7 +93,7 @@ const UploadAndCropImage = () => {
                   </div>
                 ))}
             { (croppedImages.length < maxImages) &&
-              ( <ReactImageUploading value={uploadedImages} onChange={handleChange}>
+              ( <ReactImageUploading value={uploadedImages} onChange={handleImageUpload}>
                 {({onImageUpload, onImageUpdate}) => (
                   <button className={styles.imgUpload} 
                           onClick={uploadedImages ? onImageUpload : () => onImageUpdate(0)}>
