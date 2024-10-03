@@ -9,7 +9,7 @@ import CreateProducts from './features/create-product/CreateProducts.tsx'
 
 const router = createBrowserRouter([
   { path: '/', element: <App></App> },
-  { path: '/createProducts', element: <CreateProducts></CreateProducts>}
+  { path: '/createProduct', element: <CreateProducts></CreateProducts>}
 ])
 
 createRoot(document.getElementById('root')!).render(
@@ -17,4 +17,4 @@ createRoot(document.getElementById('root')!).render(
     <Provider store={store}>
       <RouterProvider router ={router}></RouterProvider>
     </Provider>
-  </StrictMode>,)
+  </StrictMode>)
