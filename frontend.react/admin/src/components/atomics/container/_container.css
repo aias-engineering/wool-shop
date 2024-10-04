@@ -1,0 +1,8 @@
+.container {
+    width: 1920px;
+}
+
+.container--showcase {
+    width: 720px;
+    height: 720px;
+}

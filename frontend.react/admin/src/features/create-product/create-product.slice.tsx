@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { match } from "ts-pattern"
 import { Image } from "../../components/UploadAndCropImage/UploadAndCropImage"
 
 interface CreateProductState {

@@ -4,6 +4,7 @@ import MenuItem from "./item";
 import Grid from "../grid";
 import MenuHeader from "./header";
 import GridItem from "../grid/item";
+import Title from "../../atomics/title";
 
 export default {
     title: "molecules/menu",
@@ -26,10 +27,12 @@ export const JustAMenu = () => (
 
 export const MenuInAGrid = () => (
   <Grid>
-    <GridItem columnSpan={2}>
+    <GridItem columnSpan={3}>
       <Menu>
         <MenuHeader>
-          Naqab Bedouin Design
+          <Title>
+            Naqab Bedouin Design
+          </Title>
         </MenuHeader>
         <MenuItem>
           <Link to={"./#"}>Create Products</Link>

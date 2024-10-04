@@ -2,8 +2,9 @@ import ReactImageUploading, { ImageListType, ImageType } from 'react-images-uplo
 import styles from './UploadAndCropImage.module.css'
 import { useState } from 'react'
 import { match } from 'ts-pattern'
-import Cropper, { Area, Point } from 'react-easy-crop'
 import cropImage from './cropUtils'
+import Button from '../atomics/button'
+import NaqabCropper from '../molecules/naqab-cropper'
 
 export interface UploadAndCropImageProps {
   onImagesCroped: (images: Image[]) => void
@@ -26,8 +27,6 @@ const UploadAndCropImage = ({onImagesCroped}: UploadAndCropImageProps) => {
   const maxImages = 5
   const [state, setState] = useState<UploadAndCropState>({status: {step: 'showOnlyUpload'}})
   const [uploadedImages, setUploadedImages] = useState<ImageListType>([])
-  const [crop, setCrop] = useState<Point>({x: 0, y: 0})
-  const [zoom, setZoom] = useState<number>(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
   const [croppedImages, setCroppedImages] = useState<Image[]>([])
 
@@ -53,33 +52,26 @@ const UploadAndCropImage = ({onImagesCroped}: UploadAndCropImageProps) => {
   }
 
   return (
-    <div className={styles.container}>
+    <>
       {match(state.status)
         .with({step: 'showOnlyUpload'}, () => (
           <ReactImageUploading value={uploadedImages} onChange={handleImageUpload}>
               {({onImageUpload, onImageUpdate}) => (
-                <button className={styles.showCase} 
-                        onClick={uploadedImages ? onImageUpload : () => onImageUpdate(0)}>
-                  <div>+</div>
-                </button>
+                <Button className='button--add-showcase-image' onClick={uploadedImages ? onImageUpload : () => onImageUpdate(0)}>
+                  +
+                </Button>
               )}
             </ReactImageUploading>))
         .with({step: 'showCrop'}, ({image, imageName}) => (
-          <div className={styles.showCase}>
-            <div style={{position: 'relative', height: '100%'}}>
-              <Cropper 
-                image={image.dataURL}
-                crop={crop}
-                zoom={zoom}
-                aspect={1}
-                onCropChange={setCrop}
-                onCropComplete={(_, croppedAreaPixels) => setCroppedAreaPixels(croppedAreaPixels)}
-                onZoomChange={setZoom} />
+          <>
+            <NaqabCropper imageUrl={image.dataURL!} 
+                          onCropComplete={async (area) => { await setCroppedAreaPixels(area) }} />
+            <div>
+              <button onClick={async () => { await handleImageCrop(image, imageName) } } >
+                Finish!
+              </button>
             </div>
-            <button onClick={async () => { await handleImageCrop(image, imageName) } } >
-              Finish!
-            </button>
-          </div>
+          </>
         ))
         .with({step: 'showUploadWithUploaded'}, () => (
           <>
@@ -107,7 +99,7 @@ const UploadAndCropImage = ({onImagesCroped}: UploadAndCropImageProps) => {
           <div><span>{message}</span></div>
         ))
         .otherwise(() => (<></>))}
-    </div>
+    </>
   )
 }
 

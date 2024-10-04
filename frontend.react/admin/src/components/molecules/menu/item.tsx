@@ -1,4 +1,5 @@
-import React, { ReactNode } from 'react'
+import { ReactNode } from 'react'
+import './_item.css'
 
 interface Props {
   children?: ReactNode
@@ -6,7 +7,7 @@ interface Props {
 
 const MenuItem = ({children}: Props) => (
   <>
-    <div>
+    <div className='menu__item'>
       {children}
     </div>
   </>

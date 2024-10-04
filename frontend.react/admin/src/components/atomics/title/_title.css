@@ -1,0 +1,9 @@
+.title {
+  margin: 8px 0px;
+  font-size: 32pt;
+  font-weight: bolder;
+}
+
+.title--h2 {
+  font-size: 24pt;
+}

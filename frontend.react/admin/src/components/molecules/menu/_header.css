@@ -1,3 +1,11 @@
 .menu__header {
     height: 360px;
+    padding: 8px;
+}
+
+@media screen and (max-width: 1920px) { 
+    .menu__header {
+        height: 136px;
+        padding: 4px;
+    }
 }
