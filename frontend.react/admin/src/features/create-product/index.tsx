@@ -1,14 +1,11 @@
 import { useAppDispatch, useAppSelector } from '../../lib/hooks';
 import UploadAndCropImage, { Image } from "../../components/UploadAndCropImage/UploadAndCropImage";
 import { addImage } from './create-product.slice'
-import { match } from 'ts-pattern';
-import styles from './CreateProducts.module.css'
 import Container from '../../components/atomics/container';
 import HeaderLayout from '../../components/organisms/layout/header';
 import Grid from '../../components/molecules/grid';
 import GridItem from '../../components/molecules/grid/item';
-import Title from '../../components/atomics/title';
-import ImagesLayout, { ImagesLayoutShowCase } from '../../components/organisms/layout/images';
+import GridForm, { GridFormButton, GridFormInput, GridFormTitle } from '../../components/organisms/grid-form';
 
 const CreateProducts = () => {
   const state = useAppSelector(state => state.createProducts)
@@ -23,12 +20,16 @@ const CreateProducts = () => {
       <HeaderLayout />
       <Grid>
         <GridItem columnSpan={6}>
-          <UploadAndCropImage maxImages={5} onImagesCroped={handleImagesCroped}></UploadAndCropImage>
+          <UploadAndCropImage maxImages={5} onImagesCroped={handleImagesCroped} />
         </GridItem>
         <GridItem columnSpan={6}>
-          <Title as='h2'>
-            Nederlands
-          </Title>
+          <GridForm>
+            <GridFormTitle>product</GridFormTitle>
+            <GridFormInput label='naam: ' id='name'/>
+            <GridFormInput label='beschrijving: ' id='description' />
+            <GridFormInput label='prijs: ' id='price' />
+            <GridFormButton>creëren</GridFormButton>
+          </GridForm>
         </GridItem>
       </Grid>
     </Container>);

@@ -1,13 +1,10 @@
 import ReactImageUploading, { ImageListType, ImageType } from 'react-images-uploading'
-import styles from './UploadAndCropImage.module.css'
 import { useState } from 'react'
 import { match } from 'ts-pattern'
 import cropImage from './cropUtils'
 import Button from '../atomics/button'
 import NaqabCropper from '../molecules/naqab-cropper'
 import { Area } from 'react-easy-crop'
-import Grid from '../molecules/grid'
-import GridItem from '../molecules/grid/item'
 import ImagesLayout, { ImagesLayoutShowCase, ImagesLayoutThumbnails } from '../organisms/layout/images'
 
 interface Props {

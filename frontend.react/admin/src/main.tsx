@@ -5,7 +5,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import App from './App.tsx'
 import store from './lib/store.ts'
 import './index.css'
-import CreateProducts from './features/create-product/CreateProducts.tsx'
+import CreateProducts from './features/create-product'
 
 const router = createBrowserRouter([
   { path: '/', element: <App></App> },

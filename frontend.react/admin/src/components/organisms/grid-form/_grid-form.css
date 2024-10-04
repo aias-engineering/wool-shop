@@ -1,0 +1,17 @@
+.grid-form {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: var(--default-padding);
+}
+
+.grid-form__title {
+  grid-column: 1 span 2;
+}
+
+.grid-form__input-label {
+  grid-column: 1;
+}
+
+.grid-form__input {
+  grid-column: 2;
+}
