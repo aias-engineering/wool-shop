@@ -7,6 +7,8 @@ import Container from '../../components/atomics/container';
 import HeaderLayout from '../../components/organisms/layout/header';
 import Grid from '../../components/molecules/grid';
 import GridItem from '../../components/molecules/grid/item';
+import Title from '../../components/atomics/title';
+import ImagesLayout, { ImagesLayoutShowCase } from '../../components/organisms/layout/images';
 
 const CreateProducts = () => {
   const state = useAppSelector(state => state.createProducts)
@@ -20,17 +22,13 @@ const CreateProducts = () => {
     <Container>
       <HeaderLayout />
       <Grid>
-        <GridItem columnSpan={6} padding='double'>
-        <UploadAndCropImage onImagesCroped={handleImagesCroped}></UploadAndCropImage>
-          {match(state.images.flow)
-            .with({step: 'images-added'}, () => (
-              <div className={styles.buttonList}>
-                <button className={styles.nextButton}>Next</button>  
-              </div>
-            ))
-            .otherwise(() => (<></>))}
+        <GridItem columnSpan={6}>
+          <UploadAndCropImage maxImages={5} onImagesCroped={handleImagesCroped}></UploadAndCropImage>
         </GridItem>
         <GridItem columnSpan={6}>
+          <Title as='h2'>
+            Nederlands
+          </Title>
         </GridItem>
       </Grid>
     </Container>);

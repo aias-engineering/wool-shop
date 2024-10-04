@@ -1,4 +1,5 @@
 .grid {
     display: grid;
-    grid-template-columns: repeat(12, auto);
+    grid-template-columns: repeat(12, [col-start] 1fr);
+    gap: var(--default-padding)
 }

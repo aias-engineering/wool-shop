@@ -5,8 +5,13 @@ import { match } from 'ts-pattern'
 import cropImage from './cropUtils'
 import Button from '../atomics/button'
 import NaqabCropper from '../molecules/naqab-cropper'
+import { Area } from 'react-easy-crop'
+import Grid from '../molecules/grid'
+import GridItem from '../molecules/grid/item'
+import ImagesLayout, { ImagesLayoutShowCase, ImagesLayoutThumbnails } from '../organisms/layout/images'
 
-export interface UploadAndCropImageProps {
+interface Props {
+  maxImages?: number,
   onImagesCroped: (images: Image[]) => void
 }
 
@@ -23,8 +28,7 @@ interface UploadAndCropState {
     | { step: 'error', message: string }
 }
 
-const UploadAndCropImage = ({onImagesCroped}: UploadAndCropImageProps) => {
-  const maxImages = 5
+const UploadAndCropImage = ({maxImages = 5, onImagesCroped}: Props) => {
   const [state, setState] = useState<UploadAndCropState>({status: {step: 'showOnlyUpload'}})
   const [uploadedImages, setUploadedImages] = useState<ImageListType>([])
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
@@ -46,7 +50,7 @@ const UploadAndCropImage = ({onImagesCroped}: UploadAndCropImageProps) => {
 
   async function handleImageCrop(image: ImageType, imageName: string) {
     const croppedImage = await cropImage(image.dataURL!, croppedAreaPixels!)
-    await setCroppedImages([...croppedImages, { name: imageName, dataURL: croppedImage }])
+    await setCroppedImages([{ name: imageName, dataURL: croppedImage }, ...croppedImages])
     await setState({status: {step: 'showUploadWithUploaded'}})
     onImagesCroped(croppedImages)
   }
@@ -55,44 +59,55 @@ const UploadAndCropImage = ({onImagesCroped}: UploadAndCropImageProps) => {
     <>
       {match(state.status)
         .with({step: 'showOnlyUpload'}, () => (
-          <ReactImageUploading value={uploadedImages} onChange={handleImageUpload}>
-              {({onImageUpload, onImageUpdate}) => (
-                <Button className='button--add-showcase-image' onClick={uploadedImages ? onImageUpload : () => onImageUpdate(0)}>
-                  +
-                </Button>
-              )}
-            </ReactImageUploading>))
+          <ImagesLayout>
+            <ImagesLayoutShowCase>
+              <ReactImageUploading value={uploadedImages} onChange={handleImageUpload}>
+                {({onImageUpload, onImageUpdate}) => (
+                  <Button className={'button--fill'} onClick={uploadedImages ? onImageUpload : () => onImageUpdate(0)}>
+                    +
+                  </Button>
+                )}
+              </ReactImageUploading>
+            </ImagesLayoutShowCase>
+          </ImagesLayout>
+        ))
         .with({step: 'showCrop'}, ({image, imageName}) => (
           <>
-            <NaqabCropper imageUrl={image.dataURL!} 
-                          onCropComplete={async (area) => { await setCroppedAreaPixels(area) }} />
-            <div>
-              <button onClick={async () => { await handleImageCrop(image, imageName) } } >
-                Finish!
-              </button>
-            </div>
+            <ImagesLayout>
+              <ImagesLayoutShowCase>
+                <NaqabCropper imageUrl={image.dataURL!} 
+                              onCropComplete={async (area) => { await setCroppedAreaPixels(area) }} />
+              </ImagesLayoutShowCase>
+              <ImagesLayoutThumbnails>
+                <Button onClick={async () => { await handleImageCrop(image, imageName) }}>Finish</Button>
+              </ImagesLayoutThumbnails>
+            </ImagesLayout>
           </>
         ))
         .with({step: 'showUploadWithUploaded'}, () => (
           <>
-            <div className={styles.showCase}>
-              <img src={croppedImages.at(0)!.dataURL} style={{height: '100%'}} />
-            </div>
-            {croppedImages.slice(1)
+            <ImagesLayout>
+              <ImagesLayoutShowCase>
+                <img src={croppedImages.at(0)!.dataURL} style={{height: '100%'}} />
+              </ImagesLayoutShowCase>
+              {croppedImages.slice(1)
                 .map((croppedImage, index) => (
-                  <div key={index}>
+                  <ImagesLayoutThumbnails key={index}>
                     <img src={croppedImage.dataURL} style={{height: '100%'}} />
-                  </div>
+                  </ImagesLayoutThumbnails>
                 ))}
-            { (croppedImages.length < maxImages) &&
-              ( <ReactImageUploading value={uploadedImages} onChange={handleImageUpload}>
-                {({onImageUpload, onImageUpdate}) => (
-                  <button className={styles.imgUpload} 
-                          onClick={uploadedImages ? onImageUpload : () => onImageUpdate(0)}>
-                    <div>+</div>
-                  </button>
-                )}
-                </ReactImageUploading>)}
+                { (croppedImages.length < maxImages) &&
+                  <ImagesLayoutThumbnails>
+                    <ReactImageUploading value={uploadedImages} onChange={handleImageUpload}>
+                      {({onImageUpload, onImageUpdate}) => (
+                        <Button className={'button--fill'} 
+                                onClick={uploadedImages ? onImageUpload : () => onImageUpdate(0)}>
+                          +
+                        </Button>
+                      )}
+                    </ReactImageUploading>
+                  </ImagesLayoutThumbnails>}
+            </ImagesLayout>
           </>)
         )
         .with({step: 'error'}, ({message})=> (

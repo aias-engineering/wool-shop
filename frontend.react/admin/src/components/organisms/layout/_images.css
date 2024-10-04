@@ -1,0 +1,16 @@
+.images-layout {
+  padding: var(--default-padding);
+  display: grid;
+  grid-template-columns: var(--showcase-size) calc(var(--showcase-size) / 6);
+  grid-template-rows: repeat(4, calc(var(--showcase-size) / 6));
+  gap: calc(var(--showcase-size)/9) var(--default-padding);
+}
+
+.images-layout__showcase {
+  grid-column: 1;
+  grid-row: 1 / span 4;
+}
+
+.images-layout__thumbnails {
+  grid-column: 2;
+}
