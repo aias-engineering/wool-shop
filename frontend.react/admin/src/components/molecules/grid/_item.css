@@ -1,0 +1,11 @@
+.grid__item {
+    grid-column: auto;
+}
+
+.grid__item--span-2 {
+    grid-column: span 2;
+}
+
+.grid__item--span-10 {
+    grid-column: span 10;
+}

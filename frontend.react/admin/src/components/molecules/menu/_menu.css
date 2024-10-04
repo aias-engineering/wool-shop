@@ -1,0 +1,5 @@
+.menu {
+    background: var(--primary-background);
+    grid-column-start: 0;
+    grid-column-end: 2;
+}
