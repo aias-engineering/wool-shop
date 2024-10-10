@@ -1,0 +1,18 @@
+.products {
+  padding: 0dvh 1dvw;
+  display: grid;
+  grid-template-columns: repeat(4, 24dvw);
+  column-gap: 0.5dvw;
+}
+
+.products--middle-panel {
+  grid-column: 2 / span 2;
+}
+
+.no-product {
+
+}
+
+.no-product--button {
+  
+}

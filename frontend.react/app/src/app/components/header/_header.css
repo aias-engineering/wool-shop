@@ -1,3 +1,7 @@
 .header {
-    background: var(--primary-background);
+  display: flex;
+  flex-direction: row;
+  padding: 20px 40px;
+  align-items: center;
+  gap: 40px;
 }

@@ -1,10 +1,8 @@
-import Container from '../components/container'
+import HeaderLayout from '../components/layout/header'
 
 const Page = () => (
   <>
-    <Container>
-      <h1>Admin Section</h1>
-    </Container>
+    <HeaderLayout></HeaderLayout>
   </>
 )
 
