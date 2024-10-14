@@ -1,5 +1,5 @@
 import Products from "@/app/components/products";
-import { getProducts } from "@/lib/local-db";
+import { getProducts } from "@/lib/azure/cosmos-client";
 
 const Page = async () => {
     const products = await getProducts();

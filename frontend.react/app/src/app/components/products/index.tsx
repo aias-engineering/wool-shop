@@ -8,16 +8,22 @@ interface Props {
 const Products = ({items}:Props) => (
   <>
     <div className="products">
-      {items.length === 0 && (
-        <>
-          <div className='products--middle-panel no-product'>
-            nog geen producten
-            <Link href="/admin/product/create">
-              creëer de eerste
-            </Link>
-          </div>
-        </>
-        )
+      {items.length === 0 
+        ? (
+          <>
+            <div className='products--middle-panel no-product'>
+              nog geen producten
+              <Link href="/admin/product/create">
+                creëer de eerste
+              </Link>
+            </div>
+          </>
+          )
+        : items.map((item, index) => (
+          <>
+            <span key={index}>{item.name}</span>
+          </>)
+          )
       }
     </div>
   </>

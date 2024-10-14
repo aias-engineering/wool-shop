@@ -11,7 +11,7 @@ import cropImage from './cropUtils'
 
 interface Props {
   maxImages?: number,
-  onImagesCroped: (images: Image[]) => void
+  onImagesCroped?: (images: Image[]) => void
 }
 
 export interface Image {

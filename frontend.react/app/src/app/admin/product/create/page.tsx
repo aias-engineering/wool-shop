@@ -2,7 +2,12 @@ import UploadAndCropImage, { Image } from "@/app/components/upload-and-crop-imag
 
 const Page = () => (
   <>
-    <UploadAndCropImage maxImages={5} />
+    <div style={{display: 'grid', gridTemplateColumns: '45dvw 45dvw'}}>
+      <div style={{gridColumn: 1}}>
+        <UploadAndCropImage />
+      </div>
+      <div style={{gridColumn: 1}}></div>
+    </div>
   </>
 )
 

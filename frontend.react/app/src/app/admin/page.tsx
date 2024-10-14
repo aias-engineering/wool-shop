@@ -1,8 +1,5 @@
-import HeaderLayout from '../components/layout/header'
-
 const Page = () => (
   <>
-    <HeaderLayout></HeaderLayout>
   </>
 )
 
