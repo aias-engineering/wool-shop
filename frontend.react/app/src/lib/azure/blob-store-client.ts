@@ -20,5 +20,5 @@ export async function storeImage(blobname: string, stream: internal.Readable) {
   console.log('storing image %o', blobname)
   const containerClient = blobService.getContainerClient('images')
   const blockBlobClient = containerClient.getBlockBlobClient(blobname)
-  blockBlobClient.uploadStream(stream)
+  await blockBlobClient.uploadStream(stream)
 }

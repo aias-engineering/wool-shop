@@ -1,12 +1,6 @@
-import { IProduct, createProduct } from "@/lib/azure/cosmos-client";
-import { getProducts } from "@/lib/local-db"
+import { getProduct, getProducts } from "@/lib/azure/cosmos-client";
 
-export async function GET() {
+export async function GET(): Promise<Response> {
   const products = await getProducts();
   return Response.json(products)
-}
-
-export async function POST(request: Request) {
-  const product = await request.json() as IProduct
-  await createProduct(product)
 }
