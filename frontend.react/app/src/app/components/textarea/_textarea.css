@@ -1,0 +1,16 @@
+.textarea {
+  font-weight: 600;
+  padding: 8px 16px;
+}
+
+.textarea__label {
+  display: block;
+}
+
+.textarea__input {
+  padding: 4px 8px;
+  margin-left: 4px;
+  margin-top: 4px;
+  font-weight: 600;
+  width: 100%;
+}

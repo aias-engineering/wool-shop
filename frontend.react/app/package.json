@@ -22,7 +22,8 @@
     "react-dom": "^18",
     "react-easy-crop": "^5.0.8",
     "react-images-uploading": "^3.1.7",
-    "ts-pattern": "^5.4.0"
+    "ts-pattern": "^5.4.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^1.9.0",
