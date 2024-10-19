@@ -1,4 +1,4 @@
-import { getProduct, getProducts } from "@/lib/azure/cosmos-client";
+import { getProducts } from "@/lib/azure/cosmos-client";
 
 export async function GET(): Promise<Response> {
   const products = await getProducts();

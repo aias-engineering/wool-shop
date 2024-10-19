@@ -7,6 +7,7 @@ import ImageOrPlaceholder from '../image'
 import Button from '../button'
 import { useState } from 'react'
 import OverlayContainer, { Overlay } from '../overlay-container'
+import { deleteProduct } from '@/app/admin/actions'
 
 interface Props {
   className?: string,
@@ -30,12 +31,12 @@ const ProductsItem = ({className, product}: Props) => {
            onMouseOver={mouseOver} 
            onMouseLeave={mouseLeave}>
         <OverlayContainer>
-        <ImageOrPlaceholder src={firstImage(product)} alt={product.name} />
-        { hover &&
-            <Overlay>
-              <Button>Delete</Button>
-            </Overlay>
-        }
+          <ImageOrPlaceholder src={firstImage(product)} alt={product.name} />
+          { hover &&
+              <Overlay>
+                <Button onClick={() => deleteProduct(product.id)}>Delete</Button>
+              </Overlay>
+          }
         </OverlayContainer>
       </div>
     </>

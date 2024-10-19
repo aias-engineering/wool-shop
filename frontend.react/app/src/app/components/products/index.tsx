@@ -1,5 +1,4 @@
 import './_products.css'
-import Image from 'next/image';
 import Link from 'next/link'
 import { Product } from '@/lib/azure/entities';
 import ProductsItem from './item';
