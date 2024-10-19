@@ -1,6 +1,6 @@
-import { BlobServiceClient, StorageSharedKeyCredential } from '@azure/storage-blob'
+import { BlobServiceClient, ContainerClient, StorageSharedKeyCredential } from '@azure/storage-blob'
 import dotenv from 'dotenv'
-import internal, { Stream } from 'stream';
+import internal from 'stream';
 dotenv.config()
 
 
@@ -16,9 +16,21 @@ const blobService = new BlobServiceClient(
   credentials
 )
 
+function images(): ContainerClient {
+  return blobService.getContainerClient('images');
+}
+
 export async function storeImage(blobname: string, stream: internal.Readable) {
-  console.log('storing image %o', blobname)
-  const containerClient = blobService.getContainerClient('images')
-  const blockBlobClient = containerClient.getBlockBlobClient(blobname)
+  const blockBlobClient = images().getBlockBlobClient(blobname)
+  
   await blockBlobClient.uploadStream(stream)
+}
+
+export async function downloadImage(blobname: string): Promise<NodeJS.ReadableStream | null>
+{
+  const blockBlobClient = images().getBlockBlobClient(blobname);
+
+  const downloadResponse = await blockBlobClient.download()
+
+  return downloadResponse.readableStreamBody ?? null
 }

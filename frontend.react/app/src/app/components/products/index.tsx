@@ -1,8 +1,10 @@
+import Image from 'next/image';
 import Link from 'next/link'
 import './_products.css'
+import { Product } from '@/lib/azure/entities';
 
 interface Props {
-  items: []
+  items: Product[]
 }
 
 const Products = ({items}:Props) => (
@@ -20,9 +22,12 @@ const Products = ({items}:Props) => (
           </>
           )
         : items.map((item, index) => (
-          <>
-            <span key={index}>{item.name}</span>
-          </>)
+          <div key={index}>
+              <Image src={item.imageLinks?.length > 0 ? item.imageLinks[0] : ''}
+                     width={480}
+                     height={480}
+                     alt={item.name} ></Image>
+          </div>)
           )
       }
     </div>

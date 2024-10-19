@@ -31,13 +31,13 @@ export async function handleCreateProductForm(formData: FormData) {
     }
     const response = await createProduct(productRequest)
 
-    const s: ReadableStream<Uint8Array> = extractedFile.value.stream()
-    const reader: ReadableStreamDefaultReader<Uint8Array> = s.getReader();
-    const result = await reader.read();
+    const imageFile = extractedFile.value
+    const readable = Readable.fromWeb(imageFile.stream())
 
-    const imageLink = `${response.idOfCreated}/${extractedFile.value.name}`
-    await storeImage(imageLink, Readable.from(result.value!))
+    const cosmosImageName = `${response.idOfCreated}/${imageFile.name}`
+    await storeImage(cosmosImageName, readable)
 
+    const imageLink = `/api/product/${response.idOfCreated}/image/${imageFile.name}`
     await addImageToProduct(response.idOfCreated, imageLink)
   }
   else{
