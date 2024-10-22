@@ -20,7 +20,9 @@ export async function GET(_: NextRequest, { params }: Route) {
 
   const webStream = fromReadabaleWebToBodyInit(imageStream)
 
-  const res = new NextResponse(webStream, { headers: {'content-type': 'image/*'} })
+  const streamResult = await webStream.getReader().read()
+
+  const res = new NextResponse(streamResult.value, { headers: {'content-type': 'image/*'} })
 
   return res;
 }
