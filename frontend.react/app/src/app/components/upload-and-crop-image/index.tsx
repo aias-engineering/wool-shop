@@ -51,7 +51,8 @@ const UploadAndCropImage = ({onImagesCroped}: Props) => {
     const croppedImage = await cropImage(image.dataURL!, croppedAreaPixels!)
     await setCroppedImages([{ name: imageName, dataURL: croppedImage }, ...croppedImages])
     await setState({status: {step: 'showUploadWithUploaded'}})
-    onImagesCroped(croppedImages)
+    if (onImagesCroped) 
+      onImagesCroped(croppedImages)
   }
 
   return (

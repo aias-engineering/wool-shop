@@ -1,5 +1,5 @@
 import { downloadImage } from "@/lib/azure/blob-store-client";
-import { Readable } from "stream";
+import { fromReadabaleWebToBodyInit } from "@/lib/streams";
 
 interface Route {
   params: { id: string, name: string  }
@@ -17,7 +17,7 @@ export async function GET(_: Request, { params }: Route) {
   if (!imageStream)
     return new Response('Not Found', { status: 404 })
 
-  const webStream = Readable.toWeb(imageStream)
+  const webStream = fromReadabaleWebToBodyInit(imageStream)
 
   const res = new Response(webStream, { headers: {'content-type': 'image/*'} })
 
