@@ -34,7 +34,7 @@ jobs:
       #   run: |
       #      cp -R ./.next/static ./.next/.standalone/.next/.static
       - name: zip the standalone package as release.zip
-        run: zip release.zip ./.next/.standalone -r
+        run: zip release.zip ./frontend.react/app/.next/.standalone -r
       - uses: actions/upload-artifact@v4
         with:
           name: woolshop-frontend.react-app
