@@ -1,11 +1,12 @@
 import { downloadImage } from "@/lib/azure/blob-store-client";
 import { fromReadabaleWebToBodyInit } from "@/lib/streams";
+import { NextRequest, NextResponse } from "next/server";
 
 interface Route {
   params: { id: string, name: string  }
 }
 
-export async function GET(_: Request, { params }: Route) {
+export async function GET(_: NextRequest, { params }: Route) {
 
   const blobname = `${params.id}/${params.name}`
 
@@ -15,11 +16,11 @@ export async function GET(_: Request, { params }: Route) {
 
     
   if (!imageStream)
-    return new Response('Not Found', { status: 404 })
+    return new NextResponse('Not Found', { status: 404 })
 
   const webStream = fromReadabaleWebToBodyInit(imageStream)
 
-  const res = new Response(webStream, { headers: {'content-type': 'image/*'} })
+  const res = new NextResponse(webStream, { headers: {'content-type': 'image/*'} })
 
   return res;
 }
