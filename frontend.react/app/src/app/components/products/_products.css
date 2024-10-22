@@ -2,6 +2,7 @@
   padding: 0dvh 1dvw;
   display: grid;
   grid-template-columns: repeat(4, 24dvw);
+  grid-template-rows: 36dvw;
   column-gap: 0.5dvw;
 }
 
