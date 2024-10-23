@@ -25,8 +25,6 @@ jobs:
         working-directory: ./frontend.react/app
 
     steps:
-      - uses: actions/checkout@v4
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
         
@@ -42,8 +40,7 @@ jobs:
         with:
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-          context: .
-          file: ./frontend.react/app/Dockerfile
+          context: "{{defaultContext}}:fronend.react/app"
 
   deploy:
     runs-on: ubuntu-latest
