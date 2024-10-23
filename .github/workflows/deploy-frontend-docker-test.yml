@@ -12,16 +12,17 @@ env:
   IMAGE_NAME: ${{ github.repository }}/frontend.react
   AZURE_WEBAPP_NAME: tas0jxc3reuapiywm
 
+
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./frontend.react/app
-
-    permissions:
-      contents: read
-      packages: write
 
     steps:
       - uses: actions/checkout@v4
@@ -38,6 +39,7 @@ jobs:
         with:
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          context: ./frontend.react/app
           file: ./Dockerfile
 
   deploy:
