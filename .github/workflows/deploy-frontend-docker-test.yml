@@ -20,10 +20,6 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./frontend.react/app
-
     steps:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -40,7 +36,7 @@ jobs:
         with:
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-          context: "{{defaultContext}}:fronend.react/app"
+          context: "{{defaultContext}}:frontend.react/app"
 
   deploy:
     runs-on: ubuntu-latest
