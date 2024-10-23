@@ -1,4 +1,4 @@
-name: Build and Deploy Frontend to Test
+name: Build and Deploy Frontend with Docker to Test
 
 on:
   push:
@@ -7,55 +7,52 @@ on:
       - '.github/workflows/*frontend*.yml'
     branches: 'main'
 
-env:
-  NODE_VERSION: '22.x'
+env: 
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}/frontend.react
+  AZURE_WEBAPP_NAME: tas0jxc3reuapiywm
+
 
 permissions:
   contents: read
+  packages: write
 
 jobs:
-  build-frontend:
+  build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./frontend.react/app
     steps:
-      - uses: actions/checkout@v4
-      - name: Use Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        
+      - name: Login to Github container registry
+        uses: docker/login-action@v3
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
-      - run: npm ci
-      - run: npm run build --if-present
-      # - run: npm test
-      # - name: we need to provide the next.js statics in the standalone
-      #   run: |
-      #      cp -R ./.next/static ./.next/.standalone/.next/.static
-      - name: zip the standalone package as release.zip
-        run: zip release.zip ./frontend.react/app/.next/.standalone -r
-      - uses: actions/upload-artifact@v4
-        with:
-          name: woolshop-frontend.react-app
-          path: frontend.react/app/release.zip
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-  deploy-frontend:
-    permissions:
-      contents: none
+      - name: Build and push container image to registry
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          context: "{{defaultContext}}:frontend.react/app"
+
+  deploy:
     runs-on: ubuntu-latest
-    needs: build-frontend
+    needs: build
+
+    # environment:
+    #   name: test
+    #   url: ${{ env.AZURE_WEBAPP_NAME }}
+
     steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: woolshop-frontend.react-app
-
-      - run: unzip release.zip
-
-      - name: Deploy to Azure Web App
+      - name: Deploy container to Azure Web App
         id: deploy-to-webapp
-        uses: azure/webapps-deploy@v2
+        uses: azure/webapps-deploy@v3
         with:
-          app-name: 'tas0jxc3reuapiywm'
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: .
+          images: "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}"
+
+      
