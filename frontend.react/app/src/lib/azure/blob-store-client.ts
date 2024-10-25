@@ -20,10 +20,21 @@ function images(): ContainerClient {
   return blobService.getContainerClient('images');
 }
 
+export async function getImagesFlat() {
+  console.log('getting images flat..')
+  let result: string[] = []
+  for await (const blob of images().listBlobsFlat()) {
+    result = [...result, blob.name]
+  }
+  return result;
+}
+
 export async function storeImage(blobname: string, stream: internal.Readable) {
   const blockBlobClient = images().getBlockBlobClient(blobname)
   
-  await blockBlobClient.uploadStream(stream)
+  const result = await blockBlobClient.uploadStream(stream)
+
+  console.log('%o', result)
 }
 
 export async function downloadImage(blobname: string): Promise<NodeJS.ReadableStream | null>
@@ -31,6 +42,8 @@ export async function downloadImage(blobname: string): Promise<NodeJS.ReadableSt
   const blockBlobClient = images().getBlockBlobClient(blobname);
 
   const downloadResponse = await blockBlobClient.download()
+  
+  console.log('received from azure: %i', downloadResponse.contentLength)
 
   return downloadResponse.readableStreamBody ?? null
 }

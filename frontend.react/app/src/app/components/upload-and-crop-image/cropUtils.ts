@@ -39,11 +39,14 @@ const createImage = (url: string): Promise<HTMLImageElement> =>
       Math.round(0 - safeArea / 2 + image.height * 0.5 - pixelCrop.y)
     );
   
-    return canvas.toDataURL("image/jpeg");
+    return canvas;
   }
   
-  export default async function cropImage(image: string, croppedAreaPixels: Area): Promise<string> {
-    const croppedImage = await getCroppedImg(image, croppedAreaPixels);
-    return croppedImage;
+  export default async function cropImage(
+    image: string, 
+    croppedAreaPixels: Area,
+    callback: BlobCallback): Promise<void> {
+    const canvas = await getCroppedImg(image, croppedAreaPixels)
+    canvas.toBlob(callback)
   };
   

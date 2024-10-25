@@ -1,5 +1,5 @@
 import { downloadImage } from "@/lib/azure/blob-store-client";
-import { fromReadabaleWebToBodyInit } from "@/lib/streams";
+import { mdnReadableStream_From_NodeReadableStream } from "@/lib/streams";
 import { NextRequest, NextResponse } from "next/server";
 
 interface Route {
@@ -18,11 +18,9 @@ export async function GET(_: NextRequest, { params }: Route) {
   if (!imageStream)
     return new NextResponse('Not Found', { status: 404 })
 
-  const webStream = fromReadabaleWebToBodyInit(imageStream)
+  const webStream = mdnReadableStream_From_NodeReadableStream(imageStream)
 
-  const streamResult = await webStream.getReader().read()
-
-  const res = new NextResponse(streamResult.value, { headers: {'content-type': 'image/*'} })
+  const res = new NextResponse(webStream, { headers: {'content-type': 'image/*'} })
 
   return res;
 }

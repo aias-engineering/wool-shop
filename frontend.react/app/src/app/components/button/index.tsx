@@ -1,3 +1,5 @@
+'use client'
+
 import classNames from 'clsx'
 import HasChildren from "@/lib/react/has-children";
 import './_button.css'

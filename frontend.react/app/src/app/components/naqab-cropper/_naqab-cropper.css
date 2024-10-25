@@ -1,4 +1,4 @@
 .naqab-cropper {
-  width: var(--showcase-size);
-  height: var(--showcase-size);
+  width: 400px;
+  height: 600px;
 }

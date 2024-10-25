@@ -2,7 +2,7 @@
 
 import { storeImage } from "@/lib/azure/blob-store-client"
 import { addImageToProduct, createProduct } from "@/lib/azure/cosmos-client"
-import { toReadableWeb } from "@/lib/streams"
+import { nodeReadable_From_MdnReadableStream } from "@/lib/streams"
 import { z } from "zod"
 
 export async function handleCreateProductForm(formData: FormData) {
@@ -32,7 +32,7 @@ export async function handleCreateProductForm(formData: FormData) {
     const response = await createProduct(productRequest)
 
     const imageFile = extractedFile.value
-    const readable = toReadableWeb(imageFile.stream())
+    const readable = nodeReadable_From_MdnReadableStream(imageFile.stream())
 
     const cosmosImageName = `${response.idOfCreated}/${imageFile.name}`
     await storeImage(cosmosImageName, readable)

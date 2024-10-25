@@ -15,8 +15,7 @@ const NaqabCropper = ({imageUrl, onCropComplete}: Props) => {
 
   return (
     <div className={'naqab-cropper'}>
-      <div style={{position: 'relative', height: '100%'}}>
-        <Cropper
+      <Cropper
           image={imageUrl}
           crop={crop}
           zoom={zoom}
@@ -26,7 +25,6 @@ const NaqabCropper = ({imageUrl, onCropComplete}: Props) => {
             await onCropComplete(croppedAreaPixels)
           }}
           onZoomChange={setZoom} />
-      </div>
     </div>
   )
 }
