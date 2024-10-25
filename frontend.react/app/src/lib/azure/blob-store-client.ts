@@ -48,7 +48,7 @@ export async function downloadImage(blobname: string): Promise<NodeJS.ReadableSt
   return downloadResponse.readableStreamBody ?? null
 }
 
-export async function deleteImage(blobname: string) {
+export async function deleteBlobOnAzure(blobname: string) {
   const blockBlobClient = images().getBlockBlobClient(blobname);
 
   await blockBlobClient.deleteIfExists()

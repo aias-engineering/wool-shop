@@ -1,5 +1,5 @@
 import { downloadImage } from "@/lib/azure/blob-store-client";
-import { postImage } from "@/lib/services/images";
+import { deleteImage, postImage } from "@/lib/services/images";
 import { NextRequest, NextResponse } from "next/server";
 import { mdnReadableStream_From_NodeReadableStream, nodeReadable_From_MdnReadableStream } from "@/lib/streams";
 
@@ -30,8 +30,8 @@ export async function POST(req: NextRequest, {params}: Route) {
   return new NextResponse('done')
 }
 
-export async function DELETE({params}: Route): Promise<NextResponse> {
-  // await deleteImage(params.blobname);
-  console.log('Deleting %s', params.id)
-  return new NextResponse('Deleted')
+export async function DELETE(_: NextRequest, {params}: Route): Promise<NextResponse> {
+  console.log('deleting image %s.. ', params.id)
+  await deleteImage(params.id)
+  return new NextResponse('done')
 }
