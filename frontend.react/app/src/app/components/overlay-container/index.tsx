@@ -1,13 +1,15 @@
 import { ReactNode } from "react";
+import classNames from 'clsx';
 import './_overlay-container.css'
 
 interface Props {
+  className?: string,
   children?: ReactNode
 }
 
-const OverlayContainer = ({children}: Props) => (
+const OverlayContainer = ({className, children}: Props) => (
   <>
-    <div className="overlay-container">
+    <div className={classNames("overlay-container", className)}>
       {children}
     </div>
   </>

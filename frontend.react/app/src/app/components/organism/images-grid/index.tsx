@@ -1,8 +1,9 @@
 'use client'
 
+import "./_images-grid.css"
 import Button from "@/app/components/button"
 import ImageOrPlaceholder from "@/app/components/image"
-import MainGrid from "@/app/components/main-grid"
+import MainGrid from "@/app/components/grids/main"
 import UploadAndCropImage, { Image } from "@/app/components/organism/upload-and-crop-image"
 import OverlayContainer, { Overlay } from "@/app/components/overlay-container"
 import { useState } from "react"
@@ -16,27 +17,10 @@ type State =
   | { step: 'fetching' }
   | { step: 'fetched', blobnames: string[] }
 
-type UploadingState =
-  | { step: 'idle' }
-  | { step: 'uploading', name: string }
-
 export default function Images({blobnames}: Props) {
   const [fetchingState, setFetchingState] = useState<State>({step: 'fetched', blobnames})
-  const [uploadingState, setUploadingState] = useState<UploadingState>({step: 'idle'})
 
-  async function handleOnImagesCroped(image: Image): Promise<void> {
-    await setUploadingState({ step: 'uploading', name: image.name })
-    await fetch(`/api/image/${image.name}`, {
-      body: image.data,
-      method: 'POST'
-    })
-    await setFetchingState({ step: 'fetching' })
-    const response = await fetch('/api/image')
-    await setFetchingState({step: 'fetched', blobnames: await response.json() })
-    await setUploadingState({ step: 'idle' })
-  }
-
-  async function handleDeleted(): Promise<void> {
+  async function refetch(): Promise<void> {
     await setFetchingState({ step: 'fetching' })
     const response = await fetch('/api/image')
     await setFetchingState({step: 'fetched', blobnames: await response.json() })
@@ -52,22 +36,9 @@ export default function Images({blobnames}: Props) {
         ))
         .with({step: 'fetched'}, ({blobnames}) => (
           <MainGrid>
-            {match(uploadingState)
-              .with({step: 'idle'}, () => (
-                <div>
-                  <h3>Upload an Image</h3>
-                  <UploadAndCropImage onImageCroped={handleOnImagesCroped} />
-                </div>
-              ))
-              .with({step: 'uploading'}, ({name}) => (
-                <div>
-                  uploading {name}...
-                </div>
-              ))
-              .exhaustive()
-            }
+            <ImageUpload onImageUploaded={refetch} />
             {blobnames.map((blob, index) => {
-              return (<ImageItem key={index} name={blob} onDeleted={handleDeleted}/>)
+              return (<ImageItem key={index} name={blob} onDeleted={refetch}/>)
             })}
           </MainGrid>
         ))
@@ -93,19 +64,15 @@ function ImageItem({name, onDeleted}: ItemProps) {
 
   async function handleDeletion() {
     await setState({step: 'deleteing', name: name})
-    try {
-      const response = await fetch(`/api/image/${name}`, {
-        method: 'DELETE'
-      })
-      if (response.ok){
-        await onDeleted()
-        await setState({step: 'idle'})
-      }
-      else {
-        await(setState({step: 'error', message: response.statusText }))  
-      }
-    } catch (error) {
-      await(setState({step: 'error', message: error as string}))
+    const response = await fetch(`/api/image/${name}`, {
+      method: 'DELETE'
+    })
+    if (response.ok){
+      await onDeleted()
+      await setState({step: 'idle'})
+    }
+    else {
+      await(setState({step: 'error', message: response.statusText }))  
     }
   }
 
@@ -113,7 +80,7 @@ function ImageItem({name, onDeleted}: ItemProps) {
    <>
     {match(state)
       .with({step: 'idle'}, () => (
-        <OverlayContainer>
+        <OverlayContainer  className={"images-grid__item"}>
           <ImageOrPlaceholder src={url} alt={name} />
           <Overlay>
             <Button onClick={handleDeletion}>Delete</Button>
@@ -130,6 +97,45 @@ function ImageItem({name, onDeleted}: ItemProps) {
         </div>
       ))
       .exhaustive()}
+    </>
+  )
+}
+
+type UploadingState =
+  | { step: 'idle' }
+  | { step: 'uploading', name: string }
+
+interface UploadProps {
+  onImageUploaded: () => Promise<void>
+}
+
+function ImageUpload({onImageUploaded}: UploadProps) {
+  const [state, setState] = useState<UploadingState>({step: 'idle'})
+  
+  async function handleOnImagesCroped(image: Image) {
+    await setState({ step: 'uploading', name: image.name })
+    await fetch(`/api/image/${image.name}`, {
+      body: image.data,
+      method: 'POST'
+    })
+    await onImageUploaded()
+    await setState({ step: 'idle' })
+  }
+
+  return (
+    <>
+      {match(state)
+        .with({step:'idle'}, () => (
+          <div className="images-grid__upload">
+            <UploadAndCropImage onImageCroped={handleOnImagesCroped} />
+          </div>
+        ))
+        .with({step: 'uploading'}, ({name}) => (
+          <div>
+            uploading {name}...
+          </div>
+        ))
+        .exhaustive()}
     </>
   )
 }

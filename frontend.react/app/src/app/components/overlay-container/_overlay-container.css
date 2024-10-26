@@ -1,5 +1,6 @@
 .overlay-container {
   position: relative;
+  height: 100%;
 }
 
 .overlay-container__overlay {

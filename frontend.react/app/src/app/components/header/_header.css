@@ -1,7 +1,7 @@
 .header {
   display: flex;
   flex-direction: row;
-  padding: 1dvw 2dvw;
+  padding: 16px 8px;
   align-items: center;
-  gap: 2dvw;
+  gap: 8px;
 }

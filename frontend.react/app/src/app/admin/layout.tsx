@@ -1,4 +1,5 @@
 import { ReactNode } from "react"
+import Body from "../components/layout/body"
 import HeaderLayout from "../components/layout/header"
 import Main from "../components/main"
 
@@ -8,10 +9,12 @@ interface Props {
 
 const Layout = ({children}: Props) => (
   <>
-    <HeaderLayout></HeaderLayout>
-    <Main>
-      {children}
-    </Main>
+    <Body>
+      <HeaderLayout></HeaderLayout>
+      <Main>
+        {children}
+      </Main>
+    </Body>
   </>
 )
 

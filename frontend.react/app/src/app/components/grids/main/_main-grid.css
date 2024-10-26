@@ -1,0 +1,5 @@
+.main-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 22.5%);
+  column-gap: 2%;
+}

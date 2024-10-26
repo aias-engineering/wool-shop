@@ -1,0 +1,15 @@
+.images-grid {
+
+}
+
+.images-grid__item {
+  display: flex;
+  overflow: hidden;
+  justify-content: center;
+  aspect-ratio: 1 / 1.5;
+}
+
+.images-grid__upload {
+  height: 100%;
+  aspect-ratio: 1 / 1.5;
+}
