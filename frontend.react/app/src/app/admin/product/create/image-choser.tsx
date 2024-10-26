@@ -1,6 +1,7 @@
 'use client'
 
-import Button from "@/app/components/button";
+import Button from "@/app/components/atoms/button";
+import MainGrid from "@/app/components/grids/main";
 import ImageOrPlaceholder from "@/app/components/image";
 import { useState } from "react";
 import { match } from "ts-pattern";
@@ -31,11 +32,13 @@ export default function ImageChoser() {
           </div>
         ))
         .with({step: 'fetched'}, ({imageNames}) => (
-          <div style={{display: 'grid'}}>
+          <MainGrid>
             {imageNames.map((name, index) => (
-              <ImageOrPlaceholder key={index} src={'/api/image/' + name} alt={name} />
+              <div key={index}>
+                <ImageOrPlaceholder src={'/api/image/' + name} alt={name} />
+              </div>
             ))}
-          </div>
+          </MainGrid>
         ))
         .exhaustive()}
     </div>

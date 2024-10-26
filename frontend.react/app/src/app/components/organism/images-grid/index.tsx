@@ -1,7 +1,7 @@
 'use client'
 
 import "./_images-grid.css"
-import Button from "@/app/components/button"
+import Button from "@/app/components/atoms/button"
 import ImageOrPlaceholder from "@/app/components/image"
 import MainGrid from "@/app/components/grids/main"
 import UploadAndCropImage, { Image } from "@/app/components/organism/upload-and-crop-image"

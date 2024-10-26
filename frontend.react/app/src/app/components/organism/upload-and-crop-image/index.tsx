@@ -3,7 +3,7 @@
 import { useState } from "react"
 import ReactImageUploading, { ImageListType, ImageType } from "react-images-uploading"
 import { match } from "ts-pattern"
-import Button from "../../button"
+import Button from "@/app/components/atoms/button"
 import NaqabCropper from "../../naqab-cropper"
 import OverlayContainer, { Overlay } from "../../overlay-container"
 import { Area } from "react-easy-crop"

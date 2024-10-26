@@ -1,4 +1,4 @@
-import Button from "@/app/components/button"
+import Button from "@/app/components/atoms/button"
 import ImageOrPlaceholder from "@/app/components/image"
 import ImagesLayout, { ImagesLayoutShowCase, ImagesLayoutThumbnails } from "@/app/components/layout/images"
 import TextArea from "@/app/components/textarea"

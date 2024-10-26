@@ -1,4 +1,4 @@
-import Button from "@/app/components/button"
+import Button from "@/app/components/atoms/button"
 import TextArea from "@/app/components/textarea"
 import TextBox from "@/app/components/textbox"
 import { handleCreateProductForm } from './actions'
