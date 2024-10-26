@@ -5,7 +5,7 @@ import ReactImageUploading, { ImageListType, ImageType } from "react-images-uplo
 import { match } from "ts-pattern"
 import Button from "@/app/components/atoms/button"
 import NaqabCropper from "../../naqab-cropper"
-import OverlayContainer, { Overlay } from "../../overlay-container"
+import OverlayContainer, { Overlay } from "@/app/components/atoms/overlay-container"
 import { Area } from "react-easy-crop"
 import cropImage from "../../upload-and-crop-image/cropUtils"
 

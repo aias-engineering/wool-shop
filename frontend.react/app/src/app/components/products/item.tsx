@@ -6,7 +6,7 @@ import { match, P } from 'ts-pattern'
 import ImageOrPlaceholder from '../image'
 import Button from '@/app/components/atoms/button'
 import { useState } from 'react'
-import OverlayContainer, { Overlay } from '../overlay-container'
+import OverlayContainer, { Overlay } from '@/app/components/atoms/overlay-container'
 import { deleteProduct } from '@/app/admin/actions'
 
 interface Props {

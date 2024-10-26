@@ -5,7 +5,7 @@ import Button from "@/app/components/atoms/button"
 import ImageOrPlaceholder from "@/app/components/image"
 import MainGrid from "@/app/components/grids/main"
 import UploadAndCropImage, { Image } from "@/app/components/organism/upload-and-crop-image"
-import OverlayContainer, { Overlay } from "@/app/components/overlay-container"
+import OverlayContainer, { Overlay } from "@/app/components/atoms/overlay-container"
 import { useState } from "react"
 import { match } from "ts-pattern"
 
