@@ -1,11 +1,9 @@
 'use client'
 
 import "./_images-grid.css"
-import Button from "@/app/components/atoms/button"
-import ImageOrPlaceholder from "@/app/components/atoms/image-or-placeholder"
 import MainGrid from "@/app/components/grids/main"
 import UploadAndCropImage, { Image } from "@/app/components/organism/upload-and-crop-image"
-import OverlayContainer, { Overlay } from "@/app/components/atoms/overlay-container"
+import ImageItem from "@/app/components/organism/images-grid/item"
 import { useState } from "react"
 import { match } from "ts-pattern"
 
@@ -45,60 +43,6 @@ export default function Images({blobnames}: Props) {
       .exhaustive()}
     </>
   )    
-}
-
-type DeletingState = 
-| { step: 'idle' }
-| { step: 'deleteing', name: string }
-| { step: 'error', message: string }
-
-interface ItemProps {
-  name: string,
-  onDeleting?: () => Promise<void>,
-  onDeleted: () => Promise<void>
-}
-
-function ImageItem({name, onDeleted}: ItemProps) {
-  const [state, setState] = useState<DeletingState>({step: 'idle'})
-  const url = `/api/image/${name}`
-
-  async function handleDeletion() {
-    await setState({step: 'deleteing', name: name})
-    const response = await fetch(`/api/image/${name}`, {
-      method: 'DELETE'
-    })
-    if (response.ok){
-      await onDeleted()
-      await setState({step: 'idle'})
-    }
-    else {
-      await(setState({step: 'error', message: response.statusText }))  
-    }
-  }
-
-  return (
-   <>
-    {match(state)
-      .with({step: 'idle'}, () => (
-        <OverlayContainer  className={"images-grid__item"}>
-          <ImageOrPlaceholder src={url} alt={name} />
-          <Overlay>
-            <Button onClick={handleDeletion}>Delete</Button>
-          </Overlay>
-        </OverlayContainer>
-      ))
-      .with({step: 'deleteing'}, ({name}) => (
-        <><div>Deleting {name}</div></>
-      ))
-      .with({step: 'error'}, ({message}) => (
-        <div>
-          Something went wrong:
-          {message}
-        </div>
-      ))
-      .exhaustive()}
-    </>
-  )
 }
 
 type UploadingState =
