@@ -2,7 +2,7 @@
 
 import "./_images-grid.css"
 import Button from "@/app/components/atoms/button"
-import ImageOrPlaceholder from "@/app/components/image"
+import ImageOrPlaceholder from "@/app/components/atoms/image-or-placeholder"
 import MainGrid from "@/app/components/grids/main"
 import UploadAndCropImage, { Image } from "@/app/components/organism/upload-and-crop-image"
 import OverlayContainer, { Overlay } from "@/app/components/atoms/overlay-container"

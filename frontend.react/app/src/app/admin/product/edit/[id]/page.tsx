@@ -1,5 +1,5 @@
 import Button from "@/app/components/atoms/button"
-import ImageOrPlaceholder from "@/app/components/image"
+import ImageOrPlaceholder from "@/app/components/atoms/image-or-placeholder"
 import ImagesLayout, { ImagesLayoutShowCase, ImagesLayoutThumbnails } from "@/app/components/layout/images"
 import TextArea from "@/app/components/textarea"
 import TextBox from "@/app/components/textbox"

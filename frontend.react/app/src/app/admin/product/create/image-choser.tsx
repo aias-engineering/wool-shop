@@ -2,7 +2,7 @@
 
 import Button from "@/app/components/atoms/button";
 import MainGrid from "@/app/components/grids/main";
-import ImageOrPlaceholder from "@/app/components/image";
+import ImageOrPlaceholder from "@/app/components/atoms/image-or-placeholder";
 import { useState } from "react";
 import { match } from "ts-pattern";
 
