@@ -2,8 +2,9 @@
 
 import "./_images-grid.css"
 import MainGrid from "@/app/components/grids/main"
-import UploadAndCropImage, { Image } from "@/app/components/organism/upload-and-crop-image"
 import ImageItem, { DeletingResult } from "@/app/components/organism/images-grid/item"
+import ImageUpload, { ImageUploadingResult } from "@/app/components/organism/images-grid/upload"
+import { Image } from '@/app/components/organism/upload-and-crop-image'
 import { useState } from "react"
 import { match } from "ts-pattern"
 
@@ -21,6 +22,20 @@ export default function Images({blobnames}: Props) {
 
   const [fetchingState, setFetchingState] = useState<State>({step: 'fetched', urls: toUrls(blobnames)})
   
+  async function uploadImage(image: Image): Promise<ImageUploadingResult> {
+    const response = await fetch(`/api/image/${image.name}`, {
+      body: image.data,
+      method: 'POST'
+    })
+    if (response.ok) {
+      await refetch()
+      return { success: true }
+    }
+    else {
+      return { success: false, message: response.statusText }
+    }
+  }
+
   async function deleteImage(imageUrl: string): Promise<DeletingResult> {
     const response = await fetch(imageUrl, {
       method: 'DELETE'
@@ -51,7 +66,7 @@ export default function Images({blobnames}: Props) {
         ))
         .with({step: 'fetched'}, ({urls}) => (
           <MainGrid>
-            <ImageUpload onImageUploaded={refetch} />
+            <ImageUpload onImageUploading={uploadImage} />
             {urls.map((url, index) => {
               return (<ImageItem key={index} imageUrl={url} onDeleting={deleteImage}/>)
             })}
@@ -60,43 +75,4 @@ export default function Images({blobnames}: Props) {
       .exhaustive()}
     </>
   )    
-}
-
-type UploadingState =
-  | { step: 'idle' }
-  | { step: 'uploading', name: string }
-
-interface UploadProps {
-  onImageUploaded: () => Promise<void>
-}
-
-function ImageUpload({onImageUploaded}: UploadProps) {
-  const [state, setState] = useState<UploadingState>({step: 'idle'})
-  
-  async function handleOnImagesCroped(image: Image) {
-    await setState({ step: 'uploading', name: image.name })
-    await fetch(`/api/image/${image.name}`, {
-      body: image.data,
-      method: 'POST'
-    })
-    await onImageUploaded()
-    await setState({ step: 'idle' })
-  }
-
-  return (
-    <>
-      {match(state)
-        .with({step:'idle'}, () => (
-          <div className="images-grid__upload">
-            <UploadAndCropImage onImageCroped={handleOnImagesCroped} />
-          </div>
-        ))
-        .with({step: 'uploading'}, ({name}) => (
-          <div>
-            uploading {name}...
-          </div>
-        ))
-        .exhaustive()}
-    </>
-  )
 }
