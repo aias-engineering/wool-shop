@@ -9,30 +9,30 @@ import Button from '@/app/components/atoms/button'
 
 type State = 
 | { step: 'idle' }
-| { step: 'deleting', name: string }
+| { step: 'deleting', imageUrl: string }
 | { step: 'error', message: string }
 
 interface Props {
-  name: string,
-  onDeleted: () => Promise<void>
+  imageUrl: string,
+  onDeleting: (imageUrl: string) => Promise<DeletingResult>
 }
 
-export default function ImageItem({name, onDeleted}: Props): JSX.Element {
-  const [state, setState] = useState<State>({step: 'idle'})
-  const url = `/api/image/${name}`
+export type DeletingResult =
+  | { deleted: true }
+  | { deleted: false, message: string }
 
+export default function ImageItem({imageUrl, onDeleting}: Props): JSX.Element {
+  const [state, setState] = useState<State>({step: 'idle'})
+  
   async function handleDeletion() {
-    await setState({step: 'deleting', name: name})
-    const response = await fetch(`/api/image/${name}`, {
-      method: 'DELETE'
-    })
-    if (response.ok){
-      await onDeleted()
-      await setState({step: 'idle'})
-    }
-    else {
-      await(setState({step: 'error', message: response.statusText }))  
-    }
+    await setState({step: 'deleting', imageUrl})
+
+    const result = await onDeleting(imageUrl)
+
+    await match(result)
+      .with({deleted: true}, async () => await setState({step: 'idle'}))
+      .with({deleted: false}, async ({message}) => await setState({step: 'error', message}))
+      .exhaustive()
   }
 
   return (
@@ -40,13 +40,13 @@ export default function ImageItem({name, onDeleted}: Props): JSX.Element {
       {match(state)
         .with({step: 'idle'}, () => (
           <OverlayContainer className={"images-grid__item"}>
-            <ImageOrPlaceholder src={url} alt={name} />
+            <ImageOrPlaceholder src={imageUrl} alt={imageUrl} />
             <Overlay>
               <Button onClick={handleDeletion}>Delete</Button>
             </Overlay>
           </OverlayContainer>
         ))
-        .with({step: 'deleting'}, ({name}) => (
+        .with({step: 'deleting'}, ({imageUrl: name}) => (
           <div>Deleting {name}</div>
         ))
         .with({step: 'error'}, ({message}) => (
