@@ -6,6 +6,8 @@ import { match } from 'ts-pattern'
 import OverlayContainer, { Overlay } from '@/app/components/atoms/overlay-container'
 import ImageOrPlaceholder from '@/app/components/atoms/image-or-placeholder'
 import Button from '@/app/components/atoms/button'
+import Alert, { AlertDescription, AlertTitle } from '../../molecules/alert'
+import { AlertCircle, Terminal } from 'lucide-react'
 
 type State = 
 | { step: 'idle' }
@@ -47,13 +49,19 @@ export default function ImageItem({imageUrl, onDeleting}: Props): JSX.Element {
             </OverlayContainer>
         ))
         .with({step: 'deleting'}, ({imageUrl: name}) => (
-          <div>Deleting {name}</div>
+          <Alert>
+            <Terminal />
+            <AlertTitle>Deleting {name}..</AlertTitle>
+          </Alert>
         ))
         .with({step: 'error'}, ({message}) => (
-          <div>
-            Something went wrong:
-            {message}
-          </div>
+          <Alert className='alert--destructive'>
+            <AlertCircle />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>
+              Something went wrong: {message}
+            </AlertDescription>
+          </Alert>
           ))
         .exhaustive()
       }

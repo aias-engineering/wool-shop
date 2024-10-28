@@ -1,3 +1,7 @@
+.image-or-placeholder__image {
+  height: 100%;
+}
+
 .image-or-placeholder__placeholder {
   background: var(--placeholder);
   height: 100%;
