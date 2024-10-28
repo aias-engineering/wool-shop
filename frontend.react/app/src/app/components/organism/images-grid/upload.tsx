@@ -1,9 +1,11 @@
 'use client'
 
-import { useState } from 'react'
 import './_images-grid.css'
+import { useState } from 'react'
 import UploadAndCropImage, { Image } from '@/app/components/organism/upload-and-crop-image'
 import { match } from 'ts-pattern'
+import { AlertCircle, Terminal } from 'lucide-react'
+import Alert, { AlertDescription, AlertTitle } from '../../molecules/alert'
 
 export type ImageUploadingResult =
   | { success: true }
@@ -39,15 +41,19 @@ export default function ImageUpload({onImageUploading}: Props): JSX.Element {
           </div>
         ))
         .with({step: 'uploading'}, ({name}) => (
-          <div>
-            uploading {name}...
-          </div>
+          <Alert>
+            <Terminal />
+            <AlertTitle>Uploading {name}..</AlertTitle>
+          </Alert>
         ))
         .with({step: 'error'}, ({message}) => (
-          <div>
-            Something went wrong:
-            {message}
-          </div>
+          <Alert className='alert--destructive'>
+            <AlertCircle />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>
+              Something went wrong: {message}
+            </AlertDescription>
+          </Alert>
           ))
         .exhaustive()}
     </>

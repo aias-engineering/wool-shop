@@ -1,10 +1,12 @@
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #18181b;
   --color-destructive: #ef4444;
-  --border: #e5e5e5;
+  --border: 240 5.9% 90%;
   --placeholder: #e5e5e5;
-  --radius: 8px;
+  --primary: 240 5.9% 10%;
+  --primary-foreground: 0 0% 98%;
+  --radius: 0.5rem;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -32,6 +34,7 @@ body {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+  border-color: hsl(var(--border));
 }
 
 a {

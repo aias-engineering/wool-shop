@@ -8,6 +8,7 @@ import NaqabCropper from "../../naqab-cropper"
 import OverlayContainer, { Overlay } from "@/app/components/atoms/overlay-container"
 import { Area } from "react-easy-crop"
 import cropImage from "../../upload-and-crop-image/cropUtils"
+import { ImageUp } from "lucide-react"
 
 export interface Image {
   data: Blob,
@@ -62,7 +63,9 @@ export default function UploadAndCropImage({onImageCroped}: Props) {
     .with({step: 'showUpload'}, () => (
       <ReactImageUploading value={uploadedImages} onChange={handleImageUploadChange}>
         {({onImageUpload, onImageUpdate}) => (
-          <Button onClick={uploadedImages ? onImageUpload : () => onImageUpdate(0)}>+</Button>
+          <Button onClick={uploadedImages ? onImageUpload : () => onImageUpdate(0)}>
+            <ImageUp /> afbeelding uploaden
+          </Button>
         )}
       </ReactImageUploading>
     ))
