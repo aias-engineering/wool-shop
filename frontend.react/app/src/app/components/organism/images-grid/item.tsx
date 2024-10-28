@@ -40,11 +40,11 @@ export default function ImageItem({imageUrl, onDeleting}: Props): JSX.Element {
       {match(state)
         .with({step: 'idle'}, () => (
           <OverlayContainer className={"images-grid__item"}>
-            <ImageOrPlaceholder src={imageUrl} alt={imageUrl} />
-            <Overlay>
-              <Button onClick={handleDeletion}>Delete</Button>
-            </Overlay>
-          </OverlayContainer>
+              <ImageOrPlaceholder src={imageUrl} alt={imageUrl} />
+              <Overlay>
+                <Button onClick={handleDeletion}>Delete</Button>
+              </Overlay>
+            </OverlayContainer>
         ))
         .with({step: 'deleting'}, ({imageUrl: name}) => (
           <div>Deleting {name}</div>

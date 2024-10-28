@@ -1,5 +1,5 @@
 .image-or-placeholder__placeholder {
-  background: lightgray;
+  background: var(--placeholder);
   height: 100%;
   width: 100%;
 }
