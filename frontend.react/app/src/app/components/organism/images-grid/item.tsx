@@ -16,7 +16,7 @@ type State =
 
 interface Props {
   imageUrl: string,
-  onDeleting: (imageUrl: string) => Promise<DeletingResult>
+  onDeleting?: (imageUrl: string) => Promise<DeletingResult>
 }
 
 export type DeletingResult =
@@ -27,14 +27,16 @@ export default function ImageItem({imageUrl, onDeleting}: Props): JSX.Element {
   const [state, setState] = useState<State>({step: 'idle'})
   
   async function handleDeletion() {
-    await setState({step: 'deleting', imageUrl})
+    if (onDeleting) {
+      await setState({step: 'deleting', imageUrl})
 
-    const result = await onDeleting(imageUrl)
+      const result = await onDeleting(imageUrl)
 
-    await match(result)
-      .with({deleted: true}, async () => await setState({step: 'idle'}))
-      .with({deleted: false}, async ({message}) => await setState({step: 'error', message}))
-      .exhaustive()
+      await match(result)
+        .with({deleted: true}, async () => await setState({step: 'idle'}))
+        .with({deleted: false}, async ({message}) => await setState({step: 'error', message}))
+        .exhaustive()
+    }
   }
 
   return (
@@ -44,7 +46,9 @@ export default function ImageItem({imageUrl, onDeleting}: Props): JSX.Element {
           <OverlayContainer className={"images-grid__item"}>
               <ImageOrPlaceholder src={imageUrl} alt={imageUrl} />
               <Overlay>
-                <Button onClick={handleDeletion}>Delete</Button>
+                {onDeleting &&
+                  <Button onClick={handleDeletion}>Delete</Button>
+                }
               </Overlay>
             </OverlayContainer>
         ))
