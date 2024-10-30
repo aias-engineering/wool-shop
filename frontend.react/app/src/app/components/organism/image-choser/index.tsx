@@ -1,10 +1,12 @@
+'use client'
+
 import { match } from "ts-pattern"
 import Button from "../../atoms/button"
 import { FileImage, ImageIcon, ImageUp } from "lucide-react"
-import { useState } from "react"
 import MainGrid from "../../grids/main"
 import ImageItem from "../images-grid/item"
 import ImageUpload, { ImageUploadingResult } from "../images-grid/upload"
+import { atom, useAtom } from "jotai"
 
 type State =
   | { step: 'idle' }
@@ -16,8 +18,14 @@ interface Props {
   images: string[]
 }
 
+const imagesAtom = atom<string[]>([]);
+const stateAtom = atom<State>({step: 'idle'});
+
 export default function ImageChoser({images}: Props) {
-  const [state, setState] = useState<State>({step: 'idle'})
+  const [imagesArray, setImages] = useAtom(imagesAtom)
+  const [state, setState] = useAtom(stateAtom)
+
+  setImages(images)
 
   async function handleImageUploading(): Promise<ImageUploadingResult> {
     return { success: false, message: 'not implemented' }
@@ -49,7 +57,7 @@ export default function ImageChoser({images}: Props) {
         ))
         .with({step: 'choose-image'}, () => (
           <MainGrid>
-            {images.map((image, index) => (
+            {imagesArray.map((image, index) => (
               <ImageItem key={index} imageUrl={`/api/image/${image}`} />
             ))}
           </MainGrid>

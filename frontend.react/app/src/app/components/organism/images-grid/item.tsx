@@ -1,64 +1,38 @@
 'use client'
 
 import './_images-grid.css'
-import { useState } from 'react'
-import { match } from 'ts-pattern'
 import OverlayContainer, { Overlay } from '@/app/components/atoms/overlay-container'
 import ImageOrPlaceholder from '@/app/components/atoms/image-or-placeholder'
 import Button from '@/app/components/atoms/button'
+import { useAtomValue, useSetAtom } from 'jotai'
+import { PrimitiveAtom } from 'jotai'
+import { deleteImageAction, Image } from './store'
+import { match } from 'ts-pattern'
 import Alert, { AlertDescription, AlertTitle } from '../../molecules/alert'
 import { AlertCircle, Terminal } from 'lucide-react'
-
-type State = 
-| { step: 'idle' }
-| { step: 'deleting', imageUrl: string }
-| { step: 'error', message: string }
+import Spinner from '../../atoms/spinner'
+import Alertable, { AlertableAlert } from '../../atoms/alertable'
 
 interface Props {
-  imageUrl: string,
-  onDeleting?: (imageUrl: string) => Promise<DeletingResult>
+  imageAtom: PrimitiveAtom<Image>,
 }
 
-export type DeletingResult =
-  | { deleted: true }
-  | { deleted: false, message: string }
-
-export default function ImageItem({imageUrl, onDeleting}: Props): JSX.Element {
-  const [state, setState] = useState<State>({step: 'idle'})
+export default function ImageItem({imageAtom}: Props): JSX.Element {
+  const image = useAtomValue(imageAtom)
+  const deleteImage = useSetAtom(deleteImageAction)
   
-  async function handleDeletion() {
-    if (onDeleting) {
-      await setState({step: 'deleting', imageUrl})
-
-      const result = await onDeleting(imageUrl)
-
-      await match(result)
-        .with({deleted: true}, async () => await setState({step: 'idle'}))
-        .with({deleted: false}, async ({message}) => await setState({step: 'error', message}))
-        .exhaustive()
-    }
-  }
-
   return (
     <>
-      {match(state)
-        .with({step: 'idle'}, () => (
-          <OverlayContainer className={"images-grid__item"}>
-              <ImageOrPlaceholder src={imageUrl} alt={imageUrl} />
-              <Overlay>
-                {onDeleting &&
-                  <Button onClick={handleDeletion}>Delete</Button>
-                }
-              </Overlay>
-            </OverlayContainer>
+      {match(image.state)
+        .with({ step: 'deleting' }, () => (
+          <Alertable>
+            <AlertableAlert>
+              <div><Spinner /></div>
+              <div>Deleting {image.url} ...</div>
+            </AlertableAlert>
+          </Alertable>
         ))
-        .with({step: 'deleting'}, ({imageUrl: name}) => (
-          <Alert>
-            <Terminal />
-            <AlertTitle>Deleting {name}..</AlertTitle>
-          </Alert>
-        ))
-        .with({step: 'error'}, ({message}) => (
+        .with({ step: 'delete-failed' }, ({message}) => (
           <Alert className='alert--destructive'>
             <AlertCircle />
             <AlertTitle>Error</AlertTitle>
@@ -66,9 +40,15 @@ export default function ImageItem({imageUrl, onDeleting}: Props): JSX.Element {
               Something went wrong: {message}
             </AlertDescription>
           </Alert>
-          ))
-        .exhaustive()
-      }
+        ))
+        .otherwise(() => (
+          <OverlayContainer className={"images-grid__item"}>
+            <ImageOrPlaceholder src={image.url} alt={image.url} />
+            <Overlay>
+              <Button onClick={async() => deleteImage(imageAtom)}>Delete</Button>
+            </Overlay>
+          </OverlayContainer>
+        ))}
     </>
   )
 }

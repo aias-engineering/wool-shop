@@ -1,16 +1,20 @@
+import { Provider } from 'jotai'
 import Button from "@/app/components/atoms/button"
 import TextArea from "@/app/components/textarea"
 import TextBox from "@/app/components/textbox"
 import { handleCreateProductForm } from './actions'
-import ImageChoser from "./image-choser"
+import ImageChoser from "@/app/components/organism/image-choser"
+import { getImages } from '@/lib/services/images'
 
-const Page = () => {
+const Page = async () => {
+  const images = await getImages()
+
   return (
-    <>
+    <Provider>
       <form action={handleCreateProductForm}>
         <div style={{ display: 'grid', gridTemplateColumns: '45dvw 45dvw' }}>
           <div style={{ gridColumn: 1 }}>
-            <ImageChoser />
+            <ImageChoser images={images} />
           </div>
           <div style={{ gridColumn: 2 }}>
             <TextBox name="name" label="naam" value="" />
@@ -24,7 +28,7 @@ const Page = () => {
           </div>
         </div>
       </form>
-    </>
+    </Provider>
   )
 }
 

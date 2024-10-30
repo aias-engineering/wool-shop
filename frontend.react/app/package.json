@@ -16,6 +16,7 @@
     "@azure/storage-blob": "^12.25.0",
     "clsx": "^2.1.1",
     "dotenv": "^16.4.5",
+    "jotai": "^2.10.1",
     "lucide-react": "^0.453.0",
     "nedb-promises": "^6.2.3",
     "next": "14.2.15",

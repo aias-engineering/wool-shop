@@ -1,14 +1,14 @@
-import Images from '.'
+import ImagesGrid from '.'
 
 export default {
   title: 'organism/image-grid',
-  component: Images
+  component: ImagesGrid
 }
 
 export function ShowAll() {
   const blobnames = ['stiria.jpg', 'blobs.png', 'anyotherpicture.png', 'withoutending']
 
   return (
-    <Images blobnames={blobnames} />
+    <ImagesGrid blobnames={blobnames} />
   )
 }

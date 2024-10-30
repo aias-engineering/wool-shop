@@ -1,50 +1,58 @@
 'use client'
 
 import './_images-grid.css'
-import { useState } from 'react'
-import UploadAndCropImage, { Image } from '@/app/components/organism/upload-and-crop-image'
+import { atom, useAtom } from 'jotai'
 import { match } from 'ts-pattern'
-import { AlertCircle, Terminal } from 'lucide-react'
-import Alert, { AlertDescription, AlertTitle } from '../../molecules/alert'
+import { AlertCircle } from 'lucide-react'
+import UploadAndCropImage, { Image } from '@/app/components/organism/upload-and-crop-image'
+import Alert, { AlertDescription, AlertTitle } from '@/app/components/molecules/alert'
+import Alertable, { AlertableAlert } from '@/app/components/atoms/alertable'
+import Spinner from '@/app/components/atoms/spinner'
+import { fetchImagesAction } from './store'
 
-export type ImageUploadingResult =
-  | { success: true }
-  | { success: false, message: string }
-
-interface Props {
-  onImageUploading: (image: Image) => Promise<ImageUploadingResult>
-}
-
-type State = 
+type ImageUpoadState = 
   | { step: 'idle' }
   | { step: 'uploading', name: string }
   | { step: 'error', message: string }
 
-export default function ImageUpload({onImageUploading}: Props): JSX.Element {
-  const [state, setState] = useState<State>({step: 'idle'})
+const imageUploadState = atom<ImageUpoadState>({ step: 'idle' })
 
-  async function handleImageCropped(image: Image): Promise<void> {
-    await setState({ step: 'uploading', name: image.name })
-    const result = await onImageUploading(image)
-    await match(result)
-      .with({success: true}, () => setState({step: 'idle'}))
-      .with({success: false}, ({message}) => setState({step: 'error', message}))
-      .exhaustive()
+const uploadImageAction = atom(null, async (_, set, image: Image) => {
+  set(imageUploadState, { step: 'uploading', name: image.name })
+
+  const response = await fetch(`/api/image/${image.name}`, {
+    body: image.data,
+    method: 'POST'
+  })
+
+  if (response.ok) {
+    set(imageUploadState, { step: 'idle' })
+    set(fetchImagesAction)
   }
+  else {
+    set(imageUploadState, { step: 'error', message: response.statusText })
+  }
+})
+
+export default function ImageUpload(): JSX.Element {
+  const [state] = useAtom(imageUploadState)
+  const [, uploadImage] = useAtom(uploadImageAction)
 
   return (
     <>
       {match(state)
         .with({step:'idle'}, () => (
           <div className="images-grid__upload">
-            <UploadAndCropImage onImageCroped={handleImageCropped} />
+            <UploadAndCropImage onImageCroped={uploadImage} />
           </div>
         ))
         .with({step: 'uploading'}, ({name}) => (
-          <Alert>
-            <Terminal />
-            <AlertTitle>Uploading {name}..</AlertTitle>
-          </Alert>
+          <Alertable>
+            <AlertableAlert>
+              <Spinner />
+              Uploading {name}..
+            </AlertableAlert>
+          </Alertable>
         ))
         .with({step: 'error'}, ({message}) => (
           <Alert className='alert--destructive'>

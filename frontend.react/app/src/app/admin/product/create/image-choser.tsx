@@ -3,16 +3,18 @@
 import Button from "@/app/components/atoms/button";
 import MainGrid from "@/app/components/grids/main";
 import ImageOrPlaceholder from "@/app/components/atoms/image-or-placeholder";
-import { useState } from "react";
 import { match } from "ts-pattern";
+import { atom, useAtom } from "jotai";
 
 type State = 
   | { step: 'idle'}
   | { step: 'fetching' }
   | { step: 'fetched', imageNames: string[]}
 
-export default function ImageChoser() {
-  const [state, setState] = useState<State>({step: 'idle'})
+const state = atom<State>({step: 'idle'})
+
+export default function ImageChoser({}) {
+  const [currentState, setState] = useAtom(state)
 
   async function handleAddButtonClick() : Promise<void> {
     await setState({step: 'fetching'})
@@ -22,7 +24,7 @@ export default function ImageChoser() {
 
   return (
     <div>
-      {match(state)
+      {match(currentState)
         .with({step: 'idle'}, () => (
           <Button onClick={handleAddButtonClick}>Add Image</Button>
         ))
