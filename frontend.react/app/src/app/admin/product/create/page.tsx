@@ -3,7 +3,7 @@ import Button from "@/app/components/atoms/button"
 import TextArea from "@/app/components/textarea"
 import TextBox from "@/app/components/textbox"
 import { handleCreateProductForm } from './actions'
-import ImageChoser from "@/app/components/organism/image-choser"
+import { PreLoadedImageChoser } from "@/app/components/organism/image-choser"
 import { getImages } from '@/lib/services/images'
 
 const Page = async () => {
@@ -14,7 +14,7 @@ const Page = async () => {
       <form action={handleCreateProductForm}>
         <div style={{ display: 'grid', gridTemplateColumns: '45dvw 45dvw' }}>
           <div style={{ gridColumn: 1 }}>
-            <ImageChoser images={images} />
+            <PreLoadedImageChoser images={images} />
           </div>
           <div style={{ gridColumn: 2 }}>
             <TextBox name="name" label="naam" value="" />

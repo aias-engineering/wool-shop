@@ -1,59 +1,92 @@
 'use client'
 
 import './_images-grid.css'
-import { atom, useAtom } from 'jotai'
+import { atom, PrimitiveAtom, useSetAtom, useAtomValue } from 'jotai'
 import { match } from 'ts-pattern'
 import { AlertCircle } from 'lucide-react'
-import UploadAndCropImage, { Image } from '@/app/components/organism/upload-and-crop-image'
 import Alert, { AlertDescription, AlertTitle } from '@/app/components/molecules/alert'
 import Alertable, { AlertableAlert } from '@/app/components/atoms/alertable'
 import Spinner from '@/app/components/atoms/spinner'
+import ImageUploadButton, { type UploadedImage } from '../../atoms/image-upload-button'
+import { useState } from 'react'
+import ImageCropper, { CroppedImage } from '../../atoms/image-cropper'
+import { Atom } from 'jotai'
 import { fetchImagesAction } from './store'
 
-type ImageUpoadState = 
-  | { step: 'idle' }
-  | { step: 'uploading', name: string }
-  | { step: 'error', message: string }
+type ImageUpload = {
+  success: boolean,
+  message: string
+}
 
-const imageUploadState = atom<ImageUpoadState>({ step: 'idle' })
+const lastImageUploadAtom = atom<ImageUpload | null>(null)
+const uploadImageAction = atom(null, async (get, set, image: Atom<CroppedImage|'Crop failed'>) => {
 
-const uploadImageAction = atom(null, async (_, set, image: Image) => {
-  set(imageUploadState, { step: 'uploading', name: image.name })
+  const croppedImage = get(image) as CroppedImage
 
-  const response = await fetch(`/api/image/${image.name}`, {
-    body: image.data,
-    method: 'POST'
-  })
+  if (croppedImage) {
+    try {
+      const response = await fetch(`/api/image/${(croppedImage.name)}`, {
+        body: croppedImage.data,
+        method: 'POST'
+      })
 
-  if (response.ok) {
-    set(imageUploadState, { step: 'idle' })
-    set(fetchImagesAction)
+      if (response.ok) {
+        set(lastImageUploadAtom, { success: true , message: 'successfully uploaded' })
+        set(fetchImagesAction)
+      } else {
+        set(lastImageUploadAtom, { success: false , message: response.statusText })
+      }
+    } catch (error) {
+      set(lastImageUploadAtom, { success: false , message: (error as TypeError)?.message })
+    }
   }
   else {
-    set(imageUploadState, { step: 'error', message: response.statusText })
+    set(lastImageUploadAtom, { success: false , message: 'Crop failed' })
   }
 })
 
+type State = 
+  | { step: 'idle' }
+  | { step: 'image-uploaded', uploadedImage: PrimitiveAtom<UploadedImage> }
+  | { step: 'image-cropped', croppedImage: Atom<CroppedImage|'Crop failed'> }
+  | { step: 'error', message: string }
+
 export default function ImageUpload(): JSX.Element {
-  const [state] = useAtom(imageUploadState)
-  const [, uploadImage] = useAtom(uploadImageAction)
+  const [state, setState] = useState<State>({step: 'idle'})
+  const uploadImage = useSetAtom(uploadImageAction)
+
+  async function handleImageCropped(croppedImage: Atom<CroppedImage|'Crop failed'>) {
+    await setState({step: 'image-cropped', croppedImage})
+
+    await uploadImage(croppedImage)
+
+    await setState({step: 'idle'})
+  }
 
   return (
     <>
       {match(state)
         .with({step:'idle'}, () => (
           <div className="images-grid__upload">
-            <UploadAndCropImage onImageCroped={uploadImage} />
+            <ImageUploadButton onImageUploaded={async(uploadedImage) => { 
+              console.log('image uploaded..')
+              await setState({step: 'image-uploaded', uploadedImage }) }}/>
           </div>
         ))
-        .with({step: 'uploading'}, ({name}) => (
-          <Alertable>
-            <AlertableAlert>
-              <Spinner />
-              Uploading {name}..
-            </AlertableAlert>
-          </Alertable>
+        .with({step: 'image-uploaded'}, ({uploadedImage}) => (
+          <ImageCropper uploadedImageAtom={uploadedImage} onImageCropped={handleImageCropped} />
         ))
+        .with({step: 'image-cropped'}, () => {
+          
+          return (
+            <Alertable>
+              <AlertableAlert>
+                <Spinner />
+                Uploading..
+              </AlertableAlert>
+            </Alertable>
+          )
+        })
         .with({step: 'error'}, ({message}) => (
           <Alert className='alert--destructive'>
             <AlertCircle />

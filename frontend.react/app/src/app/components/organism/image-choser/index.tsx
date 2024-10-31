@@ -2,35 +2,49 @@
 
 import { match } from "ts-pattern"
 import Button from "../../atoms/button"
-import { FileImage, ImageIcon, ImageUp } from "lucide-react"
+import { FileImage, ImageIcon } from "lucide-react"
 import MainGrid from "../../grids/main"
 import ImageItem from "../images-grid/item"
-import ImageUpload, { ImageUploadingResult } from "../images-grid/upload"
-import { atom, useAtom } from "jotai"
+import { atom, useAtom, useSetAtom } from "jotai"
+import { Image, imagesAtom } from "../images-grid/store"
+import ImageUploadButton, { UploadedImage } from "../../atoms/image-upload-button"
+import { useState } from "react"
+import { PrimitiveAtom } from "jotai"
+import ImageCropper, { CroppedImage } from "../../atoms/image-cropper"
+import { Atom } from "jotai"
 
 type State =
   | { step: 'idle' }
   | { step: 'choose-mode' }
   | { step: 'choose-image' }
-  | { step: 'upload-image' }
+  | { step: 'image-uploaded', uploadedImage: PrimitiveAtom<UploadedImage> }
 
 interface Props {
   images: string[]
 }
 
-const imagesAtom = atom<string[]>([]);
-const stateAtom = atom<State>({step: 'idle'});
+export function PreLoadedImageChoser({images}: Props) {
+  const setImages = useSetAtom(imagesAtom)
 
-export default function ImageChoser({images}: Props) {
+  
+  setImages(images.map(imageUrl => atom<Image>({url: imageUrl})))
+
+  return (<ImageChoser />)
+}
+
+export default function ImageChoser() {
   const [imagesArray, setImages] = useAtom(imagesAtom)
-  const [state, setState] = useAtom(stateAtom)
+  const [state, setState] = useState<State>({step: 'idle'})
 
-  setImages(images)
-
-  async function handleImageUploading(): Promise<ImageUploadingResult> {
-    return { success: false, message: 'not implemented' }
+  async function handleImageUploaded(uploadedImage: PrimitiveAtom<UploadedImage>) {
+    await setState({step: 'image-uploaded', uploadedImage})
   }
-
+  
+  async function handleImageCropped(croppedImage: Atom<CroppedImage|'Crop failed'>) {
+    
+    console.log(' a lot to do still... ')
+  }
+  
   return (
     <>
       {match(state)
@@ -42,23 +56,20 @@ export default function ImageChoser({images}: Props) {
         ))
         .with({step: 'choose-mode'}, () => (
           <div>
-            <Button onClick={async () => setState({step: 'upload-image'})}>
-              <ImageUp />
-              afbeelding uploaden
-            </Button>
+            <ImageUploadButton onImageUploaded={handleImageUploaded} />
             <Button onClick={async () => setState({step: 'choose-image'})}>
               <ImageIcon />
               een afbeelding kiezen
             </Button>
           </div>
         ))
-        .with({step: 'upload-image'}, () => (
-          <ImageUpload onImageUploading={handleImageUploading} />
+        .with({step: 'image-uploaded'}, ({uploadedImage}) => (
+          <ImageCropper uploadedImageAtom={uploadedImage} onImageCropped={handleImageCropped} />
         ))
         .with({step: 'choose-image'}, () => (
           <MainGrid>
             {imagesArray.map((image, index) => (
-              <ImageItem key={index} imageUrl={`/api/image/${image}`} />
+              <ImageItem key={index} imageAtom={image} />
             ))}
           </MainGrid>
         ))
