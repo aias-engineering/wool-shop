@@ -11,6 +11,7 @@ import { AlertCircle } from 'lucide-react'
 import Spinner from '@/app/components/atoms/spinner'
 import Alertable, { AlertableAlert } from '@/app/components/atoms/alertable'
 import { type Image, type ImageDelete, deleteImageAction } from '@/lib/client/store'
+import { useMemo } from 'react'
 
 interface Props {
   imageAtom: PrimitiveAtom<Image>,
@@ -18,9 +19,9 @@ interface Props {
 
 export default function ImageItem({imageAtom}: Props): JSX.Element {
   const image = useAtomValue(imageAtom)
-  const imageDeletionAtom = atom<ImageDelete>({imageAtom, step: 'idle'})
+  const imageDeletionAtom = useMemo(() => atom<ImageDelete>({imageAtom, step: 'idle'}), [imageAtom])
   const imageDeletion = useAtomValue(imageDeletionAtom);
-    const deleteImage = useSetAtom(deleteImageAction);
+  const deleteImage = useSetAtom(deleteImageAction);
 
   return (
     <>
