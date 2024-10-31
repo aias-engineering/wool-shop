@@ -1,10 +1,12 @@
+'use client'
+
 import classNames from 'clsx'
 import HasChildren from "@/lib/client/react/has-children";
 import './_button.css'
 
 interface Props extends HasChildren {
   className?: string,
-  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  onClick?: () => Promise<void>
 }
 
 const Button = ({className, children, onClick}: Props) => (

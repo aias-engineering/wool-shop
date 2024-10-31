@@ -2,8 +2,12 @@ import { PrimitiveAtom } from "jotai";
 import { atom } from "jotai";
 import { match, P } from "ts-pattern";
 
+export function toUrl(name: string) {
+  return `/api/image/${name}`
+}
+
 export function toUrls(names: string[]) {
-  return names.map(name => `/api/image/${name}`)
+  return names.map(name => toUrl(name))
 }
 
 export interface Image {

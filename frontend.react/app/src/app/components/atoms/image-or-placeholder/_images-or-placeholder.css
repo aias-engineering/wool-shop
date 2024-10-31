@@ -1,3 +1,8 @@
+.image-or-placeholder {
+  overflow: hidden;
+  border-radius: var(--radius);
+}
+
 .image-or-placeholder__image {
   height: 100%;
 }

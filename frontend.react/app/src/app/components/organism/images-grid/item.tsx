@@ -2,7 +2,7 @@
 
 import './_images-grid.css'
 import OverlayContainer, { Overlay } from '@/app/components/atoms/overlay-container'
-import ImageOrPlaceholder from '@/app/components/atoms/image-or-placeholder'
+import WsImage from '@/app/components/atoms/image'
 import Button from '@/app/components/atoms/button'
 import { atom, PrimitiveAtom, useAtomValue, useSetAtom } from 'jotai'
 import { match } from 'ts-pattern'
@@ -12,6 +12,7 @@ import Spinner from '@/app/components/atoms/spinner'
 import Alertable, { AlertableAlert } from '@/app/components/atoms/alertable'
 import { type Image, type ImageDelete, deleteImageAction } from '@/lib/client/store'
 import { useMemo } from 'react'
+import { AspectRatio } from '../../atoms/aspect-ratio'
 
 interface Props {
   imageAtom: PrimitiveAtom<Image>,
@@ -29,7 +30,9 @@ export default function ImageItem({imageAtom}: Props): JSX.Element {
         .with({step: 'idle'}, () => {
           return (
             <OverlayContainer className={"images-grid__item"}>
-              <ImageOrPlaceholder src={image.url} alt={image.url} />
+              <AspectRatio ratio={1 / 1.5}>
+                <WsImage className={'image--rounded'} src={image.url} alt={image.url} />
+              </AspectRatio>
               <Overlay>
                 <Button onClick={async () => await deleteImage(imageDeletionAtom)}>Delete</Button>
               </Overlay>

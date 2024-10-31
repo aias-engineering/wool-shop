@@ -1,0 +1,11 @@
+.image {
+  object-fit: cover;
+  width: auto;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  max-width: 100%;
+}
+
+.image--rounded {
+  border-radius: var(--radius);
+}

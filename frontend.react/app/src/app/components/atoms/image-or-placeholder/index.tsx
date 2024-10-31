@@ -21,13 +21,16 @@ export default function ImageOrPlaceholder({src, alt}: Props): JSX.Element {
     <>
       {match(dynamicSrc)
         .with(P.string, (s) => (
-          <Image  className='images-or-placeholder__image'
+          <div className={'image-or-placeholder'}>
+            <Image  className='images-or-placeholder__image'
                   style={{ height: '100%' }}
                   src={s}
                   width={400}
                   height={640}
                   alt={alt}
-                  onError={handleError} />))
+                  onError={handleError} />
+          </div>
+          ))
           .otherwise(() => (
             <div className="image-or-placeholder__placeholder">
               Image not found
