@@ -5,35 +5,23 @@ import Button from "../../atoms/button"
 import { FileImage, ImageIcon } from "lucide-react"
 import MainGrid from "../../grids/main"
 import ImageItem from "../images-grid/item"
-import { atom, useAtom, useSetAtom } from "jotai"
-import { Image, imagesAtom } from "../images-grid/store"
+import { imagesFetchAtom } from "@/lib/client/store"
 import ImageUploadButton, { UploadedImage } from "../../atoms/image-upload-button"
 import { useState } from "react"
 import { PrimitiveAtom } from "jotai"
 import ImageCropper, { CroppedImage } from "../../atoms/image-cropper"
 import { Atom } from "jotai"
+import { ImagesFetch } from "@/lib/client/store/image"
 
 type State =
   | { step: 'idle' }
   | { step: 'choose-mode' }
-  | { step: 'choose-image' }
+  | { step: 'choose-image', imagesFetch: ImagesFetch }
   | { step: 'image-uploaded', uploadedImage: PrimitiveAtom<UploadedImage> }
 
-interface Props {
-  images: string[]
-}
-
-export function PreLoadedImageChoser({images}: Props) {
-  const setImages = useSetAtom(imagesAtom)
-
-  
-  setImages(images.map(imageUrl => atom<Image>({url: imageUrl})))
-
-  return (<ImageChoser />)
-}
-
 export default function ImageChoser() {
-  const [imagesArray, setImages] = useAtom(imagesAtom)
+  const [imagesFetch, setImagesFetch] = useAtom(imagesFetchAtom)
+  
   const [state, setState] = useState<State>({step: 'idle'})
 
   async function handleImageUploaded(uploadedImage: PrimitiveAtom<UploadedImage>) {
@@ -57,7 +45,7 @@ export default function ImageChoser() {
         .with({step: 'choose-mode'}, () => (
           <div>
             <ImageUploadButton onImageUploaded={handleImageUploaded} />
-            <Button onClick={async () => setState({step: 'choose-image'})}>
+            <Button onClick={async () => setState({step: 'choose-image', imagesFetch})}>
               <ImageIcon />
               een afbeelding kiezen
             </Button>
@@ -66,12 +54,18 @@ export default function ImageChoser() {
         .with({step: 'image-uploaded'}, ({uploadedImage}) => (
           <ImageCropper uploadedImageAtom={uploadedImage} onImageCropped={handleImageCropped} />
         ))
-        .with({step: 'choose-image'}, () => (
-          <MainGrid>
-            {imagesArray.map((image, index) => (
-              <ImageItem key={index} imageAtom={image} />
-            ))}
-          </MainGrid>
+        .with({step: 'choose-image'}, ({imagesFetch}) => (
+          <>
+            {match(imagesFetch)
+              .with({step: 'fetched'}, ({data}) => (
+                <MainGrid>
+                  {data.map((image, index) => (
+                    <ImageItem key={index} imageAtom={image} />
+                  ))}
+                </MainGrid>
+              ))
+              .otherwise(() => <></>)}
+          </>
         ))
         .exhaustive()}
     </>

@@ -1,6 +1,0 @@
-.menu {
-    background: var(--primary-background);
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}

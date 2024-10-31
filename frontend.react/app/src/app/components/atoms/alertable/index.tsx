@@ -1,11 +1,11 @@
 'use client'
 
-import HasReactChildren from '@/lib/system/has-children'
+import HasChildren from '@/lib/client/react/has-children'
 import './_alertable.css'
 import { useState } from 'react'
 import clsx from 'clsx'
 
-interface AlertableProps extends HasReactChildren {
+interface AlertableProps extends HasChildren {
   onClick?: () => Promise<void>
 }
 
@@ -17,7 +17,7 @@ export default function Alertable({children}: AlertableProps) {
   )
 }
 
-export function AlertableAlert({children}: HasReactChildren) {
+export function AlertableAlert({children}: HasChildren) {
   const [collapsed, setCollapsed] = useState(false)
 
   return (

@@ -1,7 +1,7 @@
 'use client'
 
 import './_images-grid.css'
-import { atom, PrimitiveAtom, useSetAtom, useAtomValue } from 'jotai'
+import { atom, PrimitiveAtom, useSetAtom } from 'jotai'
 import { match } from 'ts-pattern'
 import { AlertCircle } from 'lucide-react'
 import Alert, { AlertDescription, AlertTitle } from '@/app/components/molecules/alert'
@@ -11,7 +11,7 @@ import ImageUploadButton, { type UploadedImage } from '../../atoms/image-upload-
 import { useState } from 'react'
 import ImageCropper, { CroppedImage } from '../../atoms/image-cropper'
 import { Atom } from 'jotai'
-import { fetchImagesAction } from './store'
+import { fetchImagesAction } from '@/lib/client/store'
 
 type ImageUpload = {
   success: boolean,

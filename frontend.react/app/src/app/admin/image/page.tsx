@@ -1,9 +1,6 @@
 import { getImages } from "@/lib/services/images"
-import { PreloadedImagesGrid } from "@/app/components/organism/images-grid"
 import { Provider } from "jotai"
-
-const toUrl = (blobname: string) => `/api/image/${blobname}`
-const toUrls = (blobnames: string[]) => blobnames.map(name => toUrl(name))
+import PreloadedImagesGrid from "./preloaded-image-grid"
 
 export default async function Page() {
 
@@ -11,7 +8,7 @@ export default async function Page() {
 
   return (
   <Provider>
-    <PreloadedImagesGrid imageUrls={toUrls(blobnames)} />
+    <PreloadedImagesGrid imagenames={blobnames} />
   </Provider>
   )
 }

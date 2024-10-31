@@ -1,4 +1,4 @@
-import HasChildren from '@/lib/react/has-children'
+import HasChildren from '@/lib/client/react/has-children'
 import './_images.css'
 
 const ImagesLayout = ({children}: HasChildren) => (

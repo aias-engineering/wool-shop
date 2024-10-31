@@ -1,5 +1,5 @@
 import classNames from 'clsx'
-import HasChildren from "@/lib/react/has-children";
+import HasChildren from "@/lib/client/react/has-children";
 import './_button.css'
 
 interface Props extends HasChildren {
