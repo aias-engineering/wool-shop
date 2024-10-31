@@ -1,3 +1,4 @@
+import { Separator } from "../atoms/separator";
 import Header from "../header";
 
 const HeaderLayout = () => (
