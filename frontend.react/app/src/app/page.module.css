@@ -80,7 +80,7 @@
 
 a.primary {
   background: var(--foreground);
-  color: var(--background);
+  color: hsl(var(--background));
   gap: 8px;
 }
 

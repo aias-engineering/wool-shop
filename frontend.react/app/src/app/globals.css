@@ -1,8 +1,9 @@
 :root {
-  --background: #ffffff;
+  --background: 0 0% 100%;
   --foreground: #18181b;
   --color-destructive: #ef4444;
   --border: 240 5.9% 90%;
+  --muted-foreground: 240 3.8% 46.1%;
   --placeholder: #e5e5e5;
   --primary: 240 5.9% 10%;
   --primary-foreground: 0 0% 98%;

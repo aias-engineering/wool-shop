@@ -69,7 +69,6 @@ export default function ImageUpload(): JSX.Element {
         .with({step:'idle'}, () => (
           <div className="images-grid__upload">
             <ImageUploadButton onImageUploaded={async(uploadedImage) => { 
-              console.log('image uploaded..')
               await setState({step: 'image-uploaded', uploadedImage }) }}/>
           </div>
         ))

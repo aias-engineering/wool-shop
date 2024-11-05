@@ -2,6 +2,7 @@
 
 import Button from "@/app/components/atoms/button"
 import Image from "@/app/components/atoms/image"
+import { Separator } from "@/app/components/atoms/separator"
 import Small from "@/app/components/atoms/small"
 import Space from "@/app/components/atoms/space"
 import Title from "@/app/components/atoms/title"
@@ -14,6 +15,8 @@ import { AspectRatio } from "@radix-ui/react-aspect-ratio"
 import { atom, useAtomValue } from "jotai"
 import { useHydrateAtoms } from "jotai/utils"
 import { match } from "ts-pattern"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/app/components/organism/dialog'
+import { ImageUp } from "lucide-react"
 
 interface Props {
   urls: string[]
@@ -40,6 +43,28 @@ export default function PreloadedImagesGrid({urls}: Props) {
               </MainGrid>
             </div>
             <div>
+              <Title type="h3">New</Title>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button>
+                    <ImageUp /> afbeelding uploaden
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>
+                      Hello my dear world.
+                    </DialogTitle>
+                    <DialogDescription>
+                      Blub
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div>
+                    Some text
+                  </div>
+                </DialogContent>
+              </Dialog>
+              <Separator orientation="horizontal" />
               <MainGrid>
                 {urls.map((url, index) => {
                   return (
