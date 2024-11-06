@@ -30,6 +30,10 @@
   outline-offset: 2px;
 }
 
+.button--with-contents {
+  display: contents
+}
+
 .button--link {
   background-color: transparent;
   border-width: 0;

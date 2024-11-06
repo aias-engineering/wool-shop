@@ -5,16 +5,23 @@ import TextBox from "@/app/components/textbox"
 import { handleCreateProductForm } from './actions'
 import { getImages } from '@/lib/services/images'
 import Grid from '@/app/components/atoms/grid'
+import Title from '@/app/components/atoms/title'
+import { Separator } from '@/app/components/atoms/separator'
+import { toUrls } from '@/lib/client/store/image'
+import PreloadedImagesChooser from './preloaded-image-choser'
 
 const Page = async () => {
-  const images = await getImages()
+  const images: string[] = await getImages()
+  const urls: string[] = toUrls(images)
 
   return (
     <Provider>
+      <Title type='h3'>een product creëren</Title>
+      <Separator />
       <form action={handleCreateProductForm}>
         <Grid className='grid--2-cols'>
           <div>
-            Images
+            <PreloadedImagesChooser urls={urls} />
           </div>
           <div>
             <TextBox name="name" label="naam" value="" />
