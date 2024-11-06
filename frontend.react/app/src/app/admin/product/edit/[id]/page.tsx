@@ -1,8 +1,6 @@
 import Button from "@/app/components/atoms/button"
 import ImageOrPlaceholder from "@/app/components/atoms/image-or-placeholder"
 import ImagesLayout, { ImagesLayoutShowCase, ImagesLayoutThumbnails } from "@/app/components/layout/images"
-import TextArea from "@/app/components/textarea"
-import TextBox from "@/app/components/textbox"
 import { getProduct } from "@/lib/azure/cosmos-client"
 import { Product } from "@/lib/azure/entities"
 import { match, P } from "ts-pattern"
@@ -32,9 +30,6 @@ export default async function Page({params}: {params: {id: string}}) {
                 </ImagesLayout>
               </div>
               <div style={{ gridColumn: 2 }}>
-                <TextBox name="name" label="naam" value={product.name} />
-                <TextArea name="description" label="beschrijving" value={product.descripiton} />
-                <TextBox name="price" label="prijs" value={product.price} />
               </div>
               <div style={{ gridColumn: 2 }}>
                 <Button>
