@@ -1,7 +1,7 @@
 'use client'
 
 import "./_images-grid.css"
-import MainGrid from "@/app/components/grids/main"
+import Grid from "@/app/components/atoms/grid"
 import ImageItem from "@/app/components/organism/images-grid/item"
 import ImageUpload from "@/app/components/organism/images-grid/upload"
 import { imagesFetchAtom } from "@/lib/client/store"
@@ -15,12 +15,12 @@ export default function ImagesGrid() {
     <>
       {match(imagesFetch)
         .with({step: 'fetched'}, ({data}) => (
-          <MainGrid>
+          <Grid>
             <ImageUpload />
               {data.map((image, index) => {
                 return (<ImageItem key={index} imageAtom={image} />)
               })}
-          </MainGrid>
+          </Grid>
         ))
         .otherwise(() => <></>)}
     </>

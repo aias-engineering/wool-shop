@@ -3,7 +3,7 @@
 import { match } from "ts-pattern"
 import Button from "../../atoms/button"
 import { FileImage, ImageIcon } from "lucide-react"
-import MainGrid from "../../grids/main"
+import Grid from "@/app/components/atoms/grid"
 import ImageItem from "../images-grid/item"
 import { imagesFetchAtom } from "@/lib/client/store"
 import ImageUploadButton, { UploadedImage } from "../../atoms/image-upload-button"
@@ -58,11 +58,11 @@ export default function ImageChoser() {
           <>
             {match(imagesFetch)
               .with({step: 'fetched'}, ({data}) => (
-                <MainGrid>
+                <Grid>
                   {data.map((image, index) => (
                     <ImageItem key={index} imageAtom={image} />
                   ))}
-                </MainGrid>
+                </Grid>
               ))
               .otherwise(() => <></>)}
           </>

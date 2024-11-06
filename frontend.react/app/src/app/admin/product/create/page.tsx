@@ -3,8 +3,8 @@ import Button from "@/app/components/atoms/button"
 import TextArea from "@/app/components/textarea"
 import TextBox from "@/app/components/textbox"
 import { handleCreateProductForm } from './actions'
-import PreLoadedImageChoser from "./preloaded-image-choser"
 import { getImages } from '@/lib/services/images'
+import Grid from '@/app/components/atoms/grid'
 
 const Page = async () => {
   const images = await getImages()
@@ -12,11 +12,11 @@ const Page = async () => {
   return (
     <Provider>
       <form action={handleCreateProductForm}>
-        <div style={{ display: 'grid', gridTemplateColumns: '45dvw 45dvw' }}>
-          <div style={{ gridColumn: 1 }}>
-            <PreLoadedImageChoser imagenames={images} />
+        <Grid className='grid--2-cols'>
+          <div>
+            Images
           </div>
-          <div style={{ gridColumn: 2 }}>
+          <div>
             <TextBox name="name" label="naam" value="" />
             <TextArea name="description" label="beschrijving" />
             <TextBox name="price" label="prijs" value="" />
@@ -26,7 +26,8 @@ const Page = async () => {
               Save
             </Button>
           </div>
-        </div>
+        </Grid>
+        
       </form>
     </Provider>
   )
