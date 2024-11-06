@@ -6,7 +6,7 @@ import './_button.css'
 
 interface Props extends HasChildren {
   className?: string,
-  onClick?: () => Promise<void>
+  onClick?: (() => Promise<void>) | (() => void)
 }
 
 const Button = ({className, children, onClick}: Props) => (

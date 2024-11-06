@@ -1,11 +1,24 @@
 .title {
+  letter-spacing: -.025em;
+  scroll-margin: 5rem;
+}
 
+.title--h1 {
+  font-size: 2.25rem;
+  font-weight: 800;
+  line-height: 2.5rem;
+}
+
+.title--h2 {
+  border-bottom-width: 1px;
+  font-size: 1.875rem;
+  font-weight: 600;
+  line-height: 2.25rem;
+  padding-bottom: .5rem;
 }
 
 .title--h3 {
   font-size: 1.5rem;
   font-weight: 600;
-  letter-spacing: -.025em;
   line-height: 2rem;
-  scroll-margin: 5rem;
 }

@@ -29,3 +29,18 @@
   outline: 2px solid transparent;
   outline-offset: 2px;
 }
+
+.button--link {
+  background-color: transparent;
+  border-width: 0;
+  color: hsl(var(--primary));
+  text-underline-offset: 4px;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(.4,0,.2,1);
+  transition-duration: .15s;
+}
+
+.button--link:hover {
+  background-color: transparent;
+  text-decoration-line: underline;
+}

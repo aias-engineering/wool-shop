@@ -9,8 +9,8 @@ interface Props {
 
 const Layout = ({children}: Props) => (
   <>
-    <Body>
-      <HeaderLayout></HeaderLayout>
+    <HeaderLayout></HeaderLayout>
+    <Body>  
       <Main>
         {children}
       </Main>

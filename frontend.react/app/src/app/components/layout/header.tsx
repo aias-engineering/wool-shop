@@ -1,11 +1,16 @@
-import { Separator } from "../atoms/separator";
-import Header from "../header";
+import Title from '@/app/components/atoms/title';
+import Header from "@/app/components/header";
+import Navigation, { NavigationLink } from '@/app/components/molecules/navigation';
 
 const HeaderLayout = () => (
   <>
     <Header>
-      <h1>Naqab Bedouin Design</h1>
-      <h2>Admin UI</h2>
+      <Title type="h1">Naqab Bedouin Design</Title>
+      <Title type="h2">Admin UI</Title>
+      <Navigation>
+        <NavigationLink href='/admin/product'>producten</NavigationLink>
+        <NavigationLink href='/admin/image'>afbleedingen</NavigationLink>
+      </Navigation>
     </Header>
   </>
 )
