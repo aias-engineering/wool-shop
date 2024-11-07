@@ -48,3 +48,15 @@
   background-color: transparent;
   text-decoration-line: underline;
 }
+
+.button--outline {
+  background-color: hsl(var(--background));
+  border-color: hsl(var(--input));
+  color: inherit
+}
+
+.button--outline:hover {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+  --ring-offset-color: hsl(var(--background));
+}

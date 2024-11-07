@@ -28,15 +28,15 @@ const Page = async () => {
           <div>
             <Space className='space--top-1'>
               <Label htmlFor={toId('name')}>naam</Label>
-              <Input name='name' type='text' />
+              <Input name='name' type='text' required />
             </Space>
             <Space className='space--top-1'>
               <Label htmlFor={toId('description')}>beschrijving</Label>
               <TextArea name="description" ></TextArea>
             </Space>
             <Space className='space--top-1'>
-              <Label htmlFor={toId('price')}>prijs</Label>
-              <Input name='price' type='text' />
+              <Label htmlFor={toId('price')}>prijs in euro</Label>
+              <Input name='price' type='number' required />
             </Space>
           </div>
           <div style={{ gridColumn: 2 }}>

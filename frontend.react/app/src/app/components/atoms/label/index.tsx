@@ -8,6 +8,6 @@ interface Props extends HasChildren {
 
 export default function Label({htmlFor, children}: Props) {
   return (
-    <label htmlFor={htmlFor}>{children}</label>
+    <label htmlFor={htmlFor} className='label'>{children}</label>
   )
 }
