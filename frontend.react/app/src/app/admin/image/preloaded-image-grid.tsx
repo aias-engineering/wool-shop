@@ -4,7 +4,6 @@ import Button from "@/app/components/atoms/button"
 import Image from "@/app/components/atoms/image"
 import { Separator } from "@/app/components/atoms/separator"
 import Small from "@/app/components/atoms/small"
-import Space from "@/app/components/atoms/space"
 import Title from "@/app/components/atoms/title"
 import Grid from "@/app/components/atoms/grid"
 import ImageItem from "@/app/components/organism/images-grid/item"
@@ -17,6 +16,7 @@ import { useHydrateAtoms } from "jotai/utils"
 import { match } from "ts-pattern"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/app/components/organism/dialog'
 import { ImageUp } from "lucide-react"
+import { Card, CardContent, CardFooter, CardTitle } from "@/app/components/molecules/card"
 
 interface Props {
   urls: string[]
@@ -68,17 +68,20 @@ export default function PreloadedImagesGrid({urls}: Props) {
               <Grid>
                 {urls.map((url, index) => {
                   return (
-                    <div key={index}>
-                      <AspectRatio ratio={3 / 4}>
-                        <Image className="image--rounded" key={index} src={url} alt={url} />
-                      </AspectRatio>
-                      <Space className="space--top-1">
-                        <Small>{url}</Small>
-                      </Space>
-                      <Space className="space--top-1">
+                    <Card key={index}>
+                      <CardTitle>
+
+                      </CardTitle>
+                      <CardContent>
+                        <AspectRatio ratio={3 / 4}>
+                          <Image className="image--rounded" key={index} src={url} alt={url} />
+                        </AspectRatio>
+                       <Small>{url}</Small>
+                      </CardContent>
+                      <CardFooter>
                         <Button onClick={async () => {}}>verwijderen</Button>
-                      </Space>
-                    </div>
+                      </CardFooter>
+                    </Card>
                   )
                 })}
               </Grid>
