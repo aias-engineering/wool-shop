@@ -44,7 +44,7 @@ export default function ImageChoser() {
         ))
         .with({step: 'choose-mode'}, () => (
           <div>
-            <ImageUploadButton onImageUploaded={handleImageUploaded} />
+            <ImageUploadButton onImageAtomUploaded={handleImageUploaded} />
             <Button onClick={async () => setState({step: 'choose-image', imagesFetch})}>
               <ImageIcon />
               een afbeelding kiezen

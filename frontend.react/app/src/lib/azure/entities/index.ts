@@ -3,5 +3,5 @@ export interface Product {
   name: string,
   descripiton: string | null,
   price: string,
-  imageLinks: string[]
+  image: string
 }

@@ -38,7 +38,7 @@ body {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
-  border-color: hsl(var(--border));
+  border: 0 solid #e5e7eb;
 }
 
 a {

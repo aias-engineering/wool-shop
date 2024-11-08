@@ -26,6 +26,7 @@ const Page = async () => {
             <PreloadedImagesChooser urls={urls} />
           </div>
           <div>
+            <Title type='h4' >Productinformatie in nederlands</Title>
             <Space className='space--top-1'>
               <Label htmlFor={toId('name')}>naam</Label>
               <Input name='name' type='text' required />
@@ -39,7 +40,7 @@ const Page = async () => {
               <Input name='price' type='number' required />
             </Space>
           </div>
-          <div style={{ gridColumn: 2 }}>
+          <div style={{ gridColumn: '1 span 2', justifyContent: 'end' }}>
             <Button>
               Save
             </Button>

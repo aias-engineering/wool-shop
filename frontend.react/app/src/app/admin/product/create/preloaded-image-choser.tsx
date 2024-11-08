@@ -4,13 +4,17 @@ import { AspectRatio } from "@radix-ui/react-aspect-ratio"
 import Button from "@/app/components/atoms/button"
 import Grid from "@/app/components/atoms/grid"
 import Image from "@/app/components/atoms/image"
-import { ImageIcon, ImageUp, MoveLeft } from "lucide-react"
+import { ImageIcon, MoveLeft } from "lucide-react"
 import { useState } from "react"
 import { match } from "ts-pattern"
-import Link from "next/link"
 import Space from "@/app/components/atoms/space"
 import Input from "@/app/components/atoms/input"
 import ImageFrame from "@/app/components/atoms/image-frame"
+import ImageUploadButton, { UploadedImage } from "@/app/components/atoms/image-upload-button"
+import { atom, useAtom } from "jotai"
+import { ImagePostState, postImageAction } from "@/lib/client/store/image/post"
+import { toUrl } from "@/lib/client/store/image"
+import Spinner from "@/app/components/atoms/spinner"
 
 interface Props {
   urls: string[]
@@ -20,9 +24,21 @@ type State =
   | { step: 'idle', urls: string[] }
   | { step: 'choose', urls: string[] }
   | { step: 'chosen', urls: string[], chosenUrl: string }
+  | { step: 'uploaded', urls: string[], imagePostState: ImagePostState }
+
+const imagePostStateAtom = atom<ImagePostState>({step: 'idle'})
 
 export default function PreloadedImagesChooser({urls}: Props) {
   const [state, setState] = useState<State>({step: 'idle', urls})
+  const [imagePostState, setImagePostState] = useAtom(imagePostStateAtom)
+  const [, uploadImage] = useAtom(postImageAction)
+
+  async function handleImageUploaded(uploadedImage: UploadedImage) {
+    await setState({ step: 'uploaded', urls, imagePostState })
+    const response = await fetch(uploadedImage.dataUrl)
+    const data = await response.blob()
+    await uploadImage({ name: uploadedImage.name, data }, imagePostStateAtom)
+  }
 
   return (
     <>
@@ -35,10 +51,7 @@ export default function PreloadedImagesChooser({urls}: Props) {
                 een afbeelding kiezen
               </Button>
             }
-            <Link href={'/admin/image'} className="button">
-              <ImageUp /> 
-              afbeelding uploaden
-            </Link>
+            <ImageUploadButton onImageAtomUploaded={async() => {}} onImageUploaded={handleImageUploaded} />
           </>
         ))
         .with({ step: 'choose' }, ({urls}) => (
@@ -78,7 +91,46 @@ export default function PreloadedImagesChooser({urls}: Props) {
             </Space>
           </>
         ))
-        .otherwise(() => (<></>))}
+        .with({ step: 'uploaded'}, ({}) => {
+
+          async function backToIdle() {
+            await setState({step: 'idle', urls})
+            await setImagePostState({ step: 'idle' })
+          }
+
+          return (
+            <>
+              <Button className="button--outline" onClick={backToIdle}>
+                <MoveLeft /> terug
+              </Button>
+              {match(imagePostState)
+                .with({ step: 'idle' }, () => (<>idle</>))
+                .with({ step: 'uploading' }, ({ image }) => (
+                  <div>
+                    <Spinner />
+                    Uploading {image.name}...
+                  </div>
+                ))
+                .with({ step: 'done' }, ({ image }) => (
+                  <>
+                    <Space className="space--top-1">
+                      <AspectRatio ratio={3 / 4}>
+                        <Image className="image--rounded" src={toUrl(image.name)} alt={toUrl(image.name)} />
+                      </AspectRatio>
+                      <Input type="hidden" name="image" value={toUrl(image.name)} required />
+                    </Space>
+                  </>
+                ))
+                .with({ step: 'error' }, ({ message }) => (
+                  <>
+                    {message}
+                  </>
+                ))
+                .exhaustive()}
+            </>
+          )
+        })
+        .otherwise(() => (<>otherwise choser state</>))}
     </>
   )
 }

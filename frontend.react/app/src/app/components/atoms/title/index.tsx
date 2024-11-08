@@ -3,7 +3,7 @@ import './_title.css'
 import clsx from 'clsx'
 
 interface Props extends HasChildren {
-  type: 'h1' | 'h2' | 'h3',
+  type: 'h1' | 'h2' | 'h3' | 'h4',
   className?: string
 }
 

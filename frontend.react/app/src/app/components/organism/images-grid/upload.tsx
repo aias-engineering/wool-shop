@@ -68,7 +68,7 @@ export default function ImageUpload(): JSX.Element {
       {match(state)
         .with({step:'idle'}, () => (
           <div className="images-grid__upload">
-            <ImageUploadButton onImageUploaded={async(uploadedImage) => { 
+            <ImageUploadButton onImageAtomUploaded={async(uploadedImage) => { 
               await setState({step: 'image-uploaded', uploadedImage }) }}/>
           </div>
         ))

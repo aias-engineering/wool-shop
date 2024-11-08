@@ -9,7 +9,8 @@ dotenv.config()
 export interface CreateProductRequest {
   name: string,
   description: string | null,
-  price: string
+  price: string,
+  image: string
 }
 
 export interface CreateProductResponse {
