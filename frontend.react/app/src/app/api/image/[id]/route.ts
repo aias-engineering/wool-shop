@@ -8,8 +8,6 @@ interface Route {
 }
 
 export async function GET(_: NextRequest, { params }: Route) : Promise<NextResponse> {
-  console.log('receiving %o', params)
-
   const imageStream = await downloadImage(params.id)
 
   if (!imageStream)
@@ -31,7 +29,6 @@ export async function POST(req: NextRequest, {params}: Route) {
 }
 
 export async function DELETE(_: NextRequest, {params}: Route): Promise<NextResponse> {
-  console.log('deleting image %s.. ', params.id)
   await deleteImage(params.id)
   return new NextResponse('done')
 }

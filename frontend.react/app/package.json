@@ -7,6 +7,7 @@
     "build": "next build --experimental-app-only --experimental-build-mode compile",
     "start": "next start",
     "lint": "next lint",
+    "test": "vitest",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
@@ -43,10 +44,14 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@vitejs/plugin-react": "^4.3.3",
     "eslint": "^8",
     "eslint-config-next": "14.2.15",
     "eslint-plugin-storybook": "^0.9.0",
+    "jsdom": "^25.0.1",
     "storybook": "^8.3.5",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vite-tsconfig-paths": "^5.1.1",
+    "vitest": "^2.1.4"
   }
 }

@@ -1,5 +1,5 @@
 import { deleteBlobOnAzure, getImagesFlat, storeImage } from "@/lib/azure/blob-store-client";
-import { revalidateTag, unstable_cache } from "next/cache";
+import { revalidateTag } from "next/cache";
 import stream from "stream";
 
 // export const getImages = unstable_cache(
@@ -19,5 +19,5 @@ export async function postImage(name: string, stream: stream.Readable) {
 
 export async function deleteImage(name: string): Promise<void> {
   await deleteBlobOnAzure(name)
-  revalidateTag('image-index')
+  // revalidateTag('image-index')
 }

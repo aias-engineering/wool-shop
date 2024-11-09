@@ -32,9 +32,7 @@ export async function getImagesFlat() {
 export async function storeImage(blobname: string, stream: internal.Readable) {
   const blockBlobClient = images().getBlockBlobClient(blobname)
   
-  const result = await blockBlobClient.uploadStream(stream)
-
-  console.log('%o', result)
+  await blockBlobClient.uploadStream(stream)
 }
 
 export async function downloadImage(blobname: string): Promise<NodeJS.ReadableStream | null>
@@ -43,8 +41,6 @@ export async function downloadImage(blobname: string): Promise<NodeJS.ReadableSt
 
   const downloadResponse = await blockBlobClient.download()
   
-  console.log('received from azure: %i', downloadResponse.contentLength)
-
   return downloadResponse.readableStreamBody ?? null
 }
 
