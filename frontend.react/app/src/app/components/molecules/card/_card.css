@@ -9,6 +9,10 @@
   color: hsl(var(--card-foreground));
 }
 
+.card--borderless {
+  border-width: 0;
+}
+
 .card__header {
   display: flex;
   flex-direction: column;
@@ -44,4 +48,12 @@
   align-items: center;
   padding: 1.5rem;
   padding-top: 0;
+}
+
+.card__footer--onhover {
+  visibility: hidden;
+}
+
+.card:hover .card__footer--onhover {
+  visibility: visible;
 }
