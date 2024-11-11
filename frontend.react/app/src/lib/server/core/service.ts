@@ -9,9 +9,7 @@ export async function deleteImage(
 
     return await match<ReadProductsResult, Promise<DeleteImageResult>>(readProductsWithImageResult)
       .with({state: 'success', products: []}, async () => {
-
         const deleteImageBlobResult = await deleteImageBlobPromise
-
         return match<DeleteImageBlobResult, DeleteImageResult>(deleteImageBlobResult)
           .with({state: 'success'}, () => ({ state: 'success' }))
           .with({state: 'failure'}, ({message}) => ({ state: 'failure', message }))

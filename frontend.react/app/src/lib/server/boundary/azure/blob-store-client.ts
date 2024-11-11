@@ -37,22 +37,25 @@ export async function listImages(): Promise<ListImagesResult> {
 }
 
 export async function downloadImage(blobname: string): Promise<DonwloadImageResult> {
+  try {
+    const blockBlobClient = images().getBlockBlobClient(blobname);
 
-  const blockBlobClient = images().getBlockBlobClient(blobname);
+    const downloadResponse = await blockBlobClient.download()
 
-  const downloadResponse = await blockBlobClient.download()
-
-  return match<BlobDownloadResponseParsed, DonwloadImageResult>(downloadResponse)
-    .with({ readableStreamBody: undefined, errorCode: P.string }, ({errorCode}) => ({
-      state: 'failure',
-      message: errorCode
-    }))
-    .with({ readableStreamBody: undefined }, () => ({ state: 'not-found' }))
-    .with({ readableStreamBody: P.not(undefined) }, ({readableStreamBody}) => ({
-      state: 'success',
-      imageStream: mdnReadableStream_From_NodeReadableStream(readableStreamBody)
-    }))
-    .exhaustive()
+    return match<BlobDownloadResponseParsed, DonwloadImageResult>(downloadResponse)
+      .with({ readableStreamBody: undefined, errorCode: P.string }, ({errorCode}) => ({
+        state: 'failure',
+        message: errorCode
+      }))
+      .with({ readableStreamBody: undefined }, () => ({ state: 'not-found' }))
+      .with({ readableStreamBody: P.not(undefined) }, ({readableStreamBody}) => ({
+        state: 'success',
+        imageStream: mdnReadableStream_From_NodeReadableStream(readableStreamBody)
+      }))
+      .exhaustive()
+  } catch(err) {
+    return {state: 'failure', message: (err as TypeError)?.message }
+  }
 }
 
 export async function uploadImage(blobname: string, stream: ReadableStream): Promise<UploadImageResult> {
@@ -70,12 +73,16 @@ export async function uploadImage(blobname: string, stream: ReadableStream): Pro
 }
 
 export async function deleteImageBlob(blobname: string): Promise<DeleteImageBlobResult> {
-  const blockBlobClient = images().getBlockBlobClient(blobname);
+  try {
+    const blockBlobClient = images().getBlockBlobClient(blobname);
 
-  const response = await blockBlobClient.deleteIfExists()
+    const response = await blockBlobClient.deleteIfExists()
 
-  return match<BlobDeleteIfExistsResponse, DeleteImageBlobResult>(response)
-    .with({errorCode: undefined}, () => ({state: 'success'}))
-    .with({errorCode: P.string}, ({errorCode}) => ({state: 'failure', message: errorCode}))
-    .exhaustive()
+    return match<BlobDeleteIfExistsResponse, DeleteImageBlobResult>(response)
+      .with({errorCode: undefined}, () => ({state: 'success'}))
+      .with({errorCode: P.string}, ({errorCode}) => ({state: 'failure', message: errorCode}))
+      .exhaustive()
+  } catch(err) {
+    return { state: 'failure', message: (err as TypeError)?.message }
+  }
 }

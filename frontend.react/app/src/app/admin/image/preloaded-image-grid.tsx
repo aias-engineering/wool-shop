@@ -10,10 +10,12 @@ import { AspectRatio } from "@radix-ui/react-aspect-ratio"
 import { atom, useAtom, useAtomValue } from "jotai"
 import { useHydrateAtoms } from "jotai/utils"
 import { match } from "ts-pattern"
-import { Trash2 } from "lucide-react"
+import { Annoyed, ImageUp, Trash2 } from "lucide-react"
 import { Card, CardContent, CardFooter, CardTitle } from "@/app/components/molecules/card"
 import { deleteImageAction, ImageDeleteState } from "@/lib/client/store/image/delete"
 import Spinner from "@/app/components/atoms/spinner"
+import Title from "@/app/components/atoms/title"
+import P from "@/app/components/atoms/p"
 
 interface Props {
   urls: string[]
@@ -32,7 +34,18 @@ export default function PreloadedImagesGrid({urls}: Props) {
 
   return (
     <>
-      {match(imagesFetch)
+      {match<ImagesFetch, JSX.Element>(imagesFetch)
+        .with({step: 'fetched', data: []}, () => (
+          <>
+            <Title type="h4" >
+              <Annoyed height={48} width={48} />
+              geen afbeeldingen gevonden</Title>
+            <P>Wil je er een uploaden?</P>
+            <Button>
+              <ImageUp />
+            </Button>
+          </>
+        ))
         .with({step: 'fetched'}, ({}) => (
           <Grid>
             {urls.map((url, index) => {
