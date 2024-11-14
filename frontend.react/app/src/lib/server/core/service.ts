@@ -1,21 +1,44 @@
-import { match, P } from "ts-pattern";
-import { DeleteImageBlobResult, DeleteImageResult, ReadProductsResult } from "./types";
+import { Product, Unit } from "./types";
+import { DownloadDidntReturnStream, ErrorInBlobStorageAccess, ErrorInCosmosDbAccess, Failure, ImageReferencedByProducts } from "./failure";
+import { match } from "ts-pattern";
+
+export async function getImages(listImageBlobsFlat: () => Promise<string[]>)
+  : Promise<string[] | ErrorInBlobStorageAccess> {
+
+    return listImageBlobsFlat()
+      .catch(err => new ErrorInBlobStorageAccess(err))
+}
+
+export async function getImage(
+  imagename: string, 
+  downloadImageBlob: (blobname: string) => Promise<ReadableStream | undefined>)
+  : Promise<ReadableStream<any> | DownloadDidntReturnStream | ErrorInBlobStorageAccess> {
+
+    return downloadImageBlob(imagename)
+      .then(either => either || new DownloadDidntReturnStream(imagename))
+      .catch(err => new ErrorInBlobStorageAccess(err))
+}
 
 export async function deleteImage(
-  readProductsWithImagePromise: Promise<ReadProductsResult>,
-  deleteImageBlobPromise: Promise<DeleteImageBlobResult>): Promise<DeleteImageResult> {
+  id: string,
+  readProductsWithImage: (id: string) => Promise<Product[]>,
+  deleteImageBlob: (id: string) => Promise<Unit>)
+  : Promise<Unit | ImageReferencedByProducts | Failure>  {
 
-    const readProductsWithImageResult = await readProductsWithImagePromise;
+    return readProductsWithImage(id)
+      .then(  
+        products => ValidateDeletionPossible(id, products),
+        err => new ErrorInCosmosDbAccess(err))
+      .then(
+        async (either) => typeof(either) === 'string' 
+            ? await deleteImageBlob(either)
+            : either
+      )
+      .catch(err => new ErrorInBlobStorageAccess(err))
+}
 
-    return await match<ReadProductsResult, Promise<DeleteImageResult>>(readProductsWithImageResult)
-      .with({state: 'success', products: []}, async () => {
-        const deleteImageBlobResult = await deleteImageBlobPromise
-        return match<DeleteImageBlobResult, DeleteImageResult>(deleteImageBlobResult)
-          .with({state: 'success'}, () => ({ state: 'success' }))
-          .with({state: 'failure'}, ({message}) => ({ state: 'failure', message }))
-          .exhaustive()
-      })
-      .with({state: 'success', products: P.not([])}, async ({products}) => ({ state: "referenced-by-products", products }))
-      .with({state: 'failure'}, async ({message}) => ({state: 'failure', message }))
-      .exhaustive()
+function ValidateDeletionPossible(id: string, products: Product[]): string | ImageReferencedByProducts {
+  return match(products)
+      .with([], () => id)
+      .otherwise(() => new ImageReferencedByProducts(products.map(x => x.name)))
 }

@@ -3,18 +3,19 @@ import PreloadedImagesGrid from "./preloaded-image-grid"
 import { toUrls } from "@/lib/client/store/image"
 import Title from "@/app/components/atoms/title"
 import { Separator } from "@/app/components/atoms/separator"
-import { listImages } from "@/lib/server/boundary/azure/blob-store-client"
-import { match } from "ts-pattern"
-import { ListImagesResult } from "@/lib/server/core/types"
+import * as azure from "@/lib/server/boundary/azure/images-client"
+import { match, P } from "ts-pattern"
 import ErrorPage from "@/app/components/layout/error-page"
+import { ErrorInBlobStorageAccess } from "@/lib/server/core/failure"
+import { getImages } from "@/lib/server/core/service"
 
 export default async function Page() {
-  const listImagesResult = await listImages()
+  const listImagesResult = await getImages(azure.listImages)
 
   return (
     <>
-      {match<ListImagesResult, JSX.Element>(listImagesResult)
-        .with({state: 'success'}, ({imagenames}) => (
+      {match<ErrorInBlobStorageAccess|string[], JSX.Element>(listImagesResult)
+        .with(P.array(), (imagenames) => (
           <>
             <Provider>
               <Title type="h3">jouw afbeeldingen</Title>
@@ -22,7 +23,7 @@ export default async function Page() {
               <PreloadedImagesGrid urls={toUrls(imagenames)} />
             </Provider>
           </>))
-          .with({state: 'failure'}, ({message}) => <ErrorPage message={message} />)
+          .with(P.instanceOf(ErrorInBlobStorageAccess), ({reason}) => <ErrorPage message={reason} />)
         .exhaustive()}
     </>
   )

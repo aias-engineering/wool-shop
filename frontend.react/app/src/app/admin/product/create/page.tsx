@@ -10,17 +10,18 @@ import PreloadedImagesChooser from './preloaded-image-choser'
 import Input, { toId } from '@/app/components/atoms/input'
 import Label from '@/app/components/atoms/label'
 import Space from '@/app/components/atoms/space'
-import { listImages } from '@/lib/server/boundary/azure/blob-store-client'
-import { match } from 'ts-pattern'
-import { ListImagesResult } from '@/lib/server/core/types'
+import * as azure from "@/lib/server/boundary/azure/images-client"
+import { match, P } from 'ts-pattern'
 import ErrorPage from '@/app/components/layout/error-page'
+import { ErrorInBlobStorageAccess } from '@/lib/server/core/failure'
+import { getImages } from '@/lib/server/core/service'
 
 const Page = async () => {
 
-  const readImagesResult = await listImages()
+  const readImagesResult = await getImages(azure.listImages)
 
-  return match<ListImagesResult, JSX.Element>(readImagesResult)
-    .with({state: 'success'}, ({imagenames}) => (
+  return match<ErrorInBlobStorageAccess|string[], JSX.Element>(readImagesResult)
+    .with(P.array(), (imagenames) => (
       <Provider>
         <Title type='h3'>een product creëren</Title>
         <Separator />
@@ -54,7 +55,7 @@ const Page = async () => {
         </form>
       </Provider>
     ))
-    .with({state: 'failure'}, ({message}) => (<ErrorPage message={message} />))
+    .with(P.instanceOf(ErrorInBlobStorageAccess), ({reason}) => (<ErrorPage message={reason} />))
     .exhaustive()
 }
 
