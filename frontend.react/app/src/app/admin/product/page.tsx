@@ -1,8 +1,7 @@
 import Button from "@/app/components/atoms/button";
 import { Separator } from "@/app/components/atoms/separator";
 import Title from "@/app/components/atoms/title";
-import { getProducts } from "@/lib/azure/cosmos-client";
-import { match } from "ts-pattern";
+import * as ts from "ts-pattern";
 import { PackagePlus } from 'lucide-react'
 import Link from 'next/link'
 import Grid from "@/app/components/atoms/grid";
@@ -11,15 +10,19 @@ import Image from "@/app/components/atoms/image";
 import Space from "@/app/components/atoms/space";
 import Large from "@/app/components/atoms/large";
 import P from "@/app/components/atoms/p";
+import { withAzureDataAccess } from "@/lib/server/core/data-access";
+import { getAllProducts } from "@/lib/server/core/products";
+import { ErrorInCosmosDbAccess } from "@/lib/server/core/failure";
+import ErrorPage from "@/app/components/layout/error-page";
 
 const Page = async () => {
-  const products = await getProducts();
+  const products = await withAzureDataAccess(dataAccess => getAllProducts(dataAccess))
 
   return (
     <>
       <Title type="h3">beheer uw producten</Title>
       <Separator />
-      {match(products)
+      {ts.match(products)
         .with([], () => (
           <>
             <div>
@@ -35,7 +38,7 @@ const Page = async () => {
             </div>
           </>
         ))
-        .otherwise(() => 
+        .with(ts.P.array(), (products) => 
           <>
             <Grid>
               {products.map((product, index) => (
@@ -51,7 +54,10 @@ const Page = async () => {
               ))}
             </Grid>
           </>
-        )}
+        )
+        .with(ts.P.instanceOf(ErrorInCosmosDbAccess), (error) => (<ErrorPage message={error.code} />))
+        .exhaustive()
+        }
     </>
   );
 }

@@ -4,6 +4,10 @@ import * as azureBlobClient from '@/lib/server/boundary/azure/images-client'
 import * as azureCosmosClient from '@/lib/server/boundary/azure/products-client'
 import { DownloadDidntReturnStream, ErrorInBlobStorageAccess, ErrorInCosmosDbAccess } from "./failure"
 
+export interface ReadAllProducts {
+  readAllProducts(): Promise<Product[]|ErrorInCosmosDbAccess>
+}
+
 export interface ReadProductsWithImage {
   readProductsWithImage(imagename: string): Promise<Product[]|ErrorInCosmosDbAccess>
 }
@@ -25,6 +29,7 @@ export interface DeleteImageBlob {
 }
 
 export type DataAccessFacade = 
+  & ReadAllProducts
   & ReadProductsWithImage 
   & ListImageBlobsFlat
   & DownloadImageBlob
