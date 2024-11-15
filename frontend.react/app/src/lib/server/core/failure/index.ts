@@ -1,5 +1,8 @@
 export abstract class Failure {
-  constructor(readonly code: string, readonly reason: string) { }
+  constructor(
+    readonly code: string,
+    readonly reason: string,
+  ) {}
 }
 
 export function isFailure(x: unknown): x is Failure {
@@ -12,20 +15,23 @@ export class ImageReferencedByProducts extends Failure {
   }
 }
 
-export class ErrorInCosmosDbAccess extends Failure{
+export class ErrorInCosmosDbAccess extends Failure {
   constructor(readonly error: TypeError) {
     super('cdb-00', 'An Error was thrown when accessing Azure Cosmos DB')
   }
 }
 
-export class ErrorInBlobStorageAccess extends Failure{
+export class ErrorInBlobStorageAccess extends Failure {
   constructor(readonly error: TypeError) {
     super('bls-00', 'An Error was thrown when accessing Azure Blob Storage')
   }
 }
 
 export class DownloadDidntReturnStream extends Failure {
-  constructor(imagename: string) { 
-    super('bls-01', `Azure Blob Storage didn't return a ReadStream when downloading ${imagename}`) 
+  constructor(imagename: string) {
+    super(
+      'bls-01',
+      `Azure Blob Storage didn't return a ReadStream when downloading ${imagename}`,
+    )
   }
 }

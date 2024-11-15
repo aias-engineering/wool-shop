@@ -1,34 +1,32 @@
 'use server'
 
-import { createProduct, CreateProductRequest } from "@/lib/azure/cosmos-client"
-import { z } from "zod"
+import { createProduct, CreateProductRequest } from '@/lib/azure/cosmos-client'
+import { z } from 'zod'
 
 export async function handleCreateProductForm(formData: FormData) {
-
   const schema = z.object({
     name: z.string(),
     price: z.string(),
     description: z.string().nullable(),
-    image: z.string()
+    image: z.string(),
   })
 
-  const {data, error} =  await schema.safeParseAsync({
+  const { data, error } = await schema.safeParseAsync({
     name: formData.get('name'),
     description: formData.get('description'),
     price: formData.get('price'),
-    image: formData.get('image')
-  });
+    image: formData.get('image'),
+  })
 
-  if (!error){
+  if (!error) {
     const productRequest: CreateProductRequest = {
       name: data.name,
       description: data.description,
       price: data.price,
-      image: data.image
+      image: data.image,
     }
     await createProduct(productRequest)
-  }
-  else{
+  } else {
     console.error('error %o', error)
   }
 }

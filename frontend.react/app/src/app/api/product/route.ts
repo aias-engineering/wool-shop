@@ -5,11 +5,13 @@ import { NextResponse } from 'next/server'
 import { match, P } from 'ts-pattern'
 
 export async function GET(): Promise<NextResponse> {
-
   const result = await readAllProducts()
 
-  return match<ErrorInCosmosDbAccess|Product[], NextResponse>(result)
+  return match<ErrorInCosmosDbAccess | Product[], NextResponse>(result)
     .with(P.array(), (products) => NextResponse.json(products))
-    .with(P.instanceOf(ErrorInCosmosDbAccess), ({reason}) => new NextResponse(reason, {status: 500}))
+    .with(
+      P.instanceOf(ErrorInCosmosDbAccess),
+      ({ reason }) => new NextResponse(reason, { status: 500 }),
+    )
     .exhaustive()
 }

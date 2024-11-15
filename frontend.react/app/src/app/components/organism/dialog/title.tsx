@@ -11,7 +11,7 @@ export const DialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={clsx('dialog-title', className )}
+    className={clsx('dialog-title', className)}
     {...props}
   />
 ))

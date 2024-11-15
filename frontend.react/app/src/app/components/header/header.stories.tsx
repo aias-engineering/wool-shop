@@ -1,8 +1,8 @@
-import Header from "."
+import Header from '.'
 
 export default {
   title: 'molecules/header',
-  component: Header
+  component: Header,
 }
 
 export const JustAHeader = () => (

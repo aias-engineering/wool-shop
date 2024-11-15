@@ -6,11 +6,11 @@ import Image from 'next/image'
 import { match, P } from 'ts-pattern'
 
 interface Props {
-  src: string | null,
+  src: string | null
   alt: string
 }
 
-export default function ImageOrPlaceholder({src, alt}: Props): JSX.Element {
+export default function ImageOrPlaceholder({ src, alt }: Props): JSX.Element {
   const [dynamicSrc, setDynamicSrc] = useState(src)
 
   async function handleError(): Promise<void> {
@@ -22,20 +22,22 @@ export default function ImageOrPlaceholder({src, alt}: Props): JSX.Element {
       {match(dynamicSrc)
         .with(P.string, (s) => (
           <div className={'image-or-placeholder'}>
-            <Image  className='images-or-placeholder__image'
-                  style={{ height: '100%' }}
-                  src={s}
-                  width={400}
-                  height={640}
-                  alt={alt}
-                  onError={handleError} />
+            <Image
+              className="images-or-placeholder__image"
+              style={{ height: '100%' }}
+              src={s}
+              width={400}
+              height={640}
+              alt={alt}
+              onError={handleError}
+            />
           </div>
-          ))
-          .otherwise(() => (
-            <div className="image-or-placeholder__placeholder">
-              Image not found
-            </div>
-          ))}
+        ))
+        .otherwise(() => (
+          <div className="image-or-placeholder__placeholder">
+            Image not found
+          </div>
+        ))}
     </>
   )
 }

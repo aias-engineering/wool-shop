@@ -3,7 +3,7 @@ import Alert, { AlertDescription, AlertTitle } from '.'
 
 export default {
   title: 'molecules/alert',
-  component: Alert
+  component: Alert,
 }
 
 export function HeadsUp() {
@@ -18,7 +18,7 @@ export function HeadsUp() {
 
 export function Error() {
   return (
-    <Alert className='alert--destructive'>
+    <Alert className="alert--destructive">
       <AlertCircle />
       <AlertTitle>Error</AlertTitle>
       <AlertDescription>An exception was thrown!</AlertDescription>

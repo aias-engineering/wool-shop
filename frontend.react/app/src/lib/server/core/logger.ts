@@ -1,4 +1,4 @@
-import { Unit } from "./types"
+import { Unit } from './types'
 
 export interface ILog {
   log(message: string, ...optionalParams: unknown[]): Unit
@@ -6,7 +6,7 @@ export interface ILog {
 }
 
 export default function getLogger(): ILog {
-  return consoleLogger;
+  return consoleLogger
 }
 
 const consoleLogger: ILog = {
@@ -17,5 +17,5 @@ const consoleLogger: ILog = {
   error: (message: string, ...optionalParams: unknown[]) => {
     console.error(message, optionalParams)
     return Unit.done
-  }
+  },
 }

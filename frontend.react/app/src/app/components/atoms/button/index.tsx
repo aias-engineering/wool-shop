@@ -1,20 +1,20 @@
 'use client'
 
 import classNames from 'clsx'
-import HasChildren from "@/lib/client/react/has-children";
+import HasChildren from '@/lib/client/react/has-children'
 import './_button.css'
 
 interface Props extends HasChildren {
-  className?: string,
+  className?: string
   onClick?: (() => Promise<void>) | (() => void)
 }
 
-const Button = ({className, children, onClick}: Props) => (
+const Button = ({ className, children, onClick }: Props) => (
   <>
-    <button className={classNames("button", className)} onClick={onClick}>
+    <button className={classNames('button', className)} onClick={onClick}>
       {children}
     </button>
   </>
 )
 
-export default Button;
+export default Button

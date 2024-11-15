@@ -1,25 +1,27 @@
 'use client'
 
 import classNames from 'clsx'
-import { Product } from "@/lib/azure/entities"
+import { Product } from '@/lib/azure/entities'
 import { match, P } from 'ts-pattern'
 import ImageOrPlaceholder from '@/app/components/atoms/image-or-placeholder'
 import Button from '@/app/components/atoms/button'
 import { useState } from 'react'
-import OverlayContainer, { Overlay } from '@/app/components/atoms/overlay-container'
+import OverlayContainer, {
+  Overlay,
+} from '@/app/components/atoms/overlay-container'
 import { deleteProduct } from '@/app/admin/actions'
 
 interface Props {
-  className?: string,
+  className?: string
   product: Product
 }
 
-const firstImage = (product: Product) => (
+const firstImage = (product: Product) =>
   match(product.imageLinks)
     .with([P.string], ([link]) => link)
-    .otherwise(() => null))
+    .otherwise(() => null)
 
-const ProductsItem = ({className, product}: Props) => {
+const ProductsItem = ({ className, product }: Props) => {
   const [hover, setHover] = useState<boolean>(false)
 
   const mouseOver = () => setHover(true)
@@ -27,16 +29,18 @@ const ProductsItem = ({className, product}: Props) => {
 
   return (
     <>
-      <div className={classNames('products__item', className)} 
-           onMouseOver={mouseOver} 
-           onMouseLeave={mouseLeave}>
+      <div
+        className={classNames('products__item', className)}
+        onMouseOver={mouseOver}
+        onMouseLeave={mouseLeave}
+      >
         <OverlayContainer>
           <ImageOrPlaceholder src={firstImage(product)} alt={product.name} />
-          { hover &&
-              <Overlay>
-                <Button onClick={() => deleteProduct(product.id)}>Delete</Button>
-              </Overlay>
-          }
+          {hover && (
+            <Overlay>
+              <Button onClick={() => deleteProduct(product.id)}>Delete</Button>
+            </Overlay>
+          )}
         </OverlayContainer>
       </div>
     </>
