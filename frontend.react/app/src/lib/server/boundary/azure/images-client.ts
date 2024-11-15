@@ -1,47 +1,44 @@
-import { BlobUploadCommonResponse } from "@azure/storage-blob";
-import { Unit, UploadImageResult } from "../../core/types";
 import { images } from "./blob-store-client";
-import { match, P } from "ts-pattern";
 import { mdnReadableStream_From_NodeReadableStream, nodeReadable_From_MdnReadableStream } from "@/lib/streams";
+import { DownloadDidntReturnStream, ErrorInBlobStorageAccess } from "@/lib/server/core/failure";
+import { Unit } from "@/lib/server/core/types";
 
-
-export async function listImages(): Promise<string[]> {
-  let imagenames: string[] = []
-
-  for await (const blob of images().listBlobsFlat()) {
-    imagenames = [...imagenames, blob.name]
-  }
-  return imagenames
-}
-
-export async function downloadImage(blobname: string): Promise<ReadableStream|undefined> {
-  const blockBlobClient = images().getBlockBlobClient(blobname);
-
-  const downloadResponse = await blockBlobClient.download()
-
-  return downloadResponse.readableStreamBody 
-    ? mdnReadableStream_From_NodeReadableStream(downloadResponse.readableStreamBody)
-    : undefined
-}
-
-export async function uploadImage(blobname: string, stream: ReadableStream): Promise<UploadImageResult> {
+export async function listImageBlobsFlat(): Promise<string[]|ErrorInBlobStorageAccess> {
+  try {
+    let imagenames: string[] = []
   
-  const blockBlobClient = images().getBlockBlobClient(blobname)
-
-  const nodeReadable = nodeReadable_From_MdnReadableStream(stream)
-
-  const response = await blockBlobClient.uploadStream(nodeReadable)
-
-  return match<BlobUploadCommonResponse, UploadImageResult>(response)
-    .with({errorCode: undefined}, () => ({state: 'success'}))
-    .with({errorCode: P.string}, ({errorCode}) => ({state: 'failure', message: errorCode}))
-    .exhaustive()
+    for await (const blob of images().listBlobsFlat()) {
+      imagenames = [...imagenames, blob.name]
+    }
+    return imagenames
+  } catch (error) {
+    return new ErrorInBlobStorageAccess(error as TypeError)
+  }
 }
 
-export async function deleteImageBlob(blobname: string): Promise<Unit> {
-  const blockBlobClient = images().getBlockBlobClient(blobname);
+export const downloadImageBlob = (blobname: string): Promise<ReadableStream|DownloadDidntReturnStream|ErrorInBlobStorageAccess> => 
+  images()
+    .getBlockBlobClient(blobname)
+    .download()
+    .then(
+      response => response.readableStreamBody
+        ? mdnReadableStream_From_NodeReadableStream(response.readableStreamBody)
+        : new DownloadDidntReturnStream(blobname),
+      error => new ErrorInBlobStorageAccess(error))
 
-  await blockBlobClient.deleteIfExists()
+export const uploadImageBlob = (blobname: string, stream: ReadableStream): Promise<Unit|ErrorInBlobStorageAccess> =>  
+  images()
+    .getBlockBlobClient(blobname)
+    .uploadStream(nodeReadable_From_MdnReadableStream(stream))
+    .then(
+      () => Unit.done,
+      error => new ErrorInBlobStorageAccess(error)
+    )
 
-  return Unit.done
-}
+export const deleteImageBlob = (blobname: string): Promise<Unit|ErrorInBlobStorageAccess> => 
+  images()
+    .getBlockBlobClient(blobname)
+    .deleteIfExists()
+    .then(
+      () => Unit.done,
+      (err) => new ErrorInBlobStorageAccess(err))

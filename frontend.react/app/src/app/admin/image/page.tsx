@@ -3,14 +3,14 @@ import PreloadedImagesGrid from "./preloaded-image-grid"
 import { toUrls } from "@/lib/client/store/image"
 import Title from "@/app/components/atoms/title"
 import { Separator } from "@/app/components/atoms/separator"
-import * as azure from "@/lib/server/boundary/azure/images-client"
 import { match, P } from "ts-pattern"
 import ErrorPage from "@/app/components/layout/error-page"
 import { ErrorInBlobStorageAccess } from "@/lib/server/core/failure"
-import { getImages } from "@/lib/server/core/service"
+import { getImages } from "@/lib/server/core/images"
+import { withAzureDataAccess } from "@/lib/server/core/data-access"
 
 export default async function Page() {
-  const listImagesResult = await getImages(azure.listImages)
+  const listImagesResult = await withAzureDataAccess(dataAccess => getImages(dataAccess))
 
   return (
     <>

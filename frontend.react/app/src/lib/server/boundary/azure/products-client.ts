@@ -12,12 +12,16 @@ export async function readAllProducts(): Promise<ErrorInCosmosDbAccess|Product[]
   }
 }
 
-export async function readProductsWithImage(imagename: string): Promise<Product[]> {
-  const container = await products()
-  const response = await container.items.query({
-    query: "SELECT * FROM Products p WHERE p.image = @imagename",
-    parameters: [{ name: '@imagename', value: imagename }]
-  }).fetchAll()
-
-  return response.resources
+export function readProductsWithImage(imagename: string): Promise<Product[]|ErrorInCosmosDbAccess> {
+  return products()
+    .then(
+      container => container.items
+          .query({
+            query: "SELECT * FROM Products p WHERE p.image = @imagename",
+            parameters: [{ name: '@imagename', value: imagename }]
+          })
+          .fetchAll()
+    )
+    .then(response => response.resources as Product[])
+    .catch(err => new ErrorInCosmosDbAccess(err))
 }

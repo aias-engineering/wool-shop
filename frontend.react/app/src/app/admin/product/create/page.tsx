@@ -10,15 +10,15 @@ import PreloadedImagesChooser from './preloaded-image-choser'
 import Input, { toId } from '@/app/components/atoms/input'
 import Label from '@/app/components/atoms/label'
 import Space from '@/app/components/atoms/space'
-import * as azure from "@/lib/server/boundary/azure/images-client"
 import { match, P } from 'ts-pattern'
 import ErrorPage from '@/app/components/layout/error-page'
 import { ErrorInBlobStorageAccess } from '@/lib/server/core/failure'
-import { getImages } from '@/lib/server/core/service'
+import { getImages } from '@/lib/server/core/images'
+import { withAzureDataAccess } from '@/lib/server/core/data-access'
 
 const Page = async () => {
 
-  const readImagesResult = await getImages(azure.listImages)
+  const readImagesResult = await withAzureDataAccess(dataAccess => getImages(dataAccess))
 
   return match<ErrorInBlobStorageAccess|string[], JSX.Element>(readImagesResult)
     .with(P.array(), (imagenames) => (
