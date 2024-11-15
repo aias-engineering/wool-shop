@@ -1,4 +1,4 @@
-import { Product } from '@/lib/azure/entities'
+import { Product } from '@/lib/server/core/types'
 import { Unit } from './types'
 import * as azureBlobClient from '@/lib/server/boundary/azure/images-client'
 import * as azureCosmosClient from '@/lib/server/boundary/azure/products-client'
@@ -6,6 +6,7 @@ import {
   DownloadDidntReturnStream,
   ErrorInBlobStorageAccess,
   ErrorInCosmosDbAccess,
+  ProductWithIdNotFound,
 } from './failure'
 
 export interface ReadAllProducts {
@@ -16,6 +17,12 @@ export interface ReadProductsWithImage {
   readProductsWithImage(
     imagename: string,
   ): Promise<Product[] | ErrorInCosmosDbAccess>
+}
+
+export interface ReadProduct {
+  readProduct(
+    id: string,
+  ): Promise<Product | ProductWithIdNotFound | ErrorInCosmosDbAccess>
 }
 
 export interface ListImageBlobsFlat {
@@ -43,6 +50,7 @@ export interface DeleteImageBlob {
 
 export type DataAccessFacade = ReadAllProducts &
   ReadProductsWithImage &
+  ReadProduct &
   ListImageBlobsFlat &
   DownloadImageBlob &
   UploadImageBlob &

@@ -21,6 +21,15 @@ export class ErrorInCosmosDbAccess extends Failure {
   }
 }
 
+export class ProductWithIdNotFound extends Failure {
+  constructor(readonly id: string) {
+    super(
+      'cdb-01',
+      `The product with id ${id} wasn't found in the Azure Cosmos DB`,
+    )
+  }
+}
+
 export class ErrorInBlobStorageAccess extends Failure {
   constructor(readonly error: TypeError) {
     super('bls-00', 'An Error was thrown when accessing Azure Blob Storage')

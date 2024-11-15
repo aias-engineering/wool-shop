@@ -1,9 +1,5 @@
 import { CosmosClient } from '@azure/cosmos'
 import dotenv from 'dotenv'
-import { Product } from './entities'
-import readAllProducts from './read-all-products'
-import readProductById from './read-product-by-id'
-import replaceProductWithAdditionalImage from './replace-product-with-additional-Image'
 dotenv.config()
 
 export interface CreateProductRequest {
@@ -34,23 +30,8 @@ async function products() {
   return container
 }
 
-export async function getProducts(): Promise<Product[]> {
-  const productsContainer = await products()
-  return await readAllProducts(productsContainer)
-}
-
-export async function getProduct(id: string): Promise<Product | null> {
-  const productsContainer = await products()
-  return await readProductById(productsContainer, id)
-}
-
 export async function createProduct(request: CreateProductRequest) {
   const productsContainer = await products()
   const result = await productsContainer.items.create(request)
   return { idOfCreated: result.item.id, request: request }
-}
-
-export async function addImageToProduct(id: string, imageLink: string) {
-  const productContainer = await products()
-  await replaceProductWithAdditionalImage(productContainer, id, imageLink)
 }
