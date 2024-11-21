@@ -1,5 +1,5 @@
 import { Product } from '@/lib/server/core/types'
-import { Unit } from './types'
+import { Unit } from '../types'
 import * as azureBlobClient from '@/lib/server/boundary/azure/images-client'
 import * as azureCosmosClient from '@/lib/server/boundary/azure/products-client'
 import {
@@ -7,7 +7,8 @@ import {
   ErrorInBlobStorageAccess,
   ErrorInCosmosDbAccess,
   ProductWithIdNotFound,
-} from './failure'
+} from '../failure'
+export * from './create-product'
 
 export interface ReadAllProducts {
   readAllProducts(): Promise<Product[] | ErrorInCosmosDbAccess>

@@ -4,7 +4,7 @@ import { createProduct, CreateProductRequest } from '@/lib/azure/cosmos-client'
 import { z } from 'zod'
 
 export async function handleCreateProductForm(formData: FormData) {
-  const schema = z.object({
+  const schema = z.object({ 
     name: z.string(),
     price: z.string(),
     description: z.string().nullable(),

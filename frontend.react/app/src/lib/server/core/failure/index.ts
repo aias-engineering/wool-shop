@@ -15,6 +15,13 @@ export class ImageReferencedByProducts extends Failure {
   }
 }
 
+export class ProductValidationFailed extends Failure {
+  constructor(
+    readonly error: unknown){
+    super('cpr-01', 'Validation for the provided Product failed')
+  }
+}
+
 export class ErrorInCosmosDbAccess extends Failure {
   constructor(readonly error: TypeError) {
     super('cdb-00', 'An Error was thrown when accessing Azure Cosmos DB')
