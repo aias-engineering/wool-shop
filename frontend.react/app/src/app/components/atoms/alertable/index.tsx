@@ -9,19 +9,21 @@ interface AlertableProps extends HasChildren {
   onClick?: () => Promise<void>
 }
 
-export default function Alertable({children}: AlertableProps) {
-  return (
-    <div className="alertable">
-      {children}
-    </div>
-  )
+export default function Alertable({ children }: AlertableProps) {
+  return <div className="alertable">{children}</div>
 }
 
-export function AlertableAlert({children}: HasChildren) {
+export function AlertableAlert({ children }: HasChildren) {
   const [collapsed, setCollapsed] = useState(false)
 
   return (
-    <div className={clsx('alertable__alert', (collapsed && 'alertable__alert--collapsed'))} onClick={() => setCollapsed(true)}>
+    <div
+      className={clsx(
+        'alertable__alert',
+        collapsed && 'alertable__alert--collapsed',
+      )}
+      onClick={() => setCollapsed(true)}
+    >
       {children}
     </div>
   )

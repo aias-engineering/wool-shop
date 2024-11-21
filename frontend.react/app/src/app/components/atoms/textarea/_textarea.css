@@ -1,0 +1,14 @@
+.textarea {
+  --tw-ring-offset-color: hsl(var(--background));
+  background-color: hsl(var(--background));
+  border-color: hsl(var(--input));
+  border-radius: calc(var(--radius) - 2px);
+  border-width: 1px;
+  display: flex;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  min-height: 80px;
+  padding: 0.5rem 0.75rem;
+  resize: vertical;
+  width: 100%;
+}

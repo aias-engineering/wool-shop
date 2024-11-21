@@ -1,0 +1,4 @@
+.image-frame {
+  overflow: hidden;
+  border-radius: calc(var(--radius) - 2px);
+}

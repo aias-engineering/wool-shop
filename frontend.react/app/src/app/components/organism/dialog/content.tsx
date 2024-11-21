@@ -4,7 +4,7 @@ import './_dialog.css'
 import * as React from 'react'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { DialogOverlay } from './overlay'
-import { X } from "lucide-react"
+import { X } from 'lucide-react'
 import clsx from 'clsx'
 
 export const DialogClose = DialogPrimitive.DialogClose
@@ -19,7 +19,7 @@ export const DialogContent = React.forwardRef<
     <DialogOverlay />
     <DialogPrimitive.Content
       ref={ref}
-      className={clsx('dialog-content', className )}
+      className={clsx('dialog-content', className)}
       {...props}
     >
       {children}

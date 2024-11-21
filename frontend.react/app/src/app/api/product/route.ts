@@ -1,6 +1,17 @@
-import { getProducts } from "@/lib/azure/cosmos-client";
+import { readAllProducts } from '@/lib/server/boundary/azure/products-client'
+import { ErrorInCosmosDbAccess } from '@/lib/server/core/failure'
+import { Product } from '@/lib/server/core/types'
+import { NextResponse } from 'next/server'
+import { match, P } from 'ts-pattern'
 
-export async function GET(): Promise<Response> {
-  const products = await getProducts();
-  return Response.json(products)
+export async function GET(): Promise<NextResponse> {
+  const result = await readAllProducts()
+
+  return match<ErrorInCosmosDbAccess | Product[], NextResponse>(result)
+    .with(P.array(), (products) => NextResponse.json(products))
+    .with(
+      P.instanceOf(ErrorInCosmosDbAccess),
+      ({ reason }) => new NextResponse(reason, { status: 500 }),
+    )
+    .exhaustive()
 }

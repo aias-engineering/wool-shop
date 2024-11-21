@@ -1,9 +1,28 @@
-import { getProduct } from "@/lib/azure/cosmos-client";
+import { withAzureDataAccess } from '@/lib/server/core/data-access'
+import {
+  ErrorInCosmosDbAccess,
+  ProductWithIdNotFound,
+} from '@/lib/server/core/failure'
+import { getProduct } from '@/lib/server/core/products'
+import { NextResponse } from 'next/server'
+import { match, P } from 'ts-pattern'
 
-export async function GET(_: Request, { params }: { params: { id: string } }) {
-  console.log('/product/%s', params.id)
-  const product = await getProduct(params.id)
-  if (product)
-    return Response.json(product)
-  return new Response('Not Found', { status: 404 })
+interface Route {
+  params: { id: string }
 }
+
+export const GET = async (_: Request, { params }: Route) =>
+  withAzureDataAccess((dataAccess) => getProduct(params.id, dataAccess)).then(
+    (either) =>
+      match(either)
+        .with(P.instanceOf(ProductWithIdNotFound), (failure) =>
+          NextResponse.json(failure, { status: 404 }),
+        )
+        .with(P.instanceOf(ErrorInCosmosDbAccess), (failure) =>
+          NextResponse.json(failure, { status: 500 }),
+        )
+        .with(P.select(), (product) =>
+          NextResponse.json(product, { status: 200 }),
+        )
+        .exhaustive(),
+  )

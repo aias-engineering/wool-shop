@@ -21,7 +21,7 @@
 
 .alert__title {
   padding-left: 1.75rem;
-  letter-spacing: -.025rem;
+  letter-spacing: -0.025rem;
   line-height: 1;
   font-size: inherit;
   font-weight: 500;
@@ -30,6 +30,6 @@
 
 .alert__description {
   padding-left: 1.75rem;
-  font-size: .875rem;
+  font-size: 0.875rem;
   line-height: 1.25rem;
 }

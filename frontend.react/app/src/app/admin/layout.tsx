@@ -1,19 +1,17 @@
-import { ReactNode } from "react"
-import Body from "../components/layout/body"
-import HeaderLayout from "../components/layout/header"
-import Main from "../components/main"
+import { ReactNode } from 'react'
+import Body from '../components/layout/body'
+import HeaderLayout from '../components/layout/header'
+import Main from '../components/main'
 
 interface Props {
   children?: ReactNode
 }
 
-const Layout = ({children}: Props) => (
+const Layout = ({ children }: Props) => (
   <>
+    <HeaderLayout></HeaderLayout>
     <Body>
-      <HeaderLayout></HeaderLayout>
-      <Main>
-        {children}
-      </Main>
+      <Main>{children}</Main>
     </Body>
   </>
 )

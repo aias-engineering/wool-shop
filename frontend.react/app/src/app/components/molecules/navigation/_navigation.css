@@ -1,0 +1,29 @@
+.navigation {
+  display: flex;
+  flex-direction: row;
+}
+
+.navigation__link {
+  align-items: center;
+  background-color: transparent;
+  border-radius: calc(var(--radius) - 2px);
+  border-width: 0;
+  color: hsl(var(--primary));
+  cursor: pointer;
+  display: inline-flex;
+  padding: 0.5rem 1rem;
+  font-family: inherit;
+  font-size: 1.125rem;
+  font-weight: 600;
+  gap: 0.5rem;
+  height: 2.5rem;
+  justify-content: center;
+  line-height: 1.75rem;
+  text-underline-offset: 4px;
+  white-space: nowrap;
+}
+
+.navigation__link:hover {
+  background-color: transparent;
+  text-decoration-line: underline;
+}

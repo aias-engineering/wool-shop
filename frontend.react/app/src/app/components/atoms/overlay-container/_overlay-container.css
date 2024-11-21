@@ -5,9 +5,9 @@
 
 .overlay-container__overlay {
   visibility: hidden;
-  position: absolute; 
-  top: 80%; 
-  left: 50%; 
+  position: absolute;
+  top: 80%;
+  left: 50%;
   transform: translate(-50%, -50%);
   z-index: 100;
 }

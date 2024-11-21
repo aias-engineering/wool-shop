@@ -1,8 +1,8 @@
 'use client'
 
 import './_dialog.css'
-import * as React from "react"
-import * as DialogPrimitive from "@radix-ui/react-dialog"
+import * as React from 'react'
+import * as DialogPrimitive from '@radix-ui/react-dialog'
 import clsx from 'clsx'
 
 export const DialogOverlay = React.forwardRef<
@@ -11,7 +11,7 @@ export const DialogOverlay = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Overlay
     ref={ref}
-    className={clsx('dialog-overlay', className )}
+    className={clsx('dialog-overlay', className)}
     {...props}
   />
 ))

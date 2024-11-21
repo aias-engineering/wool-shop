@@ -8,9 +8,6 @@ export const DialogFooter = ({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={clsx('dialog-footer', className )}
-    {...props}
-  />
+  <div className={clsx('dialog-footer', className)} {...props} />
 )
-DialogFooter.displayName = "DialogFooter"
+DialogFooter.displayName = 'DialogFooter'

@@ -9,3 +9,10 @@
 .image--rounded {
   border-radius: var(--radius);
 }
+
+.image--with-zoom-effect {
+}
+
+.image--with-zoom-effect:hover {
+  transform: scaleX(1.05) scaleY(1.05);
+}
