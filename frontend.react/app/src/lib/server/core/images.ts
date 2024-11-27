@@ -23,7 +23,7 @@ export const getImage = (
   imagename: string,
   dataAccess: DownloadImageBlob,
 ): Promise<
-  ErrorInBlobStorageAccess | ReadableStream<any> | DownloadDidntReturnStream
+  ErrorInBlobStorageAccess | ReadableStream | DownloadDidntReturnStream
 > => dataAccess.downloadImageBlob(imagename)
 
 export const saveImage = (

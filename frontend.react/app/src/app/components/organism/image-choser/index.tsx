@@ -10,9 +10,8 @@ import ImageUploadButton, {
   UploadedImage,
 } from '../../atoms/image-upload-button'
 import { useState } from 'react'
-import { PrimitiveAtom } from 'jotai'
-import ImageCropper, { CroppedImage } from '../../atoms/image-cropper'
-import { Atom } from 'jotai'
+import { PrimitiveAtom, useAtom } from 'jotai'
+import ImageCropper from '../../atoms/image-cropper'
 import { ImagesFetch } from '@/lib/client/store/image'
 
 type State =
@@ -22,7 +21,7 @@ type State =
   | { step: 'image-uploaded'; uploadedImage: PrimitiveAtom<UploadedImage> }
 
 export default function ImageChoser() {
-  const [imagesFetch, setImagesFetch] = useAtom(imagesFetchAtom)
+  const [imagesFetch] = useAtom(imagesFetchAtom)
 
   const [state, setState] = useState<State>({ step: 'idle' })
 
@@ -33,7 +32,7 @@ export default function ImageChoser() {
   }
 
   async function handleImageCropped(
-    croppedImage: Atom<CroppedImage | 'Crop failed'>,
+    
   ) {
     console.log(' a lot to do still... ')
   }
