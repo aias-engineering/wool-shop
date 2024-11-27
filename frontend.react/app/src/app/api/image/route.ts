@@ -13,7 +13,7 @@ export async function GET(): Promise<NextResponse> {
     .with(P.array(), (imagenames) => NextResponse.json(imagenames))
     .with(
       P.instanceOf(ErrorInBlobStorageAccess),
-      ({ reason }) => new NextResponse(reason, { status: 500 }),
+      (error) => new NextResponse(error.reason, { status: 500 }),
     )
     .exhaustive()
 }
