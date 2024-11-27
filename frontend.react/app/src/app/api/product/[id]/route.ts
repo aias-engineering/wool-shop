@@ -8,11 +8,11 @@ import { NextResponse } from 'next/server'
 import { match, P } from 'ts-pattern'
 
 interface Route {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }
 
 export const GET = async (_: Request, { params }: Route) =>
-  withAzureDataAccess((dataAccess) => getProduct(params.id, dataAccess)).then(
+  withAzureDataAccess(async (dataAccess) => getProduct((await params).id, dataAccess)).then(
     (either) =>
       match(either)
         .with(P.instanceOf(ProductWithIdNotFound), (failure) =>

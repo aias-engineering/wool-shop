@@ -2,7 +2,6 @@
 
 import classNames from 'clsx'
 import { Product } from '@/lib/azure/entities'
-import { match, P } from 'ts-pattern'
 import ImageOrPlaceholder from '@/app/components/atoms/image-or-placeholder'
 import Button from '@/app/components/atoms/button'
 import { useState } from 'react'
@@ -15,11 +14,6 @@ interface Props {
   className?: string
   product: Product
 }
-
-const firstImage = (product: Product) =>
-  match(product.imageLinks)
-    .with([P.string], ([link]) => link)
-    .otherwise(() => null)
 
 const ProductsItem = ({ className, product }: Props) => {
   const [hover, setHover] = useState<boolean>(false)
@@ -35,7 +29,7 @@ const ProductsItem = ({ className, product }: Props) => {
         onMouseLeave={mouseLeave}
       >
         <OverlayContainer>
-          <ImageOrPlaceholder src={firstImage(product)} alt={product.name} />
+          <ImageOrPlaceholder src={product.image} alt={product.name} />
           {hover && (
             <Overlay>
               <Button onClick={() => deleteProduct(product.id)}>Delete</Button>

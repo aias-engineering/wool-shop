@@ -10,11 +10,11 @@ import {
 import { withAzureDataAccess } from '@/lib/server/core/data-access'
 
 interface Route {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }
 
 export const GET = (_: NextRequest, { params }: Route): Promise<NextResponse> =>
-  withAzureDataAccess((dataAccess) => getImage(params.id, dataAccess)).then(
+  withAzureDataAccess(async (dataAccess) => getImage((await params).id, dataAccess)).then(
     (result) =>
       match<ReadableStream | Failure, NextResponse>(result)
         .with(
@@ -34,8 +34,8 @@ export async function POST(
 ): Promise<NextResponse> {
   const stream = await req.blob().then((blob) => blob.stream())
 
-  return withAzureDataAccess((dataAccess) =>
-    saveImage(params.id, stream, dataAccess),
+  return withAzureDataAccess(async (dataAccess) =>
+    saveImage((await params).id, stream, dataAccess),
   ).then((result) =>
     match(result)
       .with(P.instanceOf(Unit), () => new NextResponse('done', { status: 200 }))
@@ -50,7 +50,7 @@ export const DELETE = (
   _: NextRequest,
   { params }: Route,
 ): Promise<NextResponse> =>
-  withAzureDataAccess((dataAccess) => deleteImage(params.id, dataAccess)).then(
+  withAzureDataAccess(async (dataAccess) => deleteImage((await params).id, dataAccess)).then(
     (result) =>
       match(result)
         .with(P.instanceOf(ImageReferencedByProducts), (f) =>
