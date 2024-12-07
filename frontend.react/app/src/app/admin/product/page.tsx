@@ -2,7 +2,7 @@ import Button from '@/app/components/atoms/button'
 import { Separator } from '@/app/components/atoms/separator'
 import Title from '@/app/components/atoms/title'
 import * as ts from 'ts-pattern'
-import { PackagePlus, Trash2 } from 'lucide-react'
+import { PackagePlus } from 'lucide-react'
 import Link from 'next/link'
 import Grid from '@/app/components/atoms/grid'
 import ImageFrame from '@/app/components/atoms/image-frame'
@@ -14,6 +14,7 @@ import { getAllProducts } from '@/lib/server/core/products'
 import { ErrorInCosmosDbAccess } from '@/lib/server/core/failure'
 import ErrorPage from '@/app/components/layout/error-page'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/app/components/molecules/card'
+import DeleteProductButton from './delete-button'
 
 const Page = async () => {
   const products = await withAzureDataAccess((dataAccess) =>
@@ -43,28 +44,24 @@ const Page = async () => {
           <>
             <Grid>
               {products.map((product, index) => (
-                <>
-                  <Card key={index}>
-                    <CardHeader>
-                      <CardTitle>
-                        {product.name}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <ImageFrame>
-                        <Image src={product.image} alt={product.image} />
-                      </ImageFrame>
-                      <Space className="space--top-1">
-                        <P>{product.price} €</P>
-                      </Space>
-                    </CardContent>
-                    <CardFooter>
-                      <Button>
-                        <Trash2 /> verwijderen
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                </>
+                <Card key={index}>
+                  <CardHeader>
+                    <CardTitle>
+                      {product.name}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ImageFrame>
+                      <Image src={product.image} alt={product.image} />
+                    </ImageFrame>
+                    <Space className="space--top-1">
+                      <P>{product.price} €</P>
+                    </Space>
+                  </CardContent>
+                  <CardFooter>
+                    <DeleteProductButton productId={product.id} />
+                  </CardFooter>
+                </Card>
               ))}
             </Grid>
           </>

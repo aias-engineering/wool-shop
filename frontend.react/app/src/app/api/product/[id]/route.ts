@@ -3,7 +3,8 @@ import {
   ErrorInCosmosDbAccess,
   ProductWithIdNotFound,
 } from '@/lib/server/core/failure'
-import { getProduct } from '@/lib/server/core/products'
+import { deleteProduct, getProduct } from '@/lib/server/core/products'
+import { Unit } from '@/lib/server/core/types'
 import { NextResponse } from 'next/server'
 import { match, P } from 'ts-pattern'
 
@@ -26,3 +27,21 @@ export const GET = async (_: Request, { params }: Route) =>
         )
         .exhaustive(),
   )
+
+export const DELETE = async(_: Request, { params }: Route) => 
+  withAzureDataAccess(
+    dataAccess => 
+      params
+        .then(
+          ({ id }) => deleteProduct(id, dataAccess)
+        )
+        .then(
+          either => 
+            match(either)
+              .with(P.instanceOf(ErrorInCosmosDbAccess), (failure) => 
+                NextResponse.json(failure, { status: 500 })
+              )
+              .with(P.instanceOf(Unit), () => 
+                new NextResponse('done', { status: 200 })
+              )
+            .exhaustive()))
