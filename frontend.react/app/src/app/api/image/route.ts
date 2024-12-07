@@ -1,4 +1,4 @@
-import { withAzureDataAccess } from '@/lib/server/core/data-access'
+import { withAzureDataAccess } from '@/lib/server'
 import { ErrorInBlobStorageAccess } from '@/lib/server/core/failure'
 import { getImages } from '@/lib/server/core/images'
 import { NextResponse } from 'next/server'

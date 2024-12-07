@@ -7,7 +7,7 @@ import {
   Failure,
   ImageReferencedByProducts,
 } from '@/lib/server/core/failure'
-import { withAzureDataAccess } from '@/lib/server/core/data-access'
+import { withAzureDataAccess } from '@/lib/server'
 
 interface Route {
   params: Promise<{ id: string }>

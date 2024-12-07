@@ -1,6 +1,6 @@
-import { CreateProduct, CreateProductRequest, CreateProductResponse, CreateProductRequestFormSchema, ReadAllProducts, ReadProduct } from './data-access'
+import { CreateProduct, CreateProductRequest, CreateProductResponse, CreateProductRequestFormSchema, ReadAllProducts, ReadProduct, DeleteProduct } from './data-access'
 import { ErrorInCosmosDbAccess, ProductValidationFailed, ProductWithIdNotFound } from './failure'
-import { Product } from './types'
+import { Product, Unit } from './types'
 
 export const getAllProducts = (
   dataAccess: ReadAllProducts,
@@ -29,3 +29,6 @@ export const createProduct = async (formData: FormData, dataAccess: CreateProduc
           ? await dataAccess.createProduct(either) 
           : either
     )
+
+export const deleteProduct = async(id: string, dataAccess: DeleteProduct): Promise<Unit | ErrorInCosmosDbAccess> => 
+  dataAccess.deleteProduct(id)

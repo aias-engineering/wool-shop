@@ -14,7 +14,7 @@ import { match, P } from 'ts-pattern'
 import ErrorPage from '@/app/components/layout/error-page'
 import { ErrorInBlobStorageAccess } from '@/lib/server/core/failure'
 import { getImages } from '@/lib/server/core/images'
-import { withAzureDataAccess } from '@/lib/server/core/data-access'
+import { withAzureDataAccess } from '@/lib/server'
 
 const Page = async () => {
   const readImagesResult = await withAzureDataAccess((dataAccess) =>

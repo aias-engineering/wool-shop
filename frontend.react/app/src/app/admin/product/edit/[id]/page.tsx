@@ -1,7 +1,7 @@
 import Grid from '@/app/components/atoms/grid'
 import Image from '@/app/components/atoms/image'
 import ErrorPage from '@/app/components/layout/error-page'
-import { withAzureDataAccess } from '@/lib/server/core/data-access'
+import { withAzureDataAccess } from '@/lib/server'
 import {
   ErrorInCosmosDbAccess,
   ProductWithIdNotFound,

@@ -1,7 +1,5 @@
 import { Product } from '@/lib/server/core/types'
 import { Unit } from '../types'
-import * as azureBlobClient from '@/lib/server/boundary/azure/images-client'
-import * as azureCosmosClient from '@/lib/server/boundary/azure/products-client'
 import {
   DownloadDidntReturnStream,
   ErrorInBlobStorageAccess,
@@ -24,6 +22,10 @@ export interface ReadProduct {
   readProduct(
     id: string,
   ): Promise<Product | ProductWithIdNotFound | ErrorInCosmosDbAccess>
+}
+
+export interface DeleteProduct {
+  deleteProduct(id: string): Promise<Unit | ErrorInCosmosDbAccess>
 }
 
 export interface ListImageBlobsFlat {
@@ -56,13 +58,3 @@ export type DataAccessFacade = ReadAllProducts &
   DownloadImageBlob &
   UploadImageBlob &
   DeleteImageBlob
-
-export async function withAzureDataAccess<R>(
-  func: (dataAccess: DataAccessFacade) => Promise<R>,
-) {
-  const azureClient: DataAccessFacade = {
-    ...azureBlobClient,
-    ...azureCosmosClient,
-  }
-  return func(azureClient)
-}

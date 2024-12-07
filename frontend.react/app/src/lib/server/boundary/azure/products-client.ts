@@ -3,7 +3,7 @@ import {
   ErrorInCosmosDbAccess,
   ProductWithIdNotFound,
 } from '@/lib/server/core/failure'
-import { Product } from '@/lib/server/core/types'
+import { Product, Unit } from '@/lib/server/core/types'
 
 export const readAllProducts = (): Promise<ErrorInCosmosDbAccess | Product[]> =>
   products()
@@ -34,4 +34,10 @@ export const readProduct = (
   products()
     .then((container) => container.item(id, id).read<Product>())
     .then((response) => response.resource || new ProductWithIdNotFound(id))
+    .catch((error) => new ErrorInCosmosDbAccess(error))
+
+export const deleteProduct = (id: string): Promise<Unit | ErrorInCosmosDbAccess> =>
+  products()
+    .then((container) => container.item(id, id).delete())
+    .then(() => Unit.done)
     .catch((error) => new ErrorInCosmosDbAccess(error))

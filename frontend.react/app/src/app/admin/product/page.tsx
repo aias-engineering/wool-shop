@@ -8,12 +8,12 @@ import Grid from '@/app/components/atoms/grid'
 import ImageFrame from '@/app/components/atoms/image-frame'
 import Image from '@/app/components/atoms/image'
 import Space from '@/app/components/atoms/space'
-import Large from '@/app/components/atoms/large'
 import P from '@/app/components/atoms/p'
-import { withAzureDataAccess } from '@/lib/server/core/data-access'
+import { withAzureDataAccess } from '@/lib/server'
 import { getAllProducts } from '@/lib/server/core/products'
 import { ErrorInCosmosDbAccess } from '@/lib/server/core/failure'
 import ErrorPage from '@/app/components/layout/error-page'
+import { Card, CardContent, CardTitle } from '@/app/components/molecules/card'
 
 const Page = async () => {
   const products = await withAzureDataAccess((dataAccess) =>
@@ -43,15 +43,21 @@ const Page = async () => {
           <>
             <Grid>
               {products.map((product, index) => (
-                <div key={index}>
-                  <ImageFrame>
-                    <Image src={product.image} alt={product.image} />
-                  </ImageFrame>
-                  <Space className="space--top-1">
-                    <Large>{product.name}</Large>
-                    <P>{product.price} €</P>
-                  </Space>
-                </div>
+                <>
+                  <Card key={index}>
+                    <CardTitle>
+                      {product.name}
+                    </CardTitle>
+                    <CardContent>
+                      <ImageFrame>
+                        <Image src={product.image} alt={product.image} />
+                      </ImageFrame>
+                      <Space className="space--top-1">
+                        <P>{product.price} €</P>
+                      </Space>
+                    </CardContent>
+                  </Card>
+                </>
               ))}
             </Grid>
           </>

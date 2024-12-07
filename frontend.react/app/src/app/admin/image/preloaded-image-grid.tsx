@@ -24,6 +24,7 @@ import {
 import Spinner from '@/app/components/atoms/spinner'
 import Title from '@/app/components/atoms/title'
 import P from '@/app/components/atoms/p'
+import { JSX } from 'react'
 
 interface Props {
   urls: string[]
@@ -57,54 +58,49 @@ export default function PreloadedImagesGrid({ urls }: Props) {
         ))
         .with({ step: 'fetched' }, ({}) => (
           <Grid>
-            {urls.map((url, index) => {
-              return (
-                <Card key={index} className="card--borderless">
-                  <CardTitle></CardTitle>
-                  <CardContent>
-                    <AspectRatio ratio={3 / 4}>
-                      <Image
-                        className="image--rounded"
-                        key={index}
-                        src={url}
-                        alt={url}
-                      />
-                    </AspectRatio>
-                    <Small>{url}</Small>
-                  </CardContent>
-                  {match(imageDeleteState)
-                    .with({ step: 'idle' }, () => (
-                      <CardFooter className="card__footer--onhover">
-                        <Button
-                          onClick={async () =>
-                            deleteImage(url, imageDeleteStateAtom)
-                          }
-                        >
-                          <Trash2 /> verwijderen
-                        </Button>
-                      </CardFooter>
-                    ))
-                    .with({ step: 'deleting', imageUrl: url }, () => (
+            {urls.map((url, index) => (
+              <Card key={index} className="card--borderless">
+                <CardTitle></CardTitle>
+                <CardContent>
+                  <AspectRatio ratio={3 / 4}>
+                    <Image
+                      className="image--rounded"
+                      key={index}
+                      src={url}
+                      alt={url} />
+                  </AspectRatio>
+                  <Small>{url}</Small>
+                </CardContent>
+                {match(imageDeleteState)
+                  .with({ step: 'idle' }, () => (
+                    <CardFooter className="card__footer--onhover">
+                      <Button
+                        onClick={async () => deleteImage(url, imageDeleteStateAtom)}
+                      >
+                        <Trash2 /> verwijderen
+                      </Button>
+                    </CardFooter>
+                  ))
+                  .with({ step: 'deleting', imageUrl: url }, () => (
+                    <CardFooter>
+                      <Spinner /> deleting...
+                    </CardFooter>
+                  ))
+                  .with({ step: 'error', imageUrl: url }, ({ message }) => (
+                    <CardFooter>{message}</CardFooter>
+                  ))
+                  .with({ step: 'done', imageUrl: url }, async () => {
+                    return (
                       <CardFooter>
-                        <Spinner /> deleting...
+                        delete succesfull.. I will disapear in a second ;)
                       </CardFooter>
-                    ))
-                    .with({ step: 'error', imageUrl: url }, ({ message }) => (
-                      <CardFooter>{message}</CardFooter>
-                    ))
-                    .with({ step: 'done', imageUrl: url }, async () => {
-                      return (
-                        <CardFooter>
-                          delete succesfull.. I will disapear in a second ;)
-                        </CardFooter>
-                      )
-                    })
-                    .otherwise(() => (
-                      <CardFooter></CardFooter>
-                    ))}
-                </Card>
-              )
-            })}
+                    )
+                  })
+                  .otherwise(() => (
+                    <CardFooter></CardFooter>
+                  ))}
+              </Card>
+            ))}
           </Grid>
         ))
         .otherwise(() => (

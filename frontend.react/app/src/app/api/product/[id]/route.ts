@@ -1,4 +1,4 @@
-import { withAzureDataAccess } from '@/lib/server/core/data-access'
+import { withAzureDataAccess } from '@/lib/server'
 import {
   ErrorInCosmosDbAccess,
   ProductWithIdNotFound,

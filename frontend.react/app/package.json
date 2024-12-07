@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@azure/cosmos": "^4.1.1",
-    "@azure/identity": "^4.4.1",
     "@azure/storage-blob": "^12.25.0",
     "@radix-ui/react-aspect-ratio": "^1.1.0",
     "@radix-ui/react-dialog": "^1.1.2",
@@ -22,10 +21,7 @@
     "dotenv": "^16.4.5",
     "jotai": "^2.10.1",
     "lucide-react": "^0.453.0",
-    "nedb-promises": "^6.2.3",
     "next": "15.0.3",
-    "react": "19.0.0-rc-66855b96-20241106",
-    "react-dom": "19.0.0-rc-66855b96-20241106",
     "react-easy-crop": "^5.0.8",
     "react-images-uploading": "^3.1.7",
     "ts-pattern": "^5.4.0",
@@ -43,8 +39,6 @@
     "@storybook/react": "^8.4.5",
     "@storybook/test": "^8.4.5",
     "@types/node": "^20",
-    "@types/react": "npm:types-react@19.0.0-rc.1",
-    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
     "@vitejs/plugin-react": "^4.3.3",
     "autoprefixer": "^10.4.20",
     "eslint": "^8",
@@ -59,9 +53,5 @@
     "typescript": "^5",
     "vite-tsconfig-paths": "^5.1.1",
     "vitest": "^2.1.4"
-  },
-  "overrides": {
-    "@types/react": "npm:types-react@19.0.0-rc.1",
-    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1"
   }
 }
