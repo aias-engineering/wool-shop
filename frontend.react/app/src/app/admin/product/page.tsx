@@ -2,7 +2,7 @@ import Button from '@/app/components/atoms/button'
 import { Separator } from '@/app/components/atoms/separator'
 import Title from '@/app/components/atoms/title'
 import * as ts from 'ts-pattern'
-import { PackagePlus } from 'lucide-react'
+import { PackagePlus, Trash2 } from 'lucide-react'
 import Link from 'next/link'
 import Grid from '@/app/components/atoms/grid'
 import ImageFrame from '@/app/components/atoms/image-frame'
@@ -13,7 +13,7 @@ import { withAzureDataAccess } from '@/lib/server'
 import { getAllProducts } from '@/lib/server/core/products'
 import { ErrorInCosmosDbAccess } from '@/lib/server/core/failure'
 import ErrorPage from '@/app/components/layout/error-page'
-import { Card, CardContent, CardTitle } from '@/app/components/molecules/card'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/app/components/molecules/card'
 
 const Page = async () => {
   const products = await withAzureDataAccess((dataAccess) =>
@@ -45,9 +45,11 @@ const Page = async () => {
               {products.map((product, index) => (
                 <>
                   <Card key={index}>
-                    <CardTitle>
-                      {product.name}
-                    </CardTitle>
+                    <CardHeader>
+                      <CardTitle>
+                        {product.name}
+                      </CardTitle>
+                    </CardHeader>
                     <CardContent>
                       <ImageFrame>
                         <Image src={product.image} alt={product.image} />
@@ -56,6 +58,11 @@ const Page = async () => {
                         <P>{product.price} €</P>
                       </Space>
                     </CardContent>
+                    <CardFooter>
+                      <Button>
+                        <Trash2 /> verwijderen
+                      </Button>
+                    </CardFooter>
                   </Card>
                 </>
               ))}
@@ -63,7 +70,10 @@ const Page = async () => {
           </>
         ))
         .with(ts.P.instanceOf(ErrorInCosmosDbAccess), (error) => (
-          <ErrorPage message={error.code} />
+          <ErrorPage message={
+            `${error.code}: ${error.reason}
+            
+             ${error.error}`} />
         ))
         .exhaustive()}
     </>

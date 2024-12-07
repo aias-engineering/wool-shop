@@ -54,6 +54,7 @@ export interface DeleteImageBlob {
 export type DataAccessFacade = ReadAllProducts &
   ReadProductsWithImage &
   ReadProduct &
+  DeleteProduct &
   ListImageBlobsFlat &
   DownloadImageBlob &
   UploadImageBlob &
