@@ -12,7 +12,7 @@ import Label from '@/app/components/atoms/label'
 import Space from '@/app/components/atoms/space'
 import { match, P } from 'ts-pattern'
 import ErrorPage from '@/app/components/layout/error-page'
-import { ErrorInBlobStorageAccess } from '@/lib/server/core/failure'
+import { ErrorInBlobStorageAccess, isFailure } from '@/lib/server/core/failure'
 import { getImages } from '@/lib/server/core/images'
 import { withAzureDataAccess } from '@/lib/server'
 
@@ -55,9 +55,7 @@ const Page = async () => {
         </form>
       </Provider>
     ))
-    .with(P.instanceOf(ErrorInBlobStorageAccess), ({ reason }) => (
-      <ErrorPage message={reason} />
-    ))
+    .with(P.when(isFailure), ({ reason }) => <ErrorPage message={reason} />)
     .exhaustive()
 }
 

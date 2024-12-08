@@ -1,6 +1,17 @@
 // overall types
-export class Unit {
-  static done = new Unit()
+export interface Unit {
+  type: 'unit'
+}
+
+const done: Unit = { type: 'unit' }
+
+export const Unit = {
+  done,
+}
+
+export function isUnit(x: unknown): x is Unit {
+  const failure = x as Unit
+  return failure.type === 'unit'
 }
 
 // product types

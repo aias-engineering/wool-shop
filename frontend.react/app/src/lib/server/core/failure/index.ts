@@ -1,52 +1,118 @@
-export abstract class Failure {
-  constructor(
-    readonly code: string,
-    readonly reason: string,
-  ) {}
+export interface Failure {
+  readonly type: 'failure'
+  readonly code: string
+  readonly reason: string
 }
 
 export function isFailure(x: unknown): x is Failure {
-  return x instanceof Failure
+  const failure = x as Failure
+  if (!failure.code) return false
+  if (!failure.reason) return false
+  return failure.type === 'failure'
 }
 
-export class ImageReferencedByProducts extends Failure {
-  constructor(readonly productnames: string[]) {
-    super('cim-01', 'The image was still referenced by products.')
-  }
+export interface ImageReferencedByProducts extends Failure {
+  readonly code: 'cim-01'
+  readonly reason: 'The image was still referenced by products.'
+  readonly productnames: string[]
 }
 
-export class ProductValidationFailed extends Failure {
-  constructor(readonly error: unknown) {
-    super('cpr-01', 'Validation for the provided Product failed')
-  }
+export interface ProductValidationFailed extends Failure {
+  readonly code: 'cpr-01'
+  readonly reason: 'Validation for the provided Product failed'
+  readonly error: TypeError
 }
 
-export class ErrorInCosmosDbAccess extends Failure {
-  constructor(readonly error: TypeError) {
-    super('cdb-00', 'An Error was thrown when accessing Azure Cosmos DB')
-  }
+export interface ErrorInCosmosDbAccess extends Failure {
+  readonly code: 'cdb-00'
+  readonly reason: 'An Error was thrown when accessing Azure Cosmos DB'
+  readonly error: TypeError
 }
 
-export class ProductWithIdNotFound extends Failure {
-  constructor(readonly id: string) {
-    super(
-      'cdb-01',
-      `The product with id ${id} wasn't found in the Azure Cosmos DB`,
-    )
-  }
+export interface ProductWithIdNotFound extends Failure {
+  readonly code: 'cdb-01'
+  readonly id: string
 }
 
-export class ErrorInBlobStorageAccess extends Failure {
-  constructor(readonly error: TypeError) {
-    super('bls-00', 'An Error was thrown when accessing Azure Blob Storage')
-  }
+export interface ErrorInBlobStorageAccess extends Failure {
+  readonly code: 'bls-00'
+  readonly reason: 'An Error was thrown when accessing Azure Blob Storage'
+  readonly error: TypeError
 }
 
-export class DownloadDidntReturnStream extends Failure {
-  constructor(imagename: string) {
-    super(
-      'bls-01',
-      `Azure Blob Storage didn't return a ReadStream when downloading ${imagename}`,
-    )
-  }
+export interface DownloadDidntReturnStream extends Failure {
+  readonly code: 'bls-01'
+  readonly imagename: string
 }
+
+export const ImageReferencedByProducts: (
+  productnames: string[],
+) => ImageReferencedByProducts = (productnames: string[]) => ({
+  type: 'failure',
+  code: 'cim-01',
+  reason: 'The image was still referenced by products.',
+  productnames,
+})
+
+export function isImageReferencedByProducts(
+  x: unknown,
+): x is ImageReferencedByProducts {
+  const failure = x as ImageReferencedByProducts
+  return (
+    failure.type === 'failure' &&
+    failure.code === 'cim-01' &&
+    failure.reason === 'The image was still referenced by products.'
+  )
+}
+
+export const ProductValidationFailed: (
+  error: TypeError,
+) => ProductValidationFailed = (error: TypeError) => ({
+  type: 'failure',
+  code: 'cpr-01',
+  reason: 'Validation for the provided Product failed',
+  error,
+})
+
+export const ErrorInCosmosDbAccess: (
+  error: TypeError,
+) => ErrorInCosmosDbAccess = (error: TypeError) => ({
+  type: 'failure',
+  code: 'cdb-00',
+  reason: 'An Error was thrown when accessing Azure Cosmos DB',
+  error,
+})
+
+export const ProductWithIdNotFound: (id: string) => ProductWithIdNotFound = (
+  id: string,
+) => ({
+  type: 'failure',
+  code: 'cdb-01',
+  reason: `The product with id ${id} wasn't found in the Azure Cosmos DB`,
+  id,
+})
+
+export function isProductWithIdNotFound(
+  x: unknown,
+): x is ProductWithIdNotFound {
+  const failure = x as ProductWithIdNotFound
+  return failure.type === 'failure' && failure.code === 'cdb-01'
+}
+
+export const ErrorInBlobStorageAccess: (
+  error: TypeError,
+) => ErrorInBlobStorageAccess = (error: TypeError) => ({
+  type: 'failure',
+  code: 'bls-00',
+  reason: 'An Error was thrown when accessing Azure Blob Storage',
+  error,
+})
+
+export const DownloadDidntReturnStream: (
+  imagename: string,
+) => DownloadDidntReturnStream = (imagename: string) => ({
+  type: 'failure',
+  code: 'bls-01',
+  reason: `Azure Blob Storage didn't return a ReadStream when downloading ${imagename}`,
+  imagename,
+})

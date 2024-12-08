@@ -11,7 +11,7 @@ import Space from '@/app/components/atoms/space'
 import P from '@/app/components/atoms/p'
 import { withAzureDataAccess } from '@/lib/server'
 import { getAllProducts } from '@/lib/server/core/products'
-import { ErrorInCosmosDbAccess } from '@/lib/server/core/failure'
+import { isFailure } from '@/lib/server/core/failure'
 import ErrorPage from '@/app/components/layout/error-page'
 import {
   Card,
@@ -70,7 +70,7 @@ const Page = async () => {
             </Grid>
           </>
         ))
-        .with(ts.P.instanceOf(ErrorInCosmosDbAccess), (error) => (
+        .with(ts.P.when(isFailure), (error) => (
           <ErrorPage
             message={`${error.code}: ${error.reason}
             

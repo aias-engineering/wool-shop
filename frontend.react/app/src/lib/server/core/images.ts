@@ -3,6 +3,7 @@ import {
   ErrorInBlobStorageAccess,
   ErrorInCosmosDbAccess,
   ImageReferencedByProducts,
+  isFailure,
 } from './failure'
 import {
   DeleteImageBlob,
@@ -47,12 +48,10 @@ export const deleteImage = (
     .then((either) =>
       match(either)
         .with([], () => imagename)
-        .with(
-          P.array(),
-          (products: Product[]) =>
-            new ImageReferencedByProducts(products.map((x) => x.name)),
+        .with(P.array(), (products: Product[]) =>
+          ImageReferencedByProducts(products.map((x) => x.name)),
         )
-        .with(P.instanceOf(ErrorInCosmosDbAccess), (failure) => failure)
+        .with(P.when(isFailure), (failure) => failure)
         .exhaustive(),
     )
     .then(async (either) =>
@@ -60,4 +59,4 @@ export const deleteImage = (
         ? await dataAccess.deleteImageBlob(either)
         : either,
     )
-    .catch((err) => new ErrorInBlobStorageAccess(err))
+    .catch((err) => ErrorInBlobStorageAccess(err))

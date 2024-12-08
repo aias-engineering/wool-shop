@@ -44,7 +44,7 @@ export const createProduct = async (
             result.data.price,
             result.data.image,
           )
-        : new ProductValidationFailed(result.error),
+        : ProductValidationFailed(result.error),
     )
     .then(async (either) =>
       either instanceof CreateProductRequest

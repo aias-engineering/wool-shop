@@ -20,7 +20,7 @@ export async function listImageBlobsFlat(): Promise<
     }
     return imagenames
   } catch (error) {
-    return new ErrorInBlobStorageAccess(error as TypeError)
+    return ErrorInBlobStorageAccess(error as TypeError)
   }
 }
 
@@ -38,8 +38,8 @@ export const downloadImageBlob = (
           ? mdnReadableStream_From_NodeReadableStream(
               response.readableStreamBody,
             )
-          : new DownloadDidntReturnStream(blobname),
-      (error) => new ErrorInBlobStorageAccess(error),
+          : DownloadDidntReturnStream(blobname),
+      (error) => ErrorInBlobStorageAccess(error),
     )
 
 export const uploadImageBlob = (
@@ -51,7 +51,7 @@ export const uploadImageBlob = (
     .uploadStream(nodeReadable_From_MdnReadableStream(stream))
     .then(
       () => Unit.done,
-      (error) => new ErrorInBlobStorageAccess(error),
+      (error) => ErrorInBlobStorageAccess(error),
     )
 
 export const deleteImageBlob = (
@@ -62,5 +62,5 @@ export const deleteImageBlob = (
     .deleteIfExists()
     .then(
       () => Unit.done,
-      (err) => new ErrorInBlobStorageAccess(err),
+      (err) => ErrorInBlobStorageAccess(err),
     )

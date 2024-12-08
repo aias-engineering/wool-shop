@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { match, P } from 'ts-pattern'
-import { Unit } from '@/lib/server/core/types'
+import { isUnit } from '@/lib/server/core/types'
 import { deleteImage, getImage, saveImage } from '@/lib/server/core/images'
 import {
-  ErrorInBlobStorageAccess,
   Failure,
-  ImageReferencedByProducts,
+  isFailure,
+  isImageReferencedByProducts,
 } from '@/lib/server/core/failure'
 import { withAzureDataAccess } from '@/lib/server'
 
@@ -23,7 +23,7 @@ export const GET = (_: NextRequest, { params }: Route): Promise<NextResponse> =>
         (imageStream) => new NextResponse(imageStream),
       )
       .with(
-        P.instanceOf(Failure),
+        P.when(isFailure),
         ({ reason }) => new NextResponse(reason, { status: 500 }),
       )
       .exhaustive(),
@@ -39,8 +39,8 @@ export async function POST(
     saveImage((await params).id, stream, dataAccess),
   ).then((result) =>
     match(result)
-      .with(P.instanceOf(Unit), () => new NextResponse('done', { status: 200 }))
-      .with(P.instanceOf(ErrorInBlobStorageAccess), (failure) =>
+      .with(P.when(isUnit), () => new NextResponse('done', { status: 200 }))
+      .with(P.when(isFailure), (failure) =>
         NextResponse.json(failure, { status: 500 }),
       )
       .exhaustive(),
@@ -55,10 +55,10 @@ export const DELETE = (
     deleteImage((await params).id, dataAccess),
   ).then((result) =>
     match(result)
-      .with(P.instanceOf(ImageReferencedByProducts), (f) =>
+      .with(P.when(isImageReferencedByProducts), (f) =>
         NextResponse.json(f, { status: 400 }),
       )
-      .with(P.instanceOf(Failure), (f) => NextResponse.json(f, { status: 500 }))
-      .with(P.instanceOf(Unit), () => new NextResponse('done', { status: 200 }))
+      .with(P.when(isFailure), (f) => NextResponse.json(f, { status: 500 }))
+      .with(P.when(isUnit), () => new NextResponse('done', { status: 200 }))
       .exhaustive(),
   )

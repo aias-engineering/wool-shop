@@ -5,7 +5,7 @@ import Title from '@/app/components/atoms/title'
 import { Separator } from '@/app/components/atoms/separator'
 import { match, P } from 'ts-pattern'
 import ErrorPage from '@/app/components/layout/error-page'
-import { ErrorInBlobStorageAccess } from '@/lib/server/core/failure'
+import { ErrorInBlobStorageAccess, isFailure } from '@/lib/server/core/failure'
 import { getImages } from '@/lib/server/core/images'
 import { withAzureDataAccess } from '@/lib/server'
 import { JSX } from 'react'
@@ -27,7 +27,7 @@ export default async function Page() {
             </Provider>
           </>
         ))
-        .with(P.instanceOf(ErrorInBlobStorageAccess), ({ reason }) => (
+        .with(P.when(isFailure), ({ reason }) => (
           <ErrorPage message={reason} />
         ))
         .exhaustive()}

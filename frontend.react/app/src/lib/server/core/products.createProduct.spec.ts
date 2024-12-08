@@ -1,7 +1,6 @@
 import { expect, test } from 'vitest'
 import { CreateProduct } from './data-access'
 import { createProduct } from './products'
-import { ProductValidationFailed } from './failure'
 
 const id = Math.random().toString()
 const defaultDataAccess: CreateProduct = {
@@ -42,7 +41,7 @@ test.each([undefined, null, ''])(
 
     const response = await createProduct(formData, defaultDataAccess)
 
-    expect(response).toBeInstanceOf(ProductValidationFailed)
+    expect(response).toMatchObject({ type: 'failure' })
   },
 )
 
@@ -56,7 +55,7 @@ test.each([undefined])(
 
     const response = await createProduct(formData, defaultDataAccess)
 
-    expect(response).toBeInstanceOf(ProductValidationFailed)
+    expect(response).toMatchObject({ type: 'failure' })
   },
 )
 
@@ -70,7 +69,7 @@ test.each([undefined, null, '', 'string', '11,00'])(
 
     const response = await createProduct(formData, defaultDataAccess)
 
-    expect(response).toBeInstanceOf(ProductValidationFailed)
+    expect(response).toMatchObject({ type: 'failure' })
   },
 )
 
@@ -84,7 +83,7 @@ test.each([undefined, null, ''])(
 
     const response = await createProduct(formData, defaultDataAccess)
 
-    expect(response).toBeInstanceOf(ProductValidationFailed)
+    expect(response).toMatchObject({ type: 'failure' })
   },
 )
 

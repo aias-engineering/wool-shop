@@ -1,10 +1,7 @@
 import { withAzureDataAccess } from '@/lib/server'
-import {
-  ErrorInCosmosDbAccess,
-  ProductWithIdNotFound,
-} from '@/lib/server/core/failure'
-import { deleteProduct, getProduct } from '@/lib/server/core/products'
-import { Unit } from '@/lib/server/core/types'
+import { isFailure, isProductWithIdNotFound } from '@/lib/server/core/failure'
+import { getProduct } from '@/lib/server/core/products'
+import { isUnit, Unit } from '@/lib/server/core/types'
 import { NextResponse } from 'next/server'
 import { match, P } from 'ts-pattern'
 
@@ -17,10 +14,10 @@ export const GET = async (_: Request, { params }: Route) =>
     getProduct((await params).id, dataAccess),
   ).then((either) =>
     match(either)
-      .with(P.instanceOf(ProductWithIdNotFound), (failure) =>
+      .with(P.when(isProductWithIdNotFound), (failure) =>
         NextResponse.json(failure, { status: 404 }),
       )
-      .with(P.instanceOf(ErrorInCosmosDbAccess), (failure) =>
+      .with(P.when(isFailure), (failure) =>
         NextResponse.json(failure, { status: 500 }),
       )
       .with(P.select(), (product) =>
@@ -39,13 +36,10 @@ export const DELETE = async (_: Request, { params }: Route) =>
       )
       .then((either) =>
         match(either)
-          .with(P.instanceOf(ErrorInCosmosDbAccess), (failure) =>
+          .with(P.when(isFailure), (failure) =>
             NextResponse.json(failure, { status: 500 }),
           )
-          .with(
-            P.instanceOf(Unit),
-            () => new NextResponse('done', { status: 200 }),
-          )
+          .with(P.when(isUnit), () => new NextResponse('done', { status: 200 }))
           .exhaustive(),
       ),
   )

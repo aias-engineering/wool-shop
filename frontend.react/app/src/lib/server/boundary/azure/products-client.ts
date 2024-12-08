@@ -10,7 +10,7 @@ export const readAllProducts = (): Promise<ErrorInCosmosDbAccess | Product[]> =>
     .then((container) => container.items.readAll<Product>().fetchAll())
     .then(
       (response) => response.resources as Product[],
-      (error) => new ErrorInCosmosDbAccess(error),
+      (error) => ErrorInCosmosDbAccess(error),
     )
 
 export const readProductsWithImage = (
@@ -26,15 +26,15 @@ export const readProductsWithImage = (
         .fetchAll(),
     )
     .then((response) => response.resources as Product[])
-    .catch((err) => new ErrorInCosmosDbAccess(err))
+    .catch((err) => ErrorInCosmosDbAccess(err))
 
 export const readProduct = (
   id: string,
 ): Promise<Product | ProductWithIdNotFound | ErrorInCosmosDbAccess> =>
   products()
     .then((container) => container.item(id, id).read<Product>())
-    .then((response) => response.resource || new ProductWithIdNotFound(id))
-    .catch((error) => new ErrorInCosmosDbAccess(error))
+    .then((response) => response.resource || ProductWithIdNotFound(id))
+    .catch((error) => ErrorInCosmosDbAccess(error))
 
 export const deleteProduct = (
   id: string,
@@ -42,4 +42,4 @@ export const deleteProduct = (
   products()
     .then((container) => container.item(id, id).delete())
     .then(() => Unit.done)
-    .catch((error) => new ErrorInCosmosDbAccess(error))
+    .catch((error) => ErrorInCosmosDbAccess(error))
