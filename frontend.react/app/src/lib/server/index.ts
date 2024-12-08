@@ -1,4 +1,4 @@
-import { DataAccessFacade } from "./core/data-access"
+import { DataAccessFacade } from './core/data-access'
 import * as azureBlobClient from '@/lib/server/boundary/azure/images-client'
 import * as azureCosmosClient from '@/lib/server/boundary/azure/products-client'
 

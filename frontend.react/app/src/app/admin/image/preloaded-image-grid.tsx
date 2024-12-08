@@ -67,7 +67,8 @@ export default function PreloadedImagesGrid({ urls }: Props) {
                       className="image--rounded"
                       key={index}
                       src={url}
-                      alt={url} />
+                      alt={url}
+                    />
                   </AspectRatio>
                   <Small>{url}</Small>
                 </CardContent>
@@ -75,7 +76,9 @@ export default function PreloadedImagesGrid({ urls }: Props) {
                   .with({ step: 'idle' }, () => (
                     <CardFooter className="card__footer--onhover">
                       <Button
-                        onClick={async () => deleteImage(url, imageDeleteStateAtom)}
+                        onClick={async () =>
+                          deleteImage(url, imageDeleteStateAtom)
+                        }
                       >
                         <Trash2 /> verwijderen
                       </Button>

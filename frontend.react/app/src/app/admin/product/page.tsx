@@ -13,7 +13,13 @@ import { withAzureDataAccess } from '@/lib/server'
 import { getAllProducts } from '@/lib/server/core/products'
 import { ErrorInCosmosDbAccess } from '@/lib/server/core/failure'
 import ErrorPage from '@/app/components/layout/error-page'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/app/components/molecules/card'
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/app/components/molecules/card'
 import DeleteProductButton from './delete-button'
 
 const Page = async () => {
@@ -46,9 +52,7 @@ const Page = async () => {
               {products.map((product, index) => (
                 <Card key={index}>
                   <CardHeader>
-                    <CardTitle>
-                      {product.name}
-                    </CardTitle>
+                    <CardTitle>{product.name}</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <ImageFrame>
@@ -67,10 +71,11 @@ const Page = async () => {
           </>
         ))
         .with(ts.P.instanceOf(ErrorInCosmosDbAccess), (error) => (
-          <ErrorPage message={
-            `${error.code}: ${error.reason}
+          <ErrorPage
+            message={`${error.code}: ${error.reason}
             
-             ${error.error}`} />
+             ${error.error}`}
+          />
         ))
         .exhaustive()}
     </>

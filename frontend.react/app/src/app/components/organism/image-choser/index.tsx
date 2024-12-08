@@ -31,9 +31,7 @@ export default function ImageChoser() {
     await setState({ step: 'image-uploaded', uploadedImage })
   }
 
-  async function handleImageCropped(
-    
-  ) {
+  async function handleImageCropped() {
     console.log(' a lot to do still... ')
   }
 

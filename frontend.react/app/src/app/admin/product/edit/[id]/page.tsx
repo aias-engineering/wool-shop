@@ -9,13 +9,15 @@ import {
 import { getProduct } from '@/lib/server/core/products'
 import { match, P } from 'ts-pattern'
 
-export default async function Page({ params }: { params: Promise<{ id: string }> }) {
-  const product = await withAzureDataAccess(async (dataAccess) =>
-    {
-      const p = await params
-      return getProduct(p.id, dataAccess)
-    },
-  )
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const product = await withAzureDataAccess(async (dataAccess) => {
+    const p = await params
+    return getProduct(p.id, dataAccess)
+  })
 
   return (
     <>

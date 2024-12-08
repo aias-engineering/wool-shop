@@ -36,7 +36,9 @@ export const readProduct = (
     .then((response) => response.resource || new ProductWithIdNotFound(id))
     .catch((error) => new ErrorInCosmosDbAccess(error))
 
-export const deleteProduct = (id: string): Promise<Unit | ErrorInCosmosDbAccess> =>
+export const deleteProduct = (
+  id: string,
+): Promise<Unit | ErrorInCosmosDbAccess> =>
   products()
     .then((container) => container.item(id, id).delete())
     .then(() => Unit.done)

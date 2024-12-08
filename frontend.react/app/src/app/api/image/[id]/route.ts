@@ -14,18 +14,19 @@ interface Route {
 }
 
 export const GET = (_: NextRequest, { params }: Route): Promise<NextResponse> =>
-  withAzureDataAccess(async (dataAccess) => getImage((await params).id, dataAccess)).then(
-    (result) =>
-      match<ReadableStream | Failure, NextResponse>(result)
-        .with(
-          P.instanceOf(ReadableStream),
-          (imageStream) => new NextResponse(imageStream),
-        )
-        .with(
-          P.instanceOf(Failure),
-          ({ reason }) => new NextResponse(reason, { status: 500 }),
-        )
-        .exhaustive(),
+  withAzureDataAccess(async (dataAccess) =>
+    getImage((await params).id, dataAccess),
+  ).then((result) =>
+    match<ReadableStream | Failure, NextResponse>(result)
+      .with(
+        P.instanceOf(ReadableStream),
+        (imageStream) => new NextResponse(imageStream),
+      )
+      .with(
+        P.instanceOf(Failure),
+        ({ reason }) => new NextResponse(reason, { status: 500 }),
+      )
+      .exhaustive(),
   )
 
 export async function POST(
@@ -50,18 +51,14 @@ export const DELETE = (
   _: NextRequest,
   { params }: Route,
 ): Promise<NextResponse> =>
-  withAzureDataAccess(async (dataAccess) => deleteImage((await params).id, dataAccess)).then(
-    (result) =>
-      match(result)
-        .with(P.instanceOf(ImageReferencedByProducts), (f) =>
-          NextResponse.json(f, { status: 400 }),
-        )
-        .with(P.instanceOf(Failure), (f) =>
-          NextResponse.json(f, { status: 500 }),
-        )
-        .with(
-          P.instanceOf(Unit),
-          () => new NextResponse('done', { status: 200 }),
-        )
-        .exhaustive(),
+  withAzureDataAccess(async (dataAccess) =>
+    deleteImage((await params).id, dataAccess),
+  ).then((result) =>
+    match(result)
+      .with(P.instanceOf(ImageReferencedByProducts), (f) =>
+        NextResponse.json(f, { status: 400 }),
+      )
+      .with(P.instanceOf(Failure), (f) => NextResponse.json(f, { status: 500 }))
+      .with(P.instanceOf(Unit), () => new NextResponse('done', { status: 200 }))
+      .exhaustive(),
   )

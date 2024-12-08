@@ -6,5 +6,5 @@ export default {
 }
 
 export function SelectOne() {
-    return <ImageChoser />
+  return <ImageChoser />
 }

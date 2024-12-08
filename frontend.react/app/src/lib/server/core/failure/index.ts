@@ -16,8 +16,7 @@ export class ImageReferencedByProducts extends Failure {
 }
 
 export class ProductValidationFailed extends Failure {
-  constructor(
-    readonly error: unknown){
+  constructor(readonly error: unknown) {
     super('cpr-01', 'Validation for the provided Product failed')
   }
 }
