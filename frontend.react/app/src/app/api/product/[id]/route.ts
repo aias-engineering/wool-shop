@@ -1,7 +1,7 @@
 import { withAzureDataAccess } from '@/lib/server'
 import { isFailure, isProductWithIdNotFound } from '@/lib/server/core/failure'
-import { getProduct } from '@/lib/server/core/products'
-import { isUnit, Unit } from '@/lib/server/core/types'
+import { deleteProduct, getProduct } from '@/lib/server/core/products'
+import { isUnit } from '@/lib/server/core/types'
 import { NextResponse } from 'next/server'
 import { match, P } from 'ts-pattern'
 
@@ -30,9 +30,7 @@ export const DELETE = async (_: Request, { params }: Route) =>
   withAzureDataAccess((dataAccess) =>
     params
       .then(
-        (
-          { id }, // deleteProduct(id, dataAccess)
-        ) => Unit.done,
+        ({ id }) => deleteProduct(id, dataAccess),
       )
       .then((either) =>
         match(either)

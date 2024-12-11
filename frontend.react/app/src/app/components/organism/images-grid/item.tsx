@@ -38,7 +38,7 @@ export default function ImageItem({ imageAtom }: Props): JSX.Element {
 
   return (
     <>
-      {match(imageDeletion)
+      {match<ImageDelete, JSX.Element>(imageDeletion)
         .with({ step: 'idle' }, () => {
           return (
             <OverlayContainer className={'images-grid__item'}>
@@ -59,8 +59,8 @@ export default function ImageItem({ imageAtom }: Props): JSX.Element {
             </OverlayContainer>
           )
         })
-        .with({ step: 'deleting' }, () => {
-          ;<Alertable>
+        .with({ step: 'deleting' }, () => (
+          <Alertable>
             <AlertableAlert>
               <div>
                 <Spinner />
@@ -68,7 +68,7 @@ export default function ImageItem({ imageAtom }: Props): JSX.Element {
               <div>Deleting {image.url} ...</div>
             </AlertableAlert>
           </Alertable>
-        })
+        ))
         .with({ step: 'error' }, ({ message }) => (
           <Alert className="alert--destructive">
             <AlertCircle />

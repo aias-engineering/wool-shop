@@ -7,6 +7,7 @@ import { Trash2 } from 'lucide-react'
 import { match } from 'ts-pattern'
 import { deleteProductAction } from './actions'
 import { useState } from 'react'
+import { isUnit } from '@/lib/server/core/types'
 
 type ProductDeleteState =
   | { step: 'idle' }
@@ -23,10 +24,10 @@ export default function DeleteProductButton({ productId }: Props) {
 
   const handleDeleteProduct = async () => {
     setState({ step: 'deleting', productId })
-    deleteProductAction(productId).then((response) =>
-      response?.type !== 'error'
+    deleteProductAction(productId).then((either) =>
+      isUnit(either)
         ? setState({ step: 'done', productId })
-        : setState({ step: 'failure', productId, message: response.reason }),
+        : setState({ step: 'failure', productId, message: either.reason }),
     )
   }
 
@@ -55,7 +56,7 @@ export default function DeleteProductButton({ productId }: Props) {
           </>
         ))
         .otherwise(() => (
-          <Button onClick={() => handleDeleteProduct(productId)}>
+          <Button onClick={() => handleDeleteProduct()}>
             <Trash2 /> verwijderen
           </Button>
         ))}
