@@ -8,7 +8,7 @@ import Grid from '@/app/components/atoms/grid'
 import ImageFrame from '@/app/components/atoms/image-frame'
 import Image from '@/app/components/atoms/image'
 import Space from '@/app/components/atoms/space'
-import P from '@/app/components/atoms/p'
+import Paragraph from '@/app/components/atoms/paragraph'
 import { withAzureDataAccess } from '@/lib/server'
 import { getAllProducts } from '@/lib/server/core/products'
 import { isFailure } from '@/lib/server/core/failure'
@@ -59,7 +59,7 @@ const Page = async () => {
                       <Image src={product.image} alt={product.image} />
                     </ImageFrame>
                     <Space className="space--top-1">
-                      <P>{product.price} €</P>
+                      <Paragraph>{product.price} €</Paragraph>
                     </Space>
                   </CardContent>
                   <CardFooter>

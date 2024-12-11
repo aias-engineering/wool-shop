@@ -4,9 +4,15 @@
 }
 
 .title--h1 {
-  font-size: 2.25rem;
+  font-size: 1.75rem;
   font-weight: 800;
   line-height: 2.5rem;
+}
+
+@media screen and (min-width: 768px) {
+  .title--h1 {
+    font-size: 2.25rem;
+  }
 }
 
 .title--h2 {
@@ -18,9 +24,16 @@
 }
 
 .title--h3 {
-  font-size: 1.5rem;
+  font-size: 0.75rem;
   font-weight: 600;
-  line-height: 2rem;
+  line-height: 1.0rem;
+}
+
+@media screen and (min-width: 768px) {
+  .title--h3 {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
 }
 
 .title--h4 {

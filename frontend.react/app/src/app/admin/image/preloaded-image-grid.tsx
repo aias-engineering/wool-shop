@@ -23,7 +23,7 @@ import {
 } from '@/lib/client/store/image/delete'
 import Spinner from '@/app/components/atoms/spinner'
 import Title from '@/app/components/atoms/title'
-import P from '@/app/components/atoms/p'
+import Paragraph from '@/app/components/atoms/paragraph'
 import { JSX } from 'react'
 
 interface Props {
@@ -50,7 +50,7 @@ export default function PreloadedImagesGrid({ urls }: Props) {
               <Annoyed height={48} width={48} />
               geen afbeeldingen gevonden
             </Title>
-            <P>Wil je er een uploaden?</P>
+            <Paragraph>Wil je er een uploaden?</Paragraph>
             <Button>
               <ImageUp />
             </Button>

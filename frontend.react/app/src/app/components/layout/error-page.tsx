@@ -1,4 +1,4 @@
-import P from '@/app/components/atoms/p'
+import Paragraph from '@/app/components/atoms/paragraph'
 import Small from '@/app/components/atoms/small'
 import {
   Error,
@@ -16,7 +16,7 @@ export default function ErrorPage({ message }: Props) {
       <Error>
         <ErrorTitle />
         <ErrorMessage>
-          <P>De server reageerde met:</P>
+          <Paragraph>De server reageerde met:</Paragraph>
           <Small>{message}</Small>
         </ErrorMessage>
       </Error>
