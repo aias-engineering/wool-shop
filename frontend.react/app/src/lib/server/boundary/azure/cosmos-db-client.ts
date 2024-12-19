@@ -7,13 +7,9 @@ const cosmosClient = new CosmosClient({
   key: process.env.WOOL_SHOP_COSMOSDB_KEY,
 })
 
-export async function products() {
+export async function woolshopDatabase() {
   const { database } = await cosmosClient.databases.createIfNotExists({
     id: 'wool-shop',
   })
-  const { container } = await database.containers.createIfNotExists({
-    id: 'products',
-    partitionKey: 'id',
-  })
-  return container
+  return database;
 }

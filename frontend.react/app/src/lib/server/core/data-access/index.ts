@@ -1,9 +1,11 @@
-import { Product, Unit } from '@/lib/server/core/types'
+import { Product, Unit, User } from '@/lib/server/core/types'
 import {
   DownloadDidntReturnStream,
   ErrorInBlobStorageAccess,
   ErrorInCosmosDbAccess,
+  MultipleUsersWithEmailFound,
   ProductWithIdNotFound,
+  UserWithEmailNotFound,
 } from '../failure'
 export * from './create-product'
 
@@ -50,6 +52,10 @@ export interface DeleteImageBlob {
   deleteImageBlob(imagename: string): Promise<Unit | ErrorInBlobStorageAccess>
 }
 
+export interface ReadUser {
+  readUser(email: string): Promise<User | UserWithEmailNotFound | MultipleUsersWithEmailFound | ErrorInCosmosDbAccess>
+}
+
 export type DataAccessFacade = ReadAllProducts &
   ReadProductsWithImage &
   ReadProduct &
@@ -57,4 +63,5 @@ export type DataAccessFacade = ReadAllProducts &
   ListImageBlobsFlat &
   DownloadImageBlob &
   UploadImageBlob &
-  DeleteImageBlob
+  DeleteImageBlob &
+  ReadUser

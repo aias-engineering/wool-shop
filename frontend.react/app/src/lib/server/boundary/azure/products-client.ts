@@ -1,9 +1,18 @@
-import { products } from './cosmos-db-client'
+import { woolshopDatabase } from './cosmos-db-client'
 import {
   ErrorInCosmosDbAccess,
   ProductWithIdNotFound,
 } from '@/lib/server/core/failure'
 import { Product, Unit } from '@/lib/server/core/types'
+
+async function products() {
+  const database = await woolshopDatabase()
+  const { container } = await database.containers.createIfNotExists({
+    id: 'products',
+    partitionKey: 'id',
+  })
+  return container
+}
 
 export const readAllProducts = (): Promise<ErrorInCosmosDbAccess | Product[]> =>
   products()

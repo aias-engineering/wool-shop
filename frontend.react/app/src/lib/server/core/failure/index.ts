@@ -45,6 +45,17 @@ export interface DownloadDidntReturnStream extends Failure {
   readonly imagename: string
 }
 
+export interface UserWithEmailNotFound extends Failure {
+  readonly code: 'cdb-02',
+  readonly email: string
+}
+
+export interface MultipleUsersWithEmailFound extends Failure {
+  readonly code: 'cdb-03',
+  readonly email: string,
+  readonly userIds: string[]
+}
+
 export const ImageReferencedByProducts: (
   productnames: string[],
 ) => ImageReferencedByProducts = (productnames: string[]) => ({
@@ -115,4 +126,19 @@ export const DownloadDidntReturnStream: (
   code: 'bls-01',
   reason: `Azure Blob Storage didn't return a ReadStream when downloading ${imagename}`,
   imagename,
+})
+
+export const UserWithEmailNotFound: (email: string) => UserWithEmailNotFound = (email: string) => ({
+  type: 'failure',
+  code: 'cdb-02',
+  reason: `The user with email ${email} wasn't found in the Azure Cosmos DB`,
+  email
+})
+
+export const MultipleUsersWithEmailFound: (email: string, userIds: string[]) => MultipleUsersWithEmailFound = (email: string, userIds: string[]) => ({
+  type: 'failure',
+  code: 'cdb-03',
+  reason: `FATAL! The user with email ${email} was found ${userIds.length} times in the Azure Cosmos DB`,
+  email,
+  userIds
 })
