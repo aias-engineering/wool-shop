@@ -2,9 +2,6 @@ import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 import './globals.css'
 import { HasChildren } from '@/lib/client/react'
-import Header from '@/app/components/header'
-import Title from '@/app/components/atoms/title'
-import Logo from '@/app/components/atoms/logo'
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -27,13 +24,7 @@ export default function RootLayout({
 }: Readonly<HasChildren>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <Header>
-          <Title type='h1'>
-            <Logo></Logo>
-            Naqab Bedouin Design
-          </Title>
-        </Header>
+      <body className={`${geistSans.variable} ${geistMono.variable} h-dvh`}>
         {children}
       </body>
     </html>

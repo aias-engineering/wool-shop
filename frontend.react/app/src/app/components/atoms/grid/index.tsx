@@ -1,9 +1,8 @@
 import HasChildren from '@/lib/client/react/has-children'
-import './_grid.css'
 import clsx from 'clsx'
+import { MightHaveClassName } from '@/lib/client/react'
 
-interface Props extends HasChildren {
-  className?: string
+interface Props extends HasChildren, MightHaveClassName {
 }
 
 export default function Grid({ children, className }: Props) {

@@ -25,7 +25,7 @@ export default async function Page({
         .with(P.select(), (product) => (
           <>
             <form>
-              <Grid className="grid--2-cols">
+              <Grid className='grid-cols-2'>
                 <Image src={product.image} alt={product.image} />
               </Grid>
             </form>

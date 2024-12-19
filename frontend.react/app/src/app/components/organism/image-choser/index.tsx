@@ -67,7 +67,7 @@ export default function ImageChoser() {
           <>
             {match(imagesFetch)
               .with({ step: 'fetched' }, ({ data }) => (
-                <Grid>
+                <Grid className='grid-cols-4'>
                   {data.map((image, index) => (
                     <ImageItem key={index} imageAtom={image} />
                   ))}

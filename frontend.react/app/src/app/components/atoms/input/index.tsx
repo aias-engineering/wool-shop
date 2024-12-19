@@ -1,15 +1,16 @@
 import clsx from 'clsx'
 import './_input.css'
 import * as React from 'react'
+import { MightHaveClassName } from '@/lib/client/react'
 
-interface Props {
-  type: 'text' | 'number' | 'hidden'
+interface Props extends MightHaveClassName {
+  type: 'text' | 'number' | 'hidden' | 'email'
   name: string
   required?: boolean
   step?: string
   value?: string
   id?: string
-  className?: string
+  placeholder?: string
 }
 
 export function toId(name: string) {
@@ -24,6 +25,7 @@ export default function Input({
   step,
   id,
   className,
+  placeholder
 }: Props) {
   return (
     <input
@@ -34,6 +36,7 @@ export default function Input({
       value={value}
       id={id || toId(name)}
       className={clsx('input', className)}
+      placeholder={placeholder}
     />
   )
 }

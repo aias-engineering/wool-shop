@@ -1,5 +1,7 @@
-import Title from "@/app/components/atoms/title";
+import Header from '@/app/components/header'
 import Grid from "@/app/components/atoms/grid";
+import Logo from '@/app/components/atoms/logo'
+import Title from "@/app/components/atoms/title";
 import { withAzureDataAccess } from "@/lib/server";
 import { getAllProducts } from "@/lib/server/core/products";
 import { match, P } from "ts-pattern";
@@ -17,39 +19,47 @@ export default async function Home() {
   )
   
   return (
-    <Main>
-      {match(products)
-        .with([], () => (
-          <Small>
-            Oeps, we hebben onze producten nog niet gedefinieerd. Kom later nog eens bij ons terug.
-          </Small>
-        ))
-        .with(P.array() , (products) => (
-          <Grid>
-            {products.map((product, index) => (
-              <div key={index}>
-                <ImageFrame>
-                  <Image src={product.image} alt={product.name} />
-                </ImageFrame>
-                <div className="mt-2">
-                  <Title type="h3">
-                    {product.name}
-                  </Title>
-                  <Space>
+    <>
+      <Header>
+        <Title type='h1'>
+          <Logo></Logo>
+          Naqab Bedouin Design
+        </Title>
+      </Header>
+      <Main>
+        {match(products)
+          .with([], () => (
+            <Small>
+              Oeps, we hebben onze producten nog niet gedefinieerd. Kom later nog eens bij ons terug.
+            </Small>
+          ))
+          .with(P.array() , (products) => (
+            <Grid className='grid-cols-2 lg:grid-cols-4'>
+              {products.map((product, index) => (
+                <div key={index}>
+                  <ImageFrame>
+                    <Image src={product.image} alt={product.name} />
+                  </ImageFrame>
+                  <div className="mt-2">
+                    <Title type="h3">
+                      {product.name}
+                    </Title>
+                    <Space>
 
-                  </Space>
-                  <p>
-                    {product.price} €
-                  </p>
+                    </Space>
+                    <p>
+                      {product.price} €
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </Grid>
-        ))
-        .with(P.when(isFailure), (failure) => (
-          <ErrorPage message={failure.reason} />
-        ))
-        .exhaustive()}
-    </Main>
+              ))}
+            </Grid>
+          ))
+          .with(P.when(isFailure), (failure) => (
+            <ErrorPage message={failure.reason} />
+          ))
+          .exhaustive()}
+        </Main>
+    </>
   )
 }
