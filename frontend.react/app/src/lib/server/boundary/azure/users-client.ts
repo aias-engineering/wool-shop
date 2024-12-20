@@ -20,7 +20,7 @@ function users(): Promise<Container> {
     .then((response) => response.container)
 }
 
-const client: ReadUser = {
+const usersClient: ReadUser = {
   readUser: (email: string) =>
     users()
       .then((container) =>
@@ -46,4 +46,4 @@ const client: ReadUser = {
       .catch((reason) => ErrorInCosmosDbAccess(reason)),
 }
 
-export default client
+export default usersClient
