@@ -11,12 +11,12 @@ export const { auth, signIn, signOut } = NextAuth({
   providers: [
     Credentials({
       async authorize(credentials) {
-        const parsedCredentials = 
-          z.object({email: z.string().email(), password: z.string().min(8)})
-          .safeParse(credentials)
+        const parsedCredentials =
+          z.object({ email: z.string().email(), password: z.string().min(8) })
+            .safeParse(credentials)
 
         if (parsedCredentials.success) {
-          const { email, password } = parsedCredentials.data
+          const { email } = parsedCredentials.data
 
           const user = await withAzureDataAccess(dataAccess => getUser(email, dataAccess))
 
@@ -27,5 +27,5 @@ export const { auth, signIn, signOut } = NextAuth({
         }
         return null
       }
-  })]
+    })]
 })
