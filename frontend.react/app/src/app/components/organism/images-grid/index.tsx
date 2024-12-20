@@ -15,7 +15,7 @@ export default function ImagesGrid() {
     <>
       {match(imagesFetch)
         .with({ step: 'fetched' }, ({ data }) => (
-          <Grid className='grid-cols-4'>
+          <Grid className="grid-cols-4">
             <ImageUpload />
             {data.map((image, index) => {
               return <ImageItem key={index} imageAtom={image} />

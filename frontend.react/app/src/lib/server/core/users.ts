@@ -1,3 +1,4 @@
-import { ReadUser } from "./data-access";
+import { ReadUser } from './data-access'
 
-export const getUser = (email: string, dataAccess: ReadUser) => dataAccess.readUser(email)
+export const getUser = (email: string, dataAccess: ReadUser) =>
+  dataAccess.readUser(email)

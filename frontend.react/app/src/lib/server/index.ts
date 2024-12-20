@@ -9,7 +9,7 @@ export async function withAzureDataAccess<R>(
   const azureClient: DataAccessFacade = {
     ...imagesClient,
     ...productsClient,
-    ...usersClient
+    ...usersClient,
   }
   return func(azureClient)
 }

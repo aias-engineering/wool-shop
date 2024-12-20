@@ -29,9 +29,7 @@ export const GET = async (_: Request, { params }: Route) =>
 export const DELETE = async (_: Request, { params }: Route) =>
   withAzureDataAccess((dataAccess) =>
     params
-      .then(
-        ({ id }) => deleteProduct(id, dataAccess),
-      )
+      .then(({ id }) => deleteProduct(id, dataAccess))
       .then((either) =>
         match(either)
           .with(P.when(isFailure), (failure) =>

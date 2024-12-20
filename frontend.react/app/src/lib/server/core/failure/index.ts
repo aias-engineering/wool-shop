@@ -46,13 +46,13 @@ export interface DownloadDidntReturnStream extends Failure {
 }
 
 export interface UserWithEmailNotFound extends Failure {
-  readonly code: 'cdb-02',
+  readonly code: 'cdb-02'
   readonly email: string
 }
 
 export interface MultipleUsersWithEmailFound extends Failure {
-  readonly code: 'cdb-03',
-  readonly email: string,
+  readonly code: 'cdb-03'
+  readonly email: string
   readonly userIds: string[]
 }
 
@@ -128,17 +128,22 @@ export const DownloadDidntReturnStream: (
   imagename,
 })
 
-export const UserWithEmailNotFound: (email: string) => UserWithEmailNotFound = (email: string) => ({
+export const UserWithEmailNotFound: (email: string) => UserWithEmailNotFound = (
+  email: string,
+) => ({
   type: 'failure',
   code: 'cdb-02',
   reason: `The user with email ${email} wasn't found in the Azure Cosmos DB`,
-  email
+  email,
 })
 
-export const MultipleUsersWithEmailFound: (email: string, userIds: string[]) => MultipleUsersWithEmailFound = (email: string, userIds: string[]) => ({
+export const MultipleUsersWithEmailFound: (
+  email: string,
+  userIds: string[],
+) => MultipleUsersWithEmailFound = (email: string, userIds: string[]) => ({
   type: 'failure',
   code: 'cdb-03',
   reason: `FATAL! The user with email ${email} was found ${userIds.length} times in the Azure Cosmos DB`,
   email,
-  userIds
+  userIds,
 })

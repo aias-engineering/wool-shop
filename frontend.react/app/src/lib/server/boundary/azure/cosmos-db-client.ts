@@ -11,5 +11,5 @@ export async function woolshopDatabase() {
   const { database } = await cosmosClient.databases.createIfNotExists({
     id: 'wool-shop',
   })
-  return database;
+  return database
 }

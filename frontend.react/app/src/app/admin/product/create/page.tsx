@@ -29,7 +29,7 @@ const Page = async () => {
         <Title type="h3">een product creëren</Title>
         <Separator />
         <form action={handleCreateProductForm}>
-          <Grid  className='grid-cols-2'>
+          <Grid className="grid-cols-2">
             <div>
               <PreloadedImagesChooser urls={toUrls(imagenames)} />
             </div>

@@ -53,7 +53,14 @@ export interface DeleteImageBlob {
 }
 
 export interface ReadUser {
-  readUser(email: string): Promise<User | UserWithEmailNotFound | MultipleUsersWithEmailFound | ErrorInCosmosDbAccess>
+  readUser(
+    email: string,
+  ): Promise<
+    | User
+    | UserWithEmailNotFound
+    | MultipleUsersWithEmailFound
+    | ErrorInCosmosDbAccess
+  >
 }
 
 export type DataAccessFacade = ReadAllProducts &

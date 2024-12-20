@@ -48,7 +48,7 @@ const Page = async () => {
         ))
         .with(ts.P.array(), (products) => (
           <>
-            <Grid className='grid-cols-4'>
+            <Grid className="grid-cols-4">
               {products.map((product, index) => (
                 <Card key={index}>
                   <CardHeader>

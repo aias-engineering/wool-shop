@@ -27,9 +27,7 @@ export default async function Page() {
             </Provider>
           </>
         ))
-        .with(P.when(isFailure), ({ reason }) => (
-          <ErrorPage message={reason} />
-        ))
+        .with(P.when(isFailure), ({ reason }) => <ErrorPage message={reason} />)
         .exhaustive()}
     </>
   )

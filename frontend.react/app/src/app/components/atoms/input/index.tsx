@@ -25,7 +25,7 @@ export default function Input({
   step,
   id,
   className,
-  placeholder
+  placeholder,
 }: Props) {
   return (
     <input

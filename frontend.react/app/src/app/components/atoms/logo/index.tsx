@@ -1,4 +1,4 @@
-import { Volleyball } from "lucide-react"
+import { Volleyball } from 'lucide-react'
 
 const Logo = () => (
   <>

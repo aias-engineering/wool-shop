@@ -68,7 +68,7 @@ export default function PreloadedImagesChooser({ urls }: Props) {
               <MoveLeft /> terug
             </Button>
             <Space className="space--top-1">
-              <Grid  className='grid-cols-2'>
+              <Grid className="grid-cols-2">
                 {urls.map((url, index) => {
                   return (
                     <div key={index}>

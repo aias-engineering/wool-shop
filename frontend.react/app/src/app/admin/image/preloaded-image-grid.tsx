@@ -57,7 +57,7 @@ export default function PreloadedImagesGrid({ urls }: Props) {
           </>
         ))
         .with({ step: 'fetched' }, ({}) => (
-          <Grid className='grid-cols-4'>
+          <Grid className="grid-cols-4">
             {urls.map((url, index) => (
               <Card key={index} className="card--borderless">
                 <CardTitle></CardTitle>
