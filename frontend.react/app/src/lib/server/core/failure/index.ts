@@ -1,15 +1,13 @@
-export interface Failure {
-  readonly type: 'failure'
-  readonly code: string
-  readonly reason: string
-}
-
-export function isFailure(x: unknown): x is Failure {
-  const failure = x as Failure
-  if (!failure.code) return false
-  if (!failure.reason) return false
-  return failure.type === 'failure'
-}
+import { type Failure } from './failure'
+export { type Failure, isFailure } from './failure'
+export {
+  EmailValidationFailed,
+  isEmailValidationFailed,
+} from './email-validation-failed'
+export {
+  UserWithEmailNotFound,
+  isUserWithEmailNotFound,
+} from './user-with-email-not-found'
 
 export interface ImageReferencedByProducts extends Failure {
   readonly code: 'cim-01'
@@ -43,11 +41,6 @@ export interface ErrorInBlobStorageAccess extends Failure {
 export interface DownloadDidntReturnStream extends Failure {
   readonly code: 'bls-01'
   readonly imagename: string
-}
-
-export interface UserWithEmailNotFound extends Failure {
-  readonly code: 'cdb-02'
-  readonly email: string
 }
 
 export interface MultipleUsersWithEmailFound extends Failure {
@@ -126,15 +119,6 @@ export const DownloadDidntReturnStream: (
   code: 'bls-01',
   reason: `Azure Blob Storage didn't return a ReadStream when downloading ${imagename}`,
   imagename,
-})
-
-export const UserWithEmailNotFound: (email: string) => UserWithEmailNotFound = (
-  email: string,
-) => ({
-  type: 'failure',
-  code: 'cdb-02',
-  reason: `The user with email ${email} wasn't found in the Azure Cosmos DB`,
-  email,
 })
 
 export const MultipleUsersWithEmailFound: (

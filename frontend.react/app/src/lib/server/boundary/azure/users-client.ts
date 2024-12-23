@@ -1,7 +1,7 @@
 import { Container } from '@azure/cosmos'
 import { woolshopDatabase } from './cosmos-db-client'
 import { ReadUser } from '@/lib/server/core/data-access'
-import { User } from '@/lib/server/core/types'
+import { User } from '@/lib/server/core/users'
 import { match, P } from 'ts-pattern'
 import {
   ErrorInCosmosDbAccess,
@@ -14,7 +14,7 @@ function users(): Promise<Container> {
     .then((database) =>
       database.containers.createIfNotExists({
         id: 'users',
-        partitionKey: 'id',
+        partitionKey: '/id',
       }),
     )
     .then((response) => response.container)

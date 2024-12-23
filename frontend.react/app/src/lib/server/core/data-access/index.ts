@@ -1,4 +1,5 @@
-import { Product, Unit, User } from '@/lib/server/core/types'
+import { Product, Unit } from '@/lib/server/core/types'
+import { User } from '../users'
 import {
   DownloadDidntReturnStream,
   ErrorInBlobStorageAccess,

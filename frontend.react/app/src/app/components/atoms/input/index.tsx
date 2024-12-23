@@ -4,7 +4,7 @@ import * as React from 'react'
 import { MightHaveClassName } from '@/lib/client/react'
 
 interface Props extends MightHaveClassName {
-  type: 'text' | 'number' | 'hidden' | 'email'
+  type: 'text' | 'number' | 'hidden' | 'email' | 'password'
   name: string
   required?: boolean
   step?: string

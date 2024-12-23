@@ -22,18 +22,3 @@ export interface Product {
   price: string
   image: string
 }
-
-export interface User {
-  id: string
-  email: string
-  password: string
-}
-
-export function isUser(x: unknown): x is User {
-  const user = x as User
-  return (
-    user.id !== undefined &&
-    user.email !== undefined &&
-    user.password !== undefined
-  )
-}
