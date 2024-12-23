@@ -4,17 +4,19 @@ import {
   ProductWithIdNotFound,
 } from '@/lib/server/core/failure'
 import { Product, Unit } from '@/lib/server/core/types'
+import { Container } from '@azure/cosmos'
+import { CreateProduct, CreateProductRequest, CreateProductResponse, DeleteProduct, ReadAllProducts, ReadProduct, ReadProductsWithImage } from '@/lib/server/core/data-access'
 
-async function products() {
+async function products(): Promise<Container> {
   const database = await woolshopDatabase()
   const { container } = await database.containers.createIfNotExists({
     id: 'products',
-    partitionKey: 'id',
+    partitionKey: '/id',
   })
   return container
 }
 
-export const readAllProducts = (): Promise<ErrorInCosmosDbAccess | Product[]> =>
+const readAllProducts = (): Promise<ErrorInCosmosDbAccess | Product[]> =>
   products()
     .then((container) => container.items.readAll<Product>().fetchAll())
     .then(
@@ -22,7 +24,7 @@ export const readAllProducts = (): Promise<ErrorInCosmosDbAccess | Product[]> =>
       (error) => ErrorInCosmosDbAccess(error),
     )
 
-export const readProductsWithImage = (
+const readProductsWithImage = (
   imagename: string,
 ): Promise<Product[] | ErrorInCosmosDbAccess> =>
   products()
@@ -37,7 +39,7 @@ export const readProductsWithImage = (
     .then((response) => response.resources as Product[])
     .catch((err) => ErrorInCosmosDbAccess(err))
 
-export const readProduct = (
+const readProduct = (
   id: string,
 ): Promise<Product | ProductWithIdNotFound | ErrorInCosmosDbAccess> =>
   products()
@@ -45,10 +47,31 @@ export const readProduct = (
     .then((response) => response.resource || ProductWithIdNotFound(id))
     .catch((error) => ErrorInCosmosDbAccess(error))
 
-export const deleteProduct = (
+const deleteProduct = (
   id: string,
 ): Promise<Unit | ErrorInCosmosDbAccess> =>
   products()
     .then((container) => container.item(id, id).delete())
     .then(() => Unit.done)
     .catch((error) => ErrorInCosmosDbAccess(error))
+
+const createProduct = (request: CreateProductRequest): Promise<CreateProductResponse | ErrorInCosmosDbAccess> => 
+  products()
+    .then(container => container.items.create(request))
+    .then((result) => ({id: result.item.id, request: request}))
+    .catch(error => ErrorInCosmosDbAccess(error))
+
+const productClient: 
+  ReadProduct & 
+  ReadProductsWithImage & 
+  ReadAllProducts &
+  DeleteProduct &
+  CreateProduct = {
+  readProduct,
+  readProductsWithImage,
+  readAllProducts,
+  deleteProduct,
+  createProduct
+}
+
+export default productClient

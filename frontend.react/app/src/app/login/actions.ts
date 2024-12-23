@@ -75,3 +75,5 @@ export const authorize = async (formData: FormData) =>
     }
     throw error
   })
+
+export const signInViaGithub = async () => signIn('github')

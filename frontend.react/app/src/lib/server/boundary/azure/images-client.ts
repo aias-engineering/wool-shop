@@ -8,8 +8,9 @@ import {
   ErrorInBlobStorageAccess,
 } from '@/lib/server/core/failure'
 import { Unit } from '@/lib/server/core/types'
+import { DeleteImageBlob, DownloadImageBlob, ListImageBlobsFlat, UploadImageBlob } from '../../core/data-access'
 
-export async function listImageBlobsFlat(): Promise<
+async function listImageBlobsFlat(): Promise<
   string[] | ErrorInBlobStorageAccess
 > {
   try {
@@ -24,7 +25,7 @@ export async function listImageBlobsFlat(): Promise<
   }
 }
 
-export const downloadImageBlob = (
+const downloadImageBlob = (
   blobname: string,
 ): Promise<
   ReadableStream | DownloadDidntReturnStream | ErrorInBlobStorageAccess
@@ -42,7 +43,7 @@ export const downloadImageBlob = (
       (error) => ErrorInBlobStorageAccess(error),
     )
 
-export const uploadImageBlob = (
+const uploadImageBlob = (
   blobname: string,
   stream: ReadableStream,
 ): Promise<Unit | ErrorInBlobStorageAccess> =>
@@ -54,7 +55,7 @@ export const uploadImageBlob = (
       (error) => ErrorInBlobStorageAccess(error),
     )
 
-export const deleteImageBlob = (
+const deleteImageBlob = (
   blobname: string,
 ): Promise<Unit | ErrorInBlobStorageAccess> =>
   images()
@@ -64,3 +65,17 @@ export const deleteImageBlob = (
       () => Unit.done,
       (err) => ErrorInBlobStorageAccess(err),
     )
+
+const imagesClient:
+  ListImageBlobsFlat &
+  DownloadImageBlob &
+  UploadImageBlob &
+  DeleteImageBlob =
+  {
+    listImageBlobsFlat,
+    downloadImageBlob,
+    uploadImageBlob,
+    deleteImageBlob
+  }
+
+export default imagesClient

@@ -8,6 +8,7 @@ import {
   ProductWithIdNotFound,
   UserWithEmailNotFound,
 } from '../failure'
+import { CreateProduct } from './create-product'
 export * from './create-product'
 
 export interface ReadAllProducts {
@@ -68,6 +69,7 @@ export type DataAccessFacade = ReadAllProducts &
   ReadProductsWithImage &
   ReadProduct &
   DeleteProduct &
+  CreateProduct &
   ListImageBlobsFlat &
   DownloadImageBlob &
   UploadImageBlob &
