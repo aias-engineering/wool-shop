@@ -8,7 +8,7 @@ export interface UserWithIdNotFound extends Failure {
 export const UserWithIdNotFound = (id: string): UserWithIdNotFound => ({
   type: 'failure',
   code: 'cur-01',
-  reason: `The product with id ${id} wasn't found in the Azure Cosmos DB`,
+  reason: `The user with id ${id} wasn't found in the Azure Cosmos DB`,
   id,
 })
 

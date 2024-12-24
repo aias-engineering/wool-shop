@@ -11,8 +11,14 @@ import { CreateProduct } from './create-product'
 import { CreateUser } from './create-user'
 import { User } from '../users'
 import { UserWithIdNotFound } from '../users/failure'
+import { CreateAccount, ReadAccountsByProviderAccount } from './accounts'
 export * from './create-product'
 export * from './create-user'
+export {
+  type CreateAccount,
+  type CreateAccountRequest,
+  type CreateAccountResponse,
+} from './accounts'
 
 export interface ReadAllProducts {
   readAllProducts(): Promise<Product[] | ErrorInCosmosDbAccess>
@@ -85,4 +91,6 @@ export type DataAccessFacade = ReadAllProducts &
   DeleteImageBlob &
   ReadUser &
   ReadUserWithEmail &
-  CreateUser
+  CreateUser &
+  ReadAccountsByProviderAccount &
+  CreateAccount
