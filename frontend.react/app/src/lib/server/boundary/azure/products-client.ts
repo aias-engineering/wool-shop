@@ -5,7 +5,15 @@ import {
 } from '@/lib/server/core/failure'
 import { Product, Unit } from '@/lib/server/core/types'
 import { Container } from '@azure/cosmos'
-import { CreateProduct, CreateProductRequest, CreateProductResponse, DeleteProduct, ReadAllProducts, ReadProduct, ReadProductsWithImage } from '@/lib/server/core/data-access'
+import {
+  CreateProduct,
+  CreateProductRequest,
+  CreateProductResponse,
+  DeleteProduct,
+  ReadAllProducts,
+  ReadProduct,
+  ReadProductsWithImage,
+} from '@/lib/server/core/data-access'
 
 async function products(): Promise<Container> {
   const database = await woolshopDatabase()
@@ -47,23 +55,22 @@ const readProduct = (
     .then((response) => response.resource || ProductWithIdNotFound(id))
     .catch((error) => ErrorInCosmosDbAccess(error))
 
-const deleteProduct = (
-  id: string,
-): Promise<Unit | ErrorInCosmosDbAccess> =>
+const deleteProduct = (id: string): Promise<Unit | ErrorInCosmosDbAccess> =>
   products()
     .then((container) => container.item(id, id).delete())
     .then(() => Unit.done)
     .catch((error) => ErrorInCosmosDbAccess(error))
 
-const createProduct = (request: CreateProductRequest): Promise<CreateProductResponse | ErrorInCosmosDbAccess> => 
+const createProduct = (
+  request: CreateProductRequest,
+): Promise<CreateProductResponse | ErrorInCosmosDbAccess> =>
   products()
-    .then(container => container.items.create(request))
-    .then((result) => ({id: result.item.id, request: request}))
-    .catch(error => ErrorInCosmosDbAccess(error))
+    .then((container) => container.items.create(request))
+    .then((result) => ({ id: result.item.id, request: request }))
+    .catch((error) => ErrorInCosmosDbAccess(error))
 
-const productClient: 
-  ReadProduct & 
-  ReadProductsWithImage & 
+const productClient: ReadProduct &
+  ReadProductsWithImage &
   ReadAllProducts &
   DeleteProduct &
   CreateProduct = {
@@ -71,7 +78,7 @@ const productClient:
   readProductsWithImage,
   readAllProducts,
   deleteProduct,
-  createProduct
+  createProduct,
 }
 
 export default productClient

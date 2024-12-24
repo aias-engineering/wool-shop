@@ -6,7 +6,7 @@ import {
   EmailValidationFailed,
   isUserWithEmailNotFound,
 } from '@/lib/server/core/failure'
-import { getUser, isUser } from '@/lib/server/core/users'
+import { getUserByEmail, isUser } from '@/lib/server/core/users'
 import { AuthError } from 'next-auth'
 import { match, P } from 'ts-pattern'
 import { z } from 'zod'
@@ -31,7 +31,9 @@ export const checkEmailOnServer: (
     )
     .then((either) =>
       typeof either === 'string'
-        ? withAzureDataAccess((dataAccess) => getUser(either, dataAccess))
+        ? withAzureDataAccess((dataAccess) =>
+            getUserByEmail(either, dataAccess),
+          )
         : either,
     )
     .then((either) =>

@@ -5,14 +5,18 @@ import Input from '@/app/components/atoms/input'
 import Paragraph from '@/app/components/atoms/paragraph'
 import Title from '@/app/components/atoms/title'
 import { useState } from 'react'
-import { authorize, checkEmailOnServer, ExistsEmailState, signInViaGithub } from './actions'
+import {
+  authorize,
+  checkEmailOnServer,
+  ExistsEmailState,
+  signInViaGithub,
+} from './actions'
 import { match, P } from 'ts-pattern'
 import Alert, {
   AlertDescription,
   AlertTitle,
 } from '../components/molecules/alert'
 import { AlertCircle, Github } from 'lucide-react'
-import { signIn } from '@/auth'
 import { Separator } from '../components/atoms/separator'
 
 export default function SignIn({}) {
@@ -44,10 +48,10 @@ export default function SignIn({}) {
               </div>
             </form>
             <form action={signInViaGithub}>
-              <div className='px-1 grid grap-1'>
+              <div className="px-1 grid grap-1">
                 <Separator />
                 <Button>
-                  <Github></Github> 
+                  <Github></Github>
                   aanmelden met github
                 </Button>
               </div>

@@ -4,7 +4,7 @@ import Credentials from 'next-auth/providers/credentials'
 import GitHub from 'next-auth/providers/github'
 import { z } from 'zod'
 import { withAzureDataAccess } from '@/lib/server'
-import { getUser, isUser } from '@/lib/server/core/users'
+import { getUserByEmail, isUser } from '@/lib/server/core/users'
 
 export const { auth, signIn, signOut, handlers } = NextAuth({
   ...authConfig,
@@ -20,7 +20,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
           const { email } = parsedCredentials.data
 
           const user = await withAzureDataAccess((dataAccess) =>
-            getUser(email, dataAccess),
+            getUserByEmail(email, dataAccess),
           )
 
           if (isUser(user)) return user

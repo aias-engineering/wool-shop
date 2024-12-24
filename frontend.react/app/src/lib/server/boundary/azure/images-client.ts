@@ -8,7 +8,12 @@ import {
   ErrorInBlobStorageAccess,
 } from '@/lib/server/core/failure'
 import { Unit } from '@/lib/server/core/types'
-import { DeleteImageBlob, DownloadImageBlob, ListImageBlobsFlat, UploadImageBlob } from '../../core/data-access'
+import {
+  DeleteImageBlob,
+  DownloadImageBlob,
+  ListImageBlobsFlat,
+  UploadImageBlob,
+} from '../../core/data-access'
 
 async function listImageBlobsFlat(): Promise<
   string[] | ErrorInBlobStorageAccess
@@ -66,16 +71,14 @@ const deleteImageBlob = (
       (err) => ErrorInBlobStorageAccess(err),
     )
 
-const imagesClient:
-  ListImageBlobsFlat &
+const imagesClient: ListImageBlobsFlat &
   DownloadImageBlob &
   UploadImageBlob &
-  DeleteImageBlob =
-  {
-    listImageBlobsFlat,
-    downloadImageBlob,
-    uploadImageBlob,
-    deleteImageBlob
-  }
+  DeleteImageBlob = {
+  listImageBlobsFlat,
+  downloadImageBlob,
+  uploadImageBlob,
+  deleteImageBlob,
+}
 
 export default imagesClient
