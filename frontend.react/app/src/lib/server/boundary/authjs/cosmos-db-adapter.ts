@@ -1,11 +1,13 @@
-import { Adapter, AdapterAccount, AdapterUser } from '@auth/core/adapters'
+import { Adapter, AdapterAccount, AdapterSession, AdapterUser } from '@auth/core/adapters'
 import * as users from '@/lib/server/core/users'
 import * as accounts from '@/lib/server/core/accounts'
-import { DataAccessFacade } from '@/lib/server/core/data-access'
-import { isFailure } from '../../core/failure'
+import { CreateAccountRequest, DataAccessFacade } from '@/lib/server/core/data-access'
+import { isFailure, isUserWithEmailNotFound } from '../../core/failure'
+import { isAccountWithProviderInfoNotFound } from '../../core/accounts/failure'
 
-export const CosmosDbAdapter = (dataAccess: DataAccessFacade): Adapter => ({
+export const CosmosDbAdapter = (dataAccessProvider: () => Promise<DataAccessFacade>): Adapter => ({
   async createUser(user: AdapterUser) {
+    const dataAccess = await dataAccessProvider()
     const response = await users.createUser(user.email, dataAccess)
     if (isFailure(response)) {
       throw response
@@ -14,6 +16,7 @@ export const CosmosDbAdapter = (dataAccess: DataAccessFacade): Adapter => ({
     }
   },
   async getUser(id: string) {
+    const dataAccess = await dataAccessProvider()
     const either = await users.getUser(id, dataAccess)
     if (isFailure(either)) {
       throw either
@@ -22,15 +25,31 @@ export const CosmosDbAdapter = (dataAccess: DataAccessFacade): Adapter => ({
       return { id: user.id, email: user.email } as AdapterUser
     }
   },
+  async getUserByEmail(email: string) {
+    const dataAccess = await dataAccessProvider()
+    const either = await users.getUserByEmail(email, dataAccess)
+
+    if (users.isUser(either)){
+      const user = either
+      return { id: user.id, email: user.email } as AdapterUser
+    } else if (isUserWithEmailNotFound(either)) {
+      return null
+    } else if (isFailure(either)) {
+      throw either
+    } else {
+      return null
+    }
+  },
   async getUserByAccount({ provider, providerAccountId }) {
+    const dataAccess = await dataAccessProvider()
     const either = await accounts.getAccountByProviderAccount(
       provider,
       providerAccountId,
       dataAccess,
     )
-    if (isFailure(either)) {
-      throw either
-    } else {
+    if (isAccountWithProviderInfoNotFound(either)){
+      return null
+    } else if (accounts.isAccount(either)) {
       const account = either
       const eitherUser = await users.getUser(account.userId, dataAccess)
       if (isFailure(eitherUser)) {
@@ -39,10 +58,21 @@ export const CosmosDbAdapter = (dataAccess: DataAccessFacade): Adapter => ({
         const user = eitherUser
         return { id: user.id, email: user.email } as AdapterUser
       }
+    } else if (isFailure(either)) {
+      throw either
+    } else {
+      return null
     }
   },
   async linkAccount(account: AdapterAccount) {
-    const either = await accounts.createAccount(account, dataAccess)
+    const dataAccess = await dataAccessProvider()
+    const request: CreateAccountRequest = {
+      userId: account.userId,
+      type: account.type,
+      provider: account.provider,
+      providerAccountId: account.providerAccountId
+     }
+    const either = await accounts.createAccount(request, dataAccess)
     if (isFailure(either)) {
       throw either
     } else {
@@ -50,4 +80,26 @@ export const CosmosDbAdapter = (dataAccess: DataAccessFacade): Adapter => ({
       return { ...account, id: response.id }
     }
   },
+  async updateUser(user) {
+    const dataAccess = await dataAccessProvider()
+    const either = await users.getUser(user.id, dataAccess)
+    if (isFailure(either)) {
+      throw either
+    } else {
+      const user = either
+      return { id: user.id, email: user.email } as AdapterUser
+    }
+  },
+  async createSession(session) {
+    return {} as AdapterSession
+  },
+  async getSessionAndUser(sessionToken) {
+    return null
+  },
+  async updateSession(session) {
+    return null
+  },
+  async deleteSession(sessionToken) {
+    return
+  }
 })

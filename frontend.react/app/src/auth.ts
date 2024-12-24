@@ -5,9 +5,13 @@ import GitHub from 'next-auth/providers/github'
 import { z } from 'zod'
 import { withAzureDataAccess } from '@/lib/server'
 import { getUserByEmail, isUser } from '@/lib/server/core/users'
+import { CosmosDbAdapter } from './lib/server/boundary/authjs/cosmos-db-adapter'
+
+const dataAccessProvider = () => withAzureDataAccess(async dataAccess => dataAccess)
 
 export const { auth, signIn, signOut, handlers } = NextAuth({
   ...authConfig,
+  adapter: CosmosDbAdapter(dataAccessProvider),
   providers: [
     GitHub,
     Credentials({
