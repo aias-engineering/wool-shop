@@ -5,6 +5,10 @@ export {
   isEmailValidationFailed,
 } from './email-validation-failed'
 export {
+  ErrorInCosmosDbAccess,
+  isErrorInCosmosDbAccess,
+} from './error-in-cosmos-db-access'
+export {
   UserWithEmailNotFound,
   isUserWithEmailNotFound,
 } from './user-with-email-not-found'
@@ -18,12 +22,6 @@ export interface ImageReferencedByProducts extends Failure {
 export interface ProductValidationFailed extends Failure {
   readonly code: 'cpr-01'
   readonly reason: 'Validation for the provided Product failed'
-  readonly error: TypeError
-}
-
-export interface ErrorInCosmosDbAccess extends Failure {
-  readonly code: 'cdb-00'
-  readonly reason: 'An Error was thrown when accessing Azure Cosmos DB'
   readonly error: TypeError
 }
 
@@ -75,15 +73,6 @@ export const ProductValidationFailed: (
   type: 'failure',
   code: 'cpr-01',
   reason: 'Validation for the provided Product failed',
-  error,
-})
-
-export const ErrorInCosmosDbAccess: (
-  error: TypeError,
-) => ErrorInCosmosDbAccess = (error: TypeError) => ({
-  type: 'failure',
-  code: 'cdb-00',
-  reason: 'An Error was thrown when accessing Azure Cosmos DB',
   error,
 })
 

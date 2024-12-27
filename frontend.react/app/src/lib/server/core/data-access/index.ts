@@ -12,6 +12,7 @@ import { CreateUser } from './create-user'
 import { User } from '../users'
 import { UserWithIdNotFound } from '../users/failure'
 import { CreateAccount, ReadAccountsByProviderAccount } from './accounts'
+import { CreateSession, DeleteSession, ReadSessionsByToken } from './sessions'
 export * from './create-product'
 export * from './create-user'
 export {
@@ -19,6 +20,11 @@ export {
   type CreateAccountRequest,
   type CreateAccountResponse,
 } from './accounts'
+export {
+  type CreateSession,
+  type CreateSessionRequest,
+  type CreateSessionResponse,
+} from './sessions'
 
 export interface ReadAllProducts {
   readAllProducts(): Promise<Product[] | ErrorInCosmosDbAccess>
@@ -93,4 +99,7 @@ export type DataAccessFacade = ReadAllProducts &
   ReadUserWithEmail &
   CreateUser &
   ReadAccountsByProviderAccount &
-  CreateAccount
+  CreateAccount &
+  ReadSessionsByToken &
+  CreateSession &
+  DeleteSession

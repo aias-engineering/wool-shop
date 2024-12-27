@@ -7,7 +7,8 @@ import { withAzureDataAccess } from '@/lib/server'
 import { getUserByEmail, isUser } from '@/lib/server/core/users'
 import { CosmosDbAdapter } from './lib/server/boundary/authjs/cosmos-db-adapter'
 
-const dataAccessProvider = () => withAzureDataAccess(async dataAccess => dataAccess)
+const dataAccessProvider = () =>
+  withAzureDataAccess(async (dataAccess) => dataAccess)
 
 export const { auth, signIn, signOut, handlers } = NextAuth({
   ...authConfig,
@@ -35,4 +36,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
       },
     }),
   ],
+  session: {
+    strategy: 'jwt'
+  }
 })

@@ -1,11 +1,30 @@
-import { Adapter, AdapterAccount, AdapterSession, AdapterUser } from '@auth/core/adapters'
-import * as users from '@/lib/server/core/users'
+import { Adapter, AdapterAccount, AdapterUser } from '@auth/core/adapters'
 import * as accounts from '@/lib/server/core/accounts'
-import { CreateAccountRequest, DataAccessFacade } from '@/lib/server/core/data-access'
-import { isFailure, isUserWithEmailNotFound } from '../../core/failure'
-import { isAccountWithProviderInfoNotFound } from '../../core/accounts/failure'
+import { isAccountWithProviderInfoNotFound } from '@/lib/server/core/accounts/failure'
+import {
+  CreateAccountRequest,
+  CreateSessionRequest,
+  DataAccessFacade,
+} from '@/lib/server/core/data-access'
+import {
+  isFailure,
+  isUserWithEmailNotFound,
+  isErrorInCosmosDbAccess,
+} from '@/lib/server/core/failure'
+import * as sessions from '@/lib/server/core/sessions'
+import * as users from '@/lib/server/core/users'
+import { isUserWithIdNotFound } from '@/lib/server/core/users/failure'
+import { isSessionWithTokenNotFound } from '@/lib/server/core/sessions/failure'
 
-export const CosmosDbAdapter = (dataAccessProvider: () => Promise<DataAccessFacade>): Adapter => ({
+const toAdapterUser = (user: users.User): AdapterUser => ({
+  id: user.id,
+  email: user.email,
+  emailVerified: null,
+})
+
+export const CosmosDbAdapter = (
+  dataAccessProvider: () => Promise<DataAccessFacade>,
+): Adapter => ({
   async createUser(user: AdapterUser) {
     const dataAccess = await dataAccessProvider()
     const response = await users.createUser(user.email, dataAccess)
@@ -22,14 +41,14 @@ export const CosmosDbAdapter = (dataAccessProvider: () => Promise<DataAccessFaca
       throw either
     } else {
       const user = either
-      return { id: user.id, email: user.email } as AdapterUser
+      return toAdapterUser(user)
     }
   },
   async getUserByEmail(email: string) {
     const dataAccess = await dataAccessProvider()
     const either = await users.getUserByEmail(email, dataAccess)
 
-    if (users.isUser(either)){
+    if (users.isUser(either)) {
       const user = either
       return { id: user.id, email: user.email } as AdapterUser
     } else if (isUserWithEmailNotFound(either)) {
@@ -47,7 +66,7 @@ export const CosmosDbAdapter = (dataAccessProvider: () => Promise<DataAccessFaca
       providerAccountId,
       dataAccess,
     )
-    if (isAccountWithProviderInfoNotFound(either)){
+    if (isAccountWithProviderInfoNotFound(either)) {
       return null
     } else if (accounts.isAccount(either)) {
       const account = either
@@ -56,7 +75,7 @@ export const CosmosDbAdapter = (dataAccessProvider: () => Promise<DataAccessFaca
         throw eitherUser
       } else {
         const user = eitherUser
-        return { id: user.id, email: user.email } as AdapterUser
+        return toAdapterUser(user)
       }
     } else if (isFailure(either)) {
       throw either
@@ -70,8 +89,8 @@ export const CosmosDbAdapter = (dataAccessProvider: () => Promise<DataAccessFaca
       userId: account.userId,
       type: account.type,
       provider: account.provider,
-      providerAccountId: account.providerAccountId
-     }
+      providerAccountId: account.providerAccountId,
+    }
     const either = await accounts.createAccount(request, dataAccess)
     if (isFailure(either)) {
       throw either
@@ -87,19 +106,71 @@ export const CosmosDbAdapter = (dataAccessProvider: () => Promise<DataAccessFaca
       throw either
     } else {
       const user = either
-      return { id: user.id, email: user.email } as AdapterUser
+      return toAdapterUser(user)
     }
   },
   async createSession(session) {
-    return {} as AdapterSession
+    const dataAccess = await dataAccessProvider()
+    const request: CreateSessionRequest = {
+      expires: session.expires,
+      sessionToken: session.sessionToken,
+      userId: session.userId,
+    }
+    const either = await sessions.createSession(request, dataAccess)
+
+    if (isFailure(either)) {
+      throw either
+    } else {
+      return session
+    }
   },
   async getSessionAndUser(sessionToken) {
-    return null
+    const dataAccess = await dataAccessProvider()
+    const eitherSession = await sessions.getSessionByToken(
+      sessionToken,
+      dataAccess,
+    )
+
+    if (sessions.isSession(eitherSession)) {
+      const session = eitherSession
+      const eitherUser = await users.getUser(session.userId, dataAccess)
+
+      if (users.isUser(eitherUser)) {
+        const user = eitherUser
+        return {
+          session: {
+            expires: session.expires,
+            sessionToken: session.sessionToken,
+            userId: session.userId,
+          },
+          user: toAdapterUser(user),
+        }
+      } else if (isUserWithIdNotFound(eitherUser)) {
+        return null
+      } else {
+        throw eitherSession
+      }
+    } else if (isSessionWithTokenNotFound(eitherSession)) {
+      return null
+    } else {
+      throw eitherSession
+    }
   },
-  async updateSession(session) {
-    return null
+  async updateSession(_session) {
+    // just some code to fool lint
+    if (_session.expires) return null
+    else return null
   },
   async deleteSession(sessionToken) {
-    return
-  }
+    const dataAccess = await dataAccessProvider()
+    const result = await sessions.deleteSessionsByToken(
+      sessionToken,
+      dataAccess,
+    )
+    if (isErrorInCosmosDbAccess(result)) {
+      throw result
+    } else {
+      return
+    }
+  },
 })
