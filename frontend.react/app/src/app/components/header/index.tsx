@@ -1,13 +1,11 @@
-import { ReactNode } from 'react'
-import './_header.css'
+import clsx from 'clsx'
+import { HasChildren, MightHaveClassName } from '@/lib/client/react'
 
-export interface Props {
-  children?: ReactNode
-}
-
-const Header = ({ children }: Props) => (
+const Header = ({ children, className }: HasChildren & MightHaveClassName) => (
   <>
-    <header className="header">{children}</header>
+    <header className={clsx('bg-black flex flex-col gap-2 p-5', className)}>
+      {children}
+    </header>
   </>
 )
 

@@ -21,7 +21,7 @@ export default async function Home() {
   return (
     <>
       <Header>
-        <Title type="h1">
+        <Title type="h1" className="text-white">
           <Logo></Logo>
           Naqab Bedouin Design
         </Title>

@@ -3,7 +3,7 @@ import { CreateUser } from '../data-access/create-user'
 import {
   EmailValidationFailed,
   ErrorInCosmosDbAccess,
-  isFailure,
+  isErrorInCosmosDbAccess,
   MultipleUsersWithEmailFound,
   UserWithEmailNotFound,
 } from '../failure'
@@ -13,6 +13,7 @@ export interface User {
   id: string
   email: string
   password: string
+  role: string
 }
 
 export function isUser(x: unknown): x is User {
@@ -20,7 +21,8 @@ export function isUser(x: unknown): x is User {
   return (
     user.id !== undefined &&
     user.email !== undefined &&
-    user.password !== undefined
+    user.password !== undefined &&
+    user.role !== undefined
   )
 }
 
@@ -47,9 +49,9 @@ export const createUser = (
   dataAccess: CreateUser,
 ): Promise<User | ErrorInCosmosDbAccess> =>
   dataAccess
-    .createUser({ email })
+    .createUser({ email, role: 'user' })
     .then((either) =>
-      isFailure(either)
+      isErrorInCosmosDbAccess(either)
         ? either
-        : { id: either.id, email: email, password: 'any' },
+        : { id: either.id, email: email, password: 'any', role: 'user' },
     )

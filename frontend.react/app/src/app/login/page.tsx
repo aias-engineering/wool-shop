@@ -1,7 +1,7 @@
 import Grid from '@/app/components/atoms/grid'
 import Logo from '@/app/components/atoms/logo'
 import Title from '@/app/components/atoms/title'
-import SignIn from './sign-in'
+import SuspensedSignIn from './sign-in'
 
 export default async function Login() {
   return (
@@ -13,7 +13,7 @@ export default async function Login() {
         </Title>
       </div>
       <div className="bg-transparent flex flex-col justify-center mx-auto">
-        <SignIn></SignIn>
+        <SuspensedSignIn />
       </div>
     </Grid>
   )

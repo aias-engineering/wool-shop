@@ -78,4 +78,5 @@ export const authorize = async (formData: FormData) =>
     throw error
   })
 
-export const signInViaGithub = async () => signIn('github')
+export const signInViaGithub = async (redirectTo: string | null) =>
+  signIn('github', { redirectTo: redirectTo ?? undefined })

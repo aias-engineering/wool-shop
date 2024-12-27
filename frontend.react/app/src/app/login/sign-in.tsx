@@ -4,7 +4,7 @@ import Button from '@/app/components/atoms/button'
 import Input from '@/app/components/atoms/input'
 import Paragraph from '@/app/components/atoms/paragraph'
 import Title from '@/app/components/atoms/title'
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import {
   authorize,
   checkEmailOnServer,
@@ -18,13 +18,26 @@ import Alert, {
 } from '../components/molecules/alert'
 import { AlertCircle, Github } from 'lucide-react'
 import { Separator } from '../components/atoms/separator'
+import { useSearchParams } from 'next/navigation'
 
-export default function SignIn({}) {
+export default function SuspensedSignIn() {
+  return (
+    <Suspense>
+      <SignIn />
+    </Suspense>
+  )
+}
+
+function SignIn() {
+  const searchParams = useSearchParams()
+
   const [existsEmailState, setExistsEmailState] =
     useState<ExistsEmailState>('idle')
 
   const handleCheckEmail = (formData: FormData) =>
     checkEmailOnServer(formData).then(setExistsEmailState)
+
+  const callbackUrl: string | null = searchParams.get('callbackUrl')
 
   return (
     <>
@@ -47,7 +60,7 @@ export default function SignIn({}) {
                 <Button>aanmelden met e-mail</Button>
               </div>
             </form>
-            <form action={signInViaGithub}>
+            <form action={() => signInViaGithub(callbackUrl)}>
               <div className="px-1 grid grap-1">
                 <Separator />
                 <Button>

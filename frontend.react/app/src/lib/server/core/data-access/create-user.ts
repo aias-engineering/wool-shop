@@ -2,6 +2,7 @@ import { ErrorInCosmosDbAccess } from '../failure'
 
 export interface CreateUserRequest {
   email: string
+  role: 'user'
 }
 
 export interface CreateUserResponse {

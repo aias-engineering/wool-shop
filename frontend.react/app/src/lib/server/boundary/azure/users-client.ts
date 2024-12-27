@@ -70,7 +70,7 @@ const createUser = (
   request: CreateUserRequest,
 ): Promise<CreateUserResponse | ErrorInCosmosDbAccess> =>
   users()
-    .then((container) => container.items.create({ email: request.email }))
+    .then((container) => container.items.create(request))
     .then((response) => ({ id: response.item.id }))
     .catch((error) => ErrorInCosmosDbAccess(error))
 
