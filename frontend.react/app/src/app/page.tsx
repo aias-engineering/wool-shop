@@ -1,17 +1,14 @@
-import Header from '@/app/components/header'
-import Grid from '@/app/components/atoms/grid'
 import Logo from '@/app/components/atoms/logo'
-import Title from '@/app/components/atoms/title'
-import { withAzureDataAccess } from '@/lib/server'
-import { getAllProducts } from '@/lib/server/core/products'
-import { match, P } from 'ts-pattern'
 import Small from '@/app/components/atoms/small'
-import Image from '@/app/components/atoms/image'
-import { isFailure } from '@/lib/server/core/failure'
+import Title from '@/app/components/atoms/title'
+import Header from '@/app/components/header'
 import ErrorPage from '@/app/components/layout/error-page'
 import Main from '@/app/components/main'
-import ImageFrame from './components/atoms/image-frame'
-import Space from './components/atoms/space'
+import Products from '@/app/components/organism/products'
+import { withAzureDataAccess } from '@/lib/server'
+import { isFailure } from '@/lib/server/core/failure'
+import { getAllProducts } from '@/lib/server/core/products'
+import { match, P } from 'ts-pattern'
 
 export default async function Home() {
   const products = await withAzureDataAccess((dataAccess) =>
@@ -34,22 +31,7 @@ export default async function Home() {
               nog eens bij ons terug.
             </Small>
           ))
-          .with(P.array(), (products) => (
-            <Grid className="grid-cols-2 lg:grid-cols-4">
-              {products.map((product, index) => (
-                <div key={index}>
-                  <ImageFrame>
-                    <Image src={product.image} alt={product.name} />
-                  </ImageFrame>
-                  <div className="mt-2">
-                    <Title type="h3">{product.name}</Title>
-                    <Space></Space>
-                    <p>{product.price} €</p>
-                  </div>
-                </div>
-              ))}
-            </Grid>
-          ))
+          .with(P.array(), (products) => <Products products={products} />)
           .with(P.when(isFailure), (failure) => (
             <ErrorPage message={failure.reason} />
           ))
