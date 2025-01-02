@@ -9,7 +9,6 @@ import { Separator } from '@/app/components/atoms/separator'
 import Title from '@/app/components/atoms/title'
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetDescription,
   SheetFooter,
@@ -22,7 +21,7 @@ import { Product } from '@/lib/server/core/types'
 import clsx from 'clsx'
 import { Provider, useAtom } from 'jotai'
 import { atomWithImmer } from 'jotai-immer'
-import { Github, Minus, Plus } from 'lucide-react'
+import { Github, Minus, Plus, ScrollText, X } from 'lucide-react'
 
 interface WishlistItem {
   amount: number
@@ -94,21 +93,43 @@ export default function Products({ products }: Props) {
     <Provider>
       <Sheet>
         <Grid className="grid-cols-2 lg:grid-cols-4">
-          {products.map((product) => (
-            <div key={product.id} className="flex flex-col gap-2">
-              <ImageFrame>
-                <Image src={product.image} alt={product.name} />
-              </ImageFrame>
-              <Title type="h3">{product.name}</Title>
-              <p>{product.price} €</p>
-              <SheetTrigger asChild>
-                <Button onClick={() => addToWishlist(product)}>
-                  toevoegen aan wensenlijst
-                </Button>
-              </SheetTrigger>
-            </div>
-          ))}
+          {products.map((product) => {
+            const matchingWishlistItem = wishlist.find(x => x.product.id === product.id)
+            return (
+              <div key={product.id} className="flex flex-col gap-2">
+                <ImageFrame>
+                  <Image src={product.image} alt={product.name} />
+                </ImageFrame>
+                <Title type="h3">{product.name}</Title>
+                <p>{product.price} €</p>
+                { (matchingWishlistItem)
+                    ? ( <div className='flex flex-row'>
+                          <Button onClick={() => removeFromWishlist(product.id)} variant="counter">
+                            <Minus />
+                          </Button>
+                          <div className="m-auto">{matchingWishlistItem.amount}</div>
+                          <Button onClick={() => addToWishlist(product)} variant="counter">
+                            <Plus />
+                          </Button>
+                        </div>)
+                    : ( <Button onClick={() => addToWishlist(product)}>
+                          naar wensenlijst
+                          <ScrollText />
+                        </Button>)
+                }
+                
+              </div>
+            )
+          })}
         </Grid>
+        <div className='fixed bottom-1 left-0 grid px-2 w-full'>
+          <SheetTrigger asChild>
+            <Button>
+              <ScrollText />
+              wensenlijst
+            </Button>
+          </SheetTrigger>
+        </div>
         <SheetContent side="right" className="bg-white w-full grid gap-4">
           <SheetHeader>
             <SheetTitle>wensenlijst</SheetTitle>
