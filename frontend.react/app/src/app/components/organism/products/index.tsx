@@ -3,7 +3,9 @@
 import Button from '@/app/components/atoms/button'
 import Grid from '@/app/components/atoms/grid'
 import Image from '@/app/components/atoms/image'
+import Input from '@/app/components/atoms/input'
 import ImageFrame from '@/app/components/atoms/image-frame'
+import { Separator } from '@/app/components/atoms/separator'
 import Title from '@/app/components/atoms/title'
 import {
   Sheet,
@@ -20,7 +22,7 @@ import { Product } from '@/lib/server/core/types'
 import clsx from 'clsx'
 import { Provider, useAtom } from 'jotai'
 import { atomWithImmer } from 'jotai-immer'
-import { Minus, Plus } from 'lucide-react'
+import { Github, Minus, Plus } from 'lucide-react'
 
 interface WishlistItem {
   amount: number
@@ -90,45 +92,62 @@ export default function Products({ products }: Props) {
 
   return (
     <Provider>
-      <Grid className="grid-cols-2 lg:grid-cols-4">
-        {products.map((product) => (
-          <div key={product.id} className="flex flex-col gap-2">
-            <ImageFrame>
-              <Image src={product.image} alt={product.name} />
-            </ImageFrame>
-            <Title type="h3">{product.name}</Title>
-            <p>{product.price} €</p>
-            <Sheet>
+      <Sheet>
+        <Grid className="grid-cols-2 lg:grid-cols-4">
+          {products.map((product) => (
+            <div key={product.id} className="flex flex-col gap-2">
+              <ImageFrame>
+                <Image src={product.image} alt={product.name} />
+              </ImageFrame>
+              <Title type="h3">{product.name}</Title>
+              <p>{product.price} €</p>
               <SheetTrigger asChild>
                 <Button onClick={() => addToWishlist(product)}>
                   toevoegen aan wensenlijst
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="bg-white w-full gap-4">
-                <SheetHeader>
-                  <SheetTitle>wensenlijst</SheetTitle>
-                  <SheetDescription>uw wensenlijst</SheetDescription>
-                </SheetHeader>
-                <div>
-                  {wishlist.map((item) => (
-                    <WishListItem
-                      key={item.toString()}
-                      item={item}
-                      add={addToWishlist}
-                      remove={removeFromWishlist}
-                    />
-                  ))}
-                </div>
-                <SheetFooter>
-                  <SheetClose asChild>
-                    <Button>bewaar</Button>
-                  </SheetClose>
-                </SheetFooter>
-              </SheetContent>
-            </Sheet>
+            </div>
+          ))}
+        </Grid>
+        <SheetContent side="right" className="bg-white w-full grid gap-4">
+          <SheetHeader>
+            <SheetTitle>wensenlijst</SheetTitle>
+            <SheetDescription>uw wensenlijst</SheetDescription>
+          </SheetHeader>
+          <div>
+            {wishlist.map((item) => (
+              <WishListItem
+                key={item.toString()}
+                item={item}
+                add={addToWishlist}
+                remove={removeFromWishlist}
+              />
+            ))}
           </div>
-        ))}
-      </Grid>
+          <SheetFooter className='text-center justify-self-end'>
+            <div>
+              Laat ons weten wat uw wensen zijn. 
+              Vul uw contactgegevens in en sla uw verlanglijstje op.
+              Wij nemen contact met u op.
+            </div>
+            <form>
+              <Input name='email' type='email' />
+              <Button>Bewaar</Button>
+            </form>
+            <Separator />
+            <div>
+              Or sign in and save your wishlist in your profile.
+              Wij nemen contact met u op.
+            </div>
+            <form>
+              <Button>
+                <Github />
+                Sign In with Github
+              </Button>  
+            </form>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
     </Provider>
   )
 }
