@@ -1,8 +1,7 @@
 import { Failure, isFailure } from "@/lib/server/core/failure"
+export { type Failure }
 
-export interface ServerFailure extends Failure {}
-
-export function ServerFailure(innerFailure: Failure): ServerFailure {
+export function ServerFailure(innerFailure: Failure): Failure {
   return (innerFailure)
 }
 
@@ -17,7 +16,7 @@ export const UnknownServerFailure = (): UnknownServerFailure => ({
   reason: 'The server returned an internal error without any details.'
 })
 
-export const processFailureResponse = (response: Response): Promise<ServerFailure|UnknownServerFailure> =>
+export const processFailureResponse = (response: Response): Promise<Failure|UnknownServerFailure> =>
   response.json()
     .then(data => isFailure(data)
       ? ServerFailure(data)

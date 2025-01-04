@@ -1,10 +1,10 @@
-import { match, P } from "ts-pattern";
+import { match } from "ts-pattern";
 import { PostableImage } from "./store/image/post"; 
-import { processFailureResponse, ServerFailure, UnknownServerFailure } from "./failure";
+import { Failure, processFailureResponse, UnknownServerFailure } from "./failure";
 
 const apiUrl = (imagename: string): string => `/api/image/${imagename}`
 
-export const postImage = (image: PostableImage): Promise<string|ServerFailure|UnknownServerFailure> => 
+export const postImage = (image: PostableImage): Promise<string|Failure|UnknownServerFailure> => 
   fetch(apiUrl(image.name), { body: image.data, method: 'POST' })
     .then(async (response) => match(response)
       .with({ status: 200 }, async () => apiUrl(image.name))

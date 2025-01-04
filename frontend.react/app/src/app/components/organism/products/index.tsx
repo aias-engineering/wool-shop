@@ -21,7 +21,7 @@ import { Product } from '@/lib/server/core/types'
 import clsx from 'clsx'
 import { Provider, useAtom } from 'jotai'
 import { atomWithImmer } from 'jotai-immer'
-import { Github, Minus, Plus, ScrollText, X } from 'lucide-react'
+import { Github, Minus, Plus, ScrollText } from 'lucide-react'
 
 interface WishlistItem {
   amount: number

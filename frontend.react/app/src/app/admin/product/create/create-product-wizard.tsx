@@ -37,7 +37,7 @@ export function CreateProductWizard({}: Props) {
         .otherwise((failure) => setState({step: 'error', failure}))
       )
 
-  const handleProductCreate = (formData: FormData) => {
+  const handleProductCreate = () => {
     if (state.step === 'image-uploaded'){
       setState({...state, saving: true})
       
