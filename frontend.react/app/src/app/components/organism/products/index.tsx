@@ -92,7 +92,7 @@ export default function Products({ products }: Props) {
   return (
     <Provider>
       <Sheet>
-        <Grid className="grid-cols-2 lg:grid-cols-4">
+        <Grid className="grid-cols-1 lg:grid-cols-4 gap-2">
           {products.map((product) => {
             const matchingWishlistItem = wishlist.find(x => x.product.id === product.id)
             return (

@@ -9,6 +9,10 @@ export {
   isErrorInCosmosDbAccess,
 } from './error-in-cosmos-db-access'
 export {
+  ProductValidationFailed,
+  isProductValidationFailed
+} from './product-validation-failed'
+export {
   UserWithEmailNotFound,
   isUserWithEmailNotFound,
 } from './user-with-email-not-found'
@@ -17,12 +21,6 @@ export interface ImageReferencedByProducts extends Failure {
   readonly code: 'cim-01'
   readonly reason: 'The image was still referenced by products.'
   readonly productnames: string[]
-}
-
-export interface ProductValidationFailed extends Failure {
-  readonly code: 'cpr-01'
-  readonly reason: 'Validation for the provided Product failed'
-  readonly error: TypeError
 }
 
 export interface ProductWithIdNotFound extends Failure {
@@ -66,15 +64,6 @@ export function isImageReferencedByProducts(
     failure.reason === 'The image was still referenced by products.'
   )
 }
-
-export const ProductValidationFailed: (
-  error: TypeError,
-) => ProductValidationFailed = (error: TypeError) => ({
-  type: 'failure',
-  code: 'cpr-01',
-  reason: 'Validation for the provided Product failed',
-  error,
-})
 
 export const ProductWithIdNotFound: (id: string) => ProductWithIdNotFound = (
   id: string,

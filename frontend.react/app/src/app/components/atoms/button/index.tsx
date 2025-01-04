@@ -2,7 +2,7 @@
 
 import clsx from 'clsx'
 import { cva } from 'class-variance-authority'
-import HasChildren from '@/lib/client/react/has-children'
+import { HasChildren, MightHaveClassName } from '@/lib/client/react'
 
 const buttonVariants = cva(
   'inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm ' +
@@ -25,17 +25,20 @@ const buttonVariants = cva(
   },
 )
 
-interface Props extends HasChildren {
-  className?: string
+interface Props extends HasChildren, MightHaveClassName {
+  disabled?: boolean
+  type?: 'button' | 'submit'
   variant?: 'default' | 'outline' | 'counter'
   onClick?: (() => Promise<void>) | (() => void)
 }
 
-const Button = ({ className, children, variant, onClick }: Props) => (
+const Button = ({ className, children, disabled, type='submit', variant, onClick }: Props) => (
   <>
     <button
       className={clsx(buttonVariants({ variant, className }))}
+      type={type}
       onClick={onClick}
+      disabled={disabled}
     >
       {children}
     </button>

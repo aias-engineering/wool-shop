@@ -17,6 +17,16 @@ export class CreateProductRequest {
   ) {}
 }
 
+export function isCreateProductRequest(x: unknown): x is CreateProductRequest {
+  const request = x as CreateProductRequest
+  return (
+    request.name !== undefined &&
+    request.description !== undefined &&
+    request.price !== undefined &&
+    request.image !== undefined
+  )
+}
+
 export const CreateProductRequestFormSchema = z.object({
   name: zfd.text(z.string().min(1)),
   description: zfd.text(),
@@ -27,4 +37,12 @@ export const CreateProductRequestFormSchema = z.object({
 export interface CreateProductResponse {
   id: string
   request: CreateProductRequest
+}
+
+export function isCreateProductResponse(x: unknown): x is CreateProductResponse {
+  const response = x as CreateProductResponse
+  return (
+    response.id !== undefined &&
+    isCreateProductRequest(response.request)
+  )
 }
