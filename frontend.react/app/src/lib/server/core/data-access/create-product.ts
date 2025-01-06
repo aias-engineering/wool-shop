@@ -29,7 +29,7 @@ export function isCreateProductRequest(x: unknown): x is CreateProductRequest {
 
 export const CreateProductRequestFormSchema = z.object({
   name: zfd.text(z.string().min(1)),
-  description: zfd.text(),
+  description: zfd.text().nullable(),
   price: zfd.numeric(z.number().gte(0)),
   image: zfd.text(z.string()),
 })

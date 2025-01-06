@@ -9,11 +9,12 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
 export type CreateProductState =
+  | { step: 'idle' }
   | { step: 'done', response: CreateProductResponse }
   | { step: 'validation-failure', failure: ProductValidationFailed }
   | { step: 'failure', failure: ErrorInCosmosDbAccess }
 
-export async function createProductOnServer(formData: FormData): Promise<CreateProductState> {
+export async function createProductOnServer(prevState: CreateProductState, formData: FormData): Promise<CreateProductState> {
   const result: CreateProductState = 
     await withAzureDataAccess(dataAccess => createProduct(formData, dataAccess))
       .then(either => match(either)

@@ -13,8 +13,9 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { postImage } from "@/lib/client/post-image"
 import { Failure } from "@/lib/server/core/failure"
 import { MoveLeft } from "lucide-react"
-import { useState } from "react"
+import { useActionState, useState } from "react"
 import { match, P } from "ts-pattern"
+import { createProductOnServer } from "./actions"
 
 interface Props {
   urls: string[]
@@ -22,30 +23,24 @@ interface Props {
 
 type WizardState = 
   | { step: 'idle' }
-  | { step: 'image-uploaded', imageUrl: string, saving: boolean }
+  | { step: 'image-uploaded', imageUrl: string }
   | { step: 'error', failure: Failure}
 
 export function CreateProductWizard({}: Props) {
   const [state, setState] = useState<WizardState>({ step: 'idle' })
+  const [creationState, formAction, pending] = useActionState(createProductOnServer, {step: 'idle'})
 
   const handleImageUploaded = (image: UploadedImage) => 
     fetch(image.dataUrl)
       .then(response => response.blob())
       .then(blob => postImage({data: blob, name: image.name}))
       .then(either => match(either)
-        .with(P.string, (url) => setState({step: 'image-uploaded', imageUrl: url, saving: false }))
+        .with(P.string, (url) => setState({step: 'image-uploaded', imageUrl: url }))
         .otherwise((failure) => setState({step: 'error', failure}))
       )
 
-  const handleProductCreate = () => {
-    if (state.step === 'image-uploaded'){
-      setState({...state, saving: true})
-      
-    }
-  }
-
   return (
-    <form action={handleProductCreate}>
+    <form action={formAction}>
       <Grid className="grid-cols-1 gap-2">
         <Title type="h3">Een product creëren</Title>
         {match(state)
@@ -70,7 +65,7 @@ export function CreateProductWizard({}: Props) {
               </Card>
             </>
           ))
-          .with({step: 'image-uploaded'}, ({imageUrl, saving}) => (
+          .with({step: 'image-uploaded'}, ({imageUrl}) => (
             <>
               <Card>
                 <CardHeader>
@@ -91,7 +86,7 @@ export function CreateProductWizard({}: Props) {
                   <Input type="hidden" name="image" value={imageUrl} required />  
                 </CardContent>
                 <CardFooter>
-                  <Button onClick={() => setState({ step: 'idle' })} type="button" disabled={saving}>
+                  <Button onClick={() => setState({ step: 'idle' })} type="button" disabled={pending}>
                     <MoveLeft />
                     Kies een andere afbeelding
                   </Button>
@@ -105,14 +100,29 @@ export function CreateProductWizard({}: Props) {
                 </CardHeader>
                 <CardContent>
                   <Label htmlFor={toId('name')}>naam</Label>
-                  <Input name="name" type="text" disabled={saving} required/>
+                  <Input name="name" type="text" disabled={pending} required/>
                   <Label htmlFor={toId('description')}>beschrijving</Label>
-                  <Textarea name="description" disabled={saving}></Textarea>
+                  <Textarea name="description" disabled={pending}></Textarea>
                   <Label htmlFor={toId('price')}>prijs in euro</Label>
-                  <Input name="price" type="number" disabled={saving} required />
+                  <Input name="price" type="number" disabled={pending} required />
                 </CardContent>
                 <CardFooter>
-                  <Button type="submit" disabled={saving}>Product creëren</Button>
+                  {match(creationState)
+                    .with({step: 'idle'}, () => (
+                      <Button type="submit" disabled={pending}>
+                        {'Product creëren'}
+                      </Button>
+                    ))
+                    .with({step: 'failure'}, ({failure}) => (<div>{failure.code} {failure.reason}</div>))
+                    .with({step: 'validation-failure'}, ({failure}) => (
+                      <div>
+                        {failure.code} {failure.reason}
+                        {failure.error.message}
+                      </div>
+                    ))
+                    .with({step: 'done'}, () => (<div>done</div>))
+                    .exhaustive()
+                  }
                 </CardFooter>
               </Card>
             </>
