@@ -31,7 +31,7 @@ export const saveImage = (
   imagename: string,
   stream: ReadableStream,
   dataAccess: UploadImageBlob,
-): Promise<Unit | ErrorInBlobStorageAccess> =>
+): Promise<string | ErrorInBlobStorageAccess> =>
   dataAccess.uploadImageBlob(imagename, stream)
 
 export const deleteImage = (

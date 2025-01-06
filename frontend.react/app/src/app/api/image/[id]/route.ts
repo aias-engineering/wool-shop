@@ -39,7 +39,7 @@ export async function POST(
     saveImage((await params).id, stream, dataAccess),
   ).then((result) =>
     match(result)
-      .with(P.when(isUnit), () => new NextResponse('done', { status: 200 }))
+      .with(P.string, (uploadedImageName) => new NextResponse(uploadedImageName, { status: 200 }))
       .with(P.when(isFailure), (failure) =>
         NextResponse.json(failure, { status: 500 }),
       )

@@ -62,7 +62,7 @@ export interface UploadImageBlob {
   uploadImageBlob(
     imageBlobname: string,
     stream: ReadableStream,
-  ): Promise<Unit | ErrorInBlobStorageAccess>
+  ): Promise<string | ErrorInBlobStorageAccess>
 }
 
 export interface DeleteImageBlob {

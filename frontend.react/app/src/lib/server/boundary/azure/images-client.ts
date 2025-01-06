@@ -51,12 +51,12 @@ const downloadImageBlob = (
 const uploadImageBlob = (
   blobname: string,
   stream: ReadableStream,
-): Promise<Unit | ErrorInBlobStorageAccess> =>
+): Promise<string | ErrorInBlobStorageAccess> =>
   images()
     .getBlockBlobClient(blobname)
     .uploadStream(nodeReadable_From_MdnReadableStream(stream))
     .then(
-      () => Unit.done,
+      () => blobname,
       (error) => ErrorInBlobStorageAccess(error),
     )
 
