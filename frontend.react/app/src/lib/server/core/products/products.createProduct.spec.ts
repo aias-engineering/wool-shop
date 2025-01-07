@@ -56,7 +56,7 @@ test.each([undefined])(
 
     const response = await createProduct(formData, defaultDataAccess)
 
-    expect(isProductValidationFailed(response)).false
+    expect(isProductValidationFailed(response)).equals(false)
   },
 )
 

@@ -1,47 +1,64 @@
 'use client'
 
-import CurrencyInput from "@/app/components/atoms/currency-input";
-import Grid from "@/app/components/atoms/grid";
-import ImageUploadButton, { UploadedImage } from "@/app/components/atoms/image-upload-button";
-import Input, { toId } from "@/app/components/atoms/input";
-import Title from "@/app/components/atoms/title";
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/app/components/molecules/card";
-import { Failure } from "@/lib/client/failure";
-import { postImage } from "@/lib/client/post-image";
-import { Product } from "@/lib/server/core/products";
+import CurrencyInput from '@/app/components/atoms/currency-input'
+import Grid from '@/app/components/atoms/grid'
+import ImageUploadButton, {
+  UploadedImage,
+} from '@/app/components/atoms/image-upload-button'
+import Input, { toId } from '@/app/components/atoms/input'
+import Title from '@/app/components/atoms/title'
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+} from '@/app/components/molecules/card'
+import { Failure } from '@/lib/client/failure'
+import { postImage } from '@/lib/client/post-image'
+import { Product } from '@/lib/server/core/products'
 import Image from 'next/image'
-import { useActionState, useState } from "react";
+import { useActionState, useState } from 'react'
 import { match, P } from 'ts-pattern'
-import { saveProductOnServer, SaveProductState } from "./actions";
-import Label from "@/app/components/atoms/label";
-import Textarea from "@/app/components/atoms/textarea";
-import Button from "@/app/components/atoms/button";
-import Spinner from "@/app/components/atoms/spinner";
-import { Save } from "lucide-react";
+import { saveProductOnServer } from './actions'
+import Label from '@/app/components/atoms/label'
+import Textarea from '@/app/components/atoms/textarea'
+import Button from '@/app/components/atoms/button'
+import Spinner from '@/app/components/atoms/spinner'
+import { Save } from 'lucide-react'
 
 interface Props {
   product: Product
 }
 
 type ImageUploadState =
-  | { state: 'idle', imageUrl: string }
-  | { state: 'failure', failure: Failure }
+  | { state: 'idle'; imageUrl: string }
+  | { state: 'failure'; failure: Failure }
 
-export function EditProduct({product}: Props) {
+export function EditProduct({ product }: Props) {
+  const [saveProductState, formAction, pending] = useActionState(
+    saveProductOnServer,
+    'idle',
+  )
+  const [imageUploadState, setImageUploadState] = useState<ImageUploadState>({
+    state: 'idle',
+    imageUrl: product.image,
+  })
 
-
-  const [saveProductState, formAction, pending] = useActionState(saveProductOnServer, 'idle')
-  const [imageUploadState, setImageUploadState] = useState<ImageUploadState>({state: 'idle', imageUrl: product.image})
-    
-  const handleImageUploaded = (image: UploadedImage) => 
+  const handleImageUploaded = (image: UploadedImage) =>
     fetch(image.dataUrl)
-      .then(response => response.blob())
-      .then(blob => postImage({data: blob, name: image.name})
-      .then(either => 
-        match(either)
-          .with(P.string, (url) => setImageUploadState({state: 'idle', imageUrl: url}))
-          .otherwise((failure) => setImageUploadState({state: 'failure', failure}))
-      ))
+      .then((response) => response.blob())
+      .then((blob) =>
+        postImage({ data: blob, name: image.name }).then((either) =>
+          match(either)
+            .with(P.string, (url) =>
+              setImageUploadState({ state: 'idle', imageUrl: url }),
+            )
+            .otherwise((failure) =>
+              setImageUploadState({ state: 'failure', failure }),
+            ),
+        ),
+      )
 
   return (
     <form action={formAction}>
@@ -54,7 +71,7 @@ export function EditProduct({product}: Props) {
           </CardHeader>
           <CardContent>
             {match(imageUploadState)
-              .with({state: 'idle'}, ({imageUrl}) => (
+              .with({ state: 'idle' }, ({ imageUrl }) => (
                 <>
                   <Image
                     src={imageUrl}
@@ -63,11 +80,12 @@ export function EditProduct({product}: Props) {
                     width={200}
                     height={300}
                     className="w-full"
-                    priority />
-                  <Input type='hidden' name="image" value={imageUrl} required />
+                    priority
+                  />
+                  <Input type="hidden" name="image" value={imageUrl} required />
                 </>
               ))
-              .with({state: 'failure'}, ({failure}) => (
+              .with({ state: 'failure' }, ({ failure }) => (
                 <div>
                   {failure.code} {failure.reason}
                 </div>
@@ -75,9 +93,10 @@ export function EditProduct({product}: Props) {
               .exhaustive()}
           </CardContent>
           <CardFooter>
-            <ImageUploadButton 
-              onImageAtomUploaded={async () => {}} 
-              onImageUploaded={handleImageUploaded}/>
+            <ImageUploadButton
+              onImageAtomUploaded={async () => {}}
+              onImageUploaded={handleImageUploaded}
+            />
           </CardFooter>
         </Card>
         <Card>
@@ -86,9 +105,21 @@ export function EditProduct({product}: Props) {
           </CardHeader>
           <CardContent>
             <Label htmlFor={toId('id')}>id</Label>
-            <Input name="id" type="text" defaultValue={product.id} disabled required />
+            <Input
+              name="id"
+              type="text"
+              defaultValue={product.id}
+              disabled
+              required
+            />
             <Label htmlFor={toId('name')}>naam</Label>
-            <Input name="name" type="text" disabled={pending} defaultValue={product.name} required />
+            <Input
+              name="name"
+              type="text"
+              disabled={pending}
+              defaultValue={product.name}
+              required
+            />
             <Label htmlFor={toId('description')}>beschrijving</Label>
             <Textarea name="description" disabled={pending}></Textarea>
             <Label htmlFor={toId('price')}>prijs in euro</Label>
@@ -98,10 +129,7 @@ export function EditProduct({product}: Props) {
             {match(saveProductState)
               .with('idle', () => (
                 <Button type="submit" disabled={pending}>
-                  {pending
-                    ? (<Spinner />)
-                    : (<Save />)
-                  }
+                  {pending ? <Spinner /> : <Save />}
                   Sparen
                 </Button>
               ))

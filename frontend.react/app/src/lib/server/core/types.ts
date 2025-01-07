@@ -1,4 +1,4 @@
-export {type Product } from './products'
+export { type Product } from './products'
 
 // overall types
 export interface Unit {

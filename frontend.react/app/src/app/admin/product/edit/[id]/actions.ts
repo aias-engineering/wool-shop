@@ -1,11 +1,12 @@
 'use server'
 
-import { Product } from "@/lib/server/core/products"
+export type SaveProductState = 'idle'
 
-export type SaveProductState = 
-  | 'idle'
-
-export async function saveProductOnServer(prev: SaveProductState, formData: FormData): Promise<SaveProductState> {
-
+export async function saveProductOnServer(
+  prev: SaveProductState,
+  formData: FormData,
+): Promise<SaveProductState> {
+  console.log(prev)
+  console.log(formData)
   return 'idle'
 }

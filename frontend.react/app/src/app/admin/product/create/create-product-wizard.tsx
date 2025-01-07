@@ -91,13 +91,13 @@ export function CreateProductWizard({}: Props) {
                 </CardHeader>
                 <CardContent>
                   <Image
-                      src={imageUrl}
-                      alt={imageUrl}
-                      sizes="(min-width: 640px) 50vw, 100vw"
-                      width={200}
-                      height={300}
-                      className="w-full"
-                    />
+                    src={imageUrl}
+                    alt={imageUrl}
+                    sizes="(min-width: 640px) 50vw, 100vw"
+                    width={200}
+                    height={300}
+                    className="w-full"
+                  />
                   <Input type="hidden" name="image" value={imageUrl} required />
                 </CardContent>
                 <CardFooter>
@@ -123,16 +123,13 @@ export function CreateProductWizard({}: Props) {
                   <Label htmlFor={toId('description')}>beschrijving</Label>
                   <Textarea name="description" disabled={pending}></Textarea>
                   <Label htmlFor={toId('price')}>prijs in euro</Label>
-                  <CurrencyInput name='price' disabled={pending} />
+                  <CurrencyInput name="price" disabled={pending} />
                 </CardContent>
                 <CardFooter>
                   {match(creationState)
                     .with({ step: 'idle' }, () => (
                       <Button type="submit" disabled={pending}>
-                        {pending
-                          ? (<Spinner />)
-                          : (<Save />)
-                        }
+                        {pending ? <Spinner /> : <Save />}
                         Sparen
                       </Button>
                     ))

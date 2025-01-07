@@ -7,23 +7,20 @@ import HeaderLayout from '@/app/components/layout/header'
 import Title from '@/app/components/atoms/title'
 import Main from '@/app/components/main'
 
-
 export default async function Page({
   params,
 }: {
   params: Promise<{ id: string }>
 }) {
-  const eitherProductOrFailure = 
-    await params
-      .then(
-        ({id}) => withAzureDataAccess(
-          dataAccess => getProduct(id, dataAccess)))
+  const eitherProductOrFailure = await params.then(({ id }) =>
+    withAzureDataAccess((dataAccess) => getProduct(id, dataAccess)),
+  )
 
   if (isFailure(eitherProductOrFailure)) {
     const failure: Failure = eitherProductOrFailure
-    return (<ErrorPage message={failure.code} />)
+    return <ErrorPage message={failure.code} />
   }
-  
+
   const product: Product = eitherProductOrFailure
 
   return (
