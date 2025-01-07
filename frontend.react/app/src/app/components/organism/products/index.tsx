@@ -3,6 +3,7 @@
 import Button from '@/app/components/atoms/button'
 import Grid from '@/app/components/atoms/grid'
 import Image from '@/app/components/atoms/image'
+import NextImage from 'next/image'
 import Input from '@/app/components/atoms/input'
 import ImageFrame from '@/app/components/atoms/image-frame'
 import { Separator } from '@/app/components/atoms/separator'
@@ -92,13 +93,17 @@ export default function Products({ products }: Props) {
   return (
     <Provider>
       <Sheet>
-        <Grid className="grid-cols-1 lg:grid-cols-4 gap-2">
+        <Grid className="grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
           {products.map((product) => {
             const matchingWishlistItem = wishlist.find(x => x.product.id === product.id)
             return (
               <div key={product.id} className="flex flex-col gap-2">
                 <ImageFrame>
-                  <Image src={product.image} alt={product.name} />
+                  <NextImage src={product.image} alt={product.name}
+                         sizes='(min-width: 1024px) 25vw, (min-width: 768px) 66vw, 50vw'
+                         width={200}
+                         height={300}
+                         className='w-full' />
                 </ImageFrame>
                 <Title type="h3">{product.name}</Title>
                 <p>{product.price} €</p>

@@ -6,7 +6,7 @@ import { PackagePlus, Pencil } from 'lucide-react'
 import Link from 'next/link'
 import Grid from '@/app/components/atoms/grid'
 import ImageFrame from '@/app/components/atoms/image-frame'
-import Image from '@/app/components/atoms/image'
+import Image from 'next/image'
 import Space from '@/app/components/atoms/space'
 import Paragraph from '@/app/components/atoms/paragraph'
 import { withAzureDataAccess } from '@/lib/server'
@@ -56,7 +56,7 @@ const Page = async () => {
           ))
           .with(ts.P.array(), (products) => (
             <>
-              <Grid className="grid-cols-1 lg:grid-cols-4">
+              <Grid className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
                 {products.map((product, index) => (
                   <Card key={index}>
                     <CardHeader>
@@ -64,7 +64,11 @@ const Page = async () => {
                     </CardHeader>
                     <CardContent>
                       <ImageFrame>
-                        <Image src={product.image} alt={product.image} />
+                        <Image src={product.image} alt={product.name}
+                               sizes='(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'
+                               width={200}
+                               height={300}
+                              className='w-full' />
                       </ImageFrame>
                       <Space className="space--top-1">
                         <Paragraph>{product.price} €</Paragraph>

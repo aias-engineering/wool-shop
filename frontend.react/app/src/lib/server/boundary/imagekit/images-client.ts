@@ -26,7 +26,7 @@ const downloadImageBlob = (blobname: string): Promise<ReadableStream | DownloadD
   const url = imageKit()
     .url({
       path: `/${blobname}`,
-      transformation: [{ width: 300, height: 300 }]
+      transformation: [{ width: 2560, height: 3840 }]
     })
     console.log('url: %s', url)
     return fetch(url, { cache: "no-cache" })

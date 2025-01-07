@@ -6,5 +6,5 @@ export default function ImageFrame({
   children,
   className,
 }: HasChildren & MightHaveClassName) {
-  return <div className={clsx('image-frame', className)}>{children}</div>
+  return <div className={clsx('image-frame grid justify-center', className)}>{children}</div>
 }

@@ -13,10 +13,14 @@ interface Route {
   params: Promise<{ id: string }>
 }
 
-export const GET = (_: NextRequest, { params }: Route): Promise<NextResponse> =>
-  withAzureDataAccess(async (dataAccess) =>
-    getImage((await params).id, dataAccess),
-  ).then((result) =>
+export const GET = (_: NextRequest, route: Route): Promise<NextResponse> =>
+  route.params
+    .then(
+      ({id}) => withAzureDataAccess(dataAccess => 
+        getImage(id, dataAccess)
+      )
+    )
+    .then((result) =>
     match<ReadableStream | Failure, NextResponse>(result)
       .with(
         P.instanceOf(ReadableStream),

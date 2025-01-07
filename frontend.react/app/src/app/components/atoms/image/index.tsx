@@ -1,4 +1,3 @@
-import './_image.css'
 import clsx from 'clsx'
 import NextImage from 'next/image'
 
@@ -7,17 +6,22 @@ interface Props {
   alt: string
   width?: number
   height?: number
+  fill?: boolean
+  sizes?: string
   className?: string
 }
 
-export default function Image({ src, alt, width, height, className }: Props) {
+export default function Image({ src, alt, width, height, fill, sizes, className }: Props) {
   return (
     <NextImage
       className={clsx('image', className)}
+      height={height}
+      width={width}
       src={src}
-      width={width ?? 400}
-      height={height ?? 640}
+      fill={fill}
+      sizes={sizes}
       alt={alt}
+      
     />
   )
 }

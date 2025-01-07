@@ -1,7 +1,7 @@
 'use client'
 
 import Button from '@/app/components/atoms/button'
-import Image from '@/app/components/atoms/image'
+import Image from 'next/image'
 import Small from '@/app/components/atoms/small'
 import Grid from '@/app/components/atoms/grid'
 import { imagesFetchAtom } from '@/lib/client/store'
@@ -39,7 +39,7 @@ export default function PreloadedImagesGrid({ urls }: Props) {
 
   const imagesFetch = useAtomValue(imagesFetchAtom)
   const [imageDeleteState] = useAtom(imageDeleteStateAtom)
-  const [, deleteImage] = useAtom(deleteImageAction)
+  const [, _] = useAtom(deleteImageAction)
 
   return (
     <>
@@ -57,31 +57,21 @@ export default function PreloadedImagesGrid({ urls }: Props) {
           </>
         ))
         .with({ step: 'fetched' }, ({}) => (
-          <Grid className="grid-cols-4">
+          <Grid className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
             {urls.map((url, index) => (
               <Card key={index} className="card--borderless">
                 <CardTitle></CardTitle>
                 <CardContent>
-                  <AspectRatio ratio={3 / 4}>
-                    <Image
-                      className="image--rounded"
-                      key={index}
-                      src={url}
-                      alt={url}
-                    />
-                  </AspectRatio>
+                  <Image  src={url} alt={url}
+                          sizes='(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'
+                          width={200}
+                          height={300}
+                          className='w-full' />
                   <Small>{url}</Small>
                 </CardContent>
                 {match(imageDeleteState)
                   .with({ step: 'idle' }, () => (
                     <CardFooter className="card__footer--onhover">
-                      <Button
-                        onClick={async () =>
-                          deleteImage(url, imageDeleteStateAtom)
-                        }
-                      >
-                        <Trash2 /> verwijderen
-                      </Button>
                     </CardFooter>
                   ))
                   .with({ step: 'deleting', imageUrl: url }, () => (
