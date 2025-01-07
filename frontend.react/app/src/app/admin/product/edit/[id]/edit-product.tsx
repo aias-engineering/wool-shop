@@ -1,5 +1,6 @@
 'use client'
 
+import CurrencyInput from "@/app/components/atoms/currency-input";
 import Grid from "@/app/components/atoms/grid";
 import ImageUploadButton, { UploadedImage } from "@/app/components/atoms/image-upload-button";
 import Input, { toId } from "@/app/components/atoms/input";
@@ -29,7 +30,7 @@ type ImageUploadState =
 export function EditProduct({product}: Props) {
 
 
-  const [saveProductState, formAction, pending] = useActionState<SaveProductState>(saveProductOnServer, 'idle')
+  const [saveProductState, formAction, pending] = useActionState(saveProductOnServer, 'idle')
   const [imageUploadState, setImageUploadState] = useState<ImageUploadState>({state: 'idle', imageUrl: product.image})
     
   const handleImageUploaded = (image: UploadedImage) => 
@@ -58,7 +59,7 @@ export function EditProduct({product}: Props) {
                   <Image
                     src={imageUrl}
                     alt={imageUrl}
-                    sizes="(min-width: 1024px) 25vw, (min-width: 768px) 66vw, 50vw"
+                    sizes="(min-width: 640px) 50vw, 100vw"
                     width={200}
                     height={300}
                     className="w-full"
@@ -91,13 +92,7 @@ export function EditProduct({product}: Props) {
             <Label htmlFor={toId('description')}>beschrijving</Label>
             <Textarea name="description" disabled={pending}></Textarea>
             <Label htmlFor={toId('price')}>prijs in euro</Label>
-            <Input
-              name="price"
-              type="number"
-              disabled={pending}
-              defaultValue={product.price}
-              required
-            />
+            <CurrencyInput name="price" defaultValue={product.price} />
           </CardContent>
           <CardFooter>
             {match(saveProductState)

@@ -25,6 +25,7 @@ import { useActionState, useState } from 'react'
 import { match, P } from 'ts-pattern'
 import { createProductOnServer } from './actions'
 import Spinner from '@/app/components/atoms/spinner'
+import CurrencyInput from '@/app/components/atoms/currency-input'
 
 interface Props {
   urls: string[]
@@ -56,8 +57,8 @@ export function CreateProductWizard({}: Props) {
 
   return (
     <form action={formAction}>
-      <Grid className="grid-cols-1 gap-2">
-        <Title type="h3">Een product creëren</Title>
+      <Title type="h3">Een product creëren</Title>
+      <Grid className="grid-cols-1 sm:grid-cols-2 gap-2">
         {match(state)
           .with({ step: 'idle' }, ({}) => (
             <>
@@ -92,7 +93,7 @@ export function CreateProductWizard({}: Props) {
                   <Image
                       src={imageUrl}
                       alt={imageUrl}
-                      sizes="(min-width: 1024px) 25vw, (min-width: 768px) 66vw, 50vw"
+                      sizes="(min-width: 640px) 50vw, 100vw"
                       width={200}
                       height={300}
                       className="w-full"
@@ -122,12 +123,7 @@ export function CreateProductWizard({}: Props) {
                   <Label htmlFor={toId('description')}>beschrijving</Label>
                   <Textarea name="description" disabled={pending}></Textarea>
                   <Label htmlFor={toId('price')}>prijs in euro</Label>
-                  <Input
-                    name="price"
-                    type="number"
-                    disabled={pending}
-                    required
-                  />
+                  <CurrencyInput name='price' disabled={pending} />
                 </CardContent>
                 <CardFooter>
                   {match(creationState)
