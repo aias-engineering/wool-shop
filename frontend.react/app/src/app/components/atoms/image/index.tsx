@@ -11,7 +11,15 @@ interface Props {
   className?: string
 }
 
-export default function Image({ src, alt, width, height, fill, sizes, className }: Props) {
+export default function Image({
+  src,
+  alt,
+  width,
+  height,
+  fill,
+  sizes,
+  className,
+}: Props) {
   return (
     <NextImage
       className={clsx('image', className)}
@@ -21,7 +29,6 @@ export default function Image({ src, alt, width, height, fill, sizes, className 
       fill={fill}
       sizes={sizes}
       alt={alt}
-      
     />
   )
 }

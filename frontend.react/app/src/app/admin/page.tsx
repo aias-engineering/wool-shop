@@ -7,12 +7,12 @@ async function Page() {
   return (
     <>
       <HeaderLayout>
-        <Title type='h2' className='text-white'>
+        <Title type="h2" className="text-white">
           AdminUI
         </Title>
       </HeaderLayout>
       <Main>
-        <Link href='/admin/product'>producten</Link>
+        <Link href="/admin/product">producten</Link>
       </Main>
     </>
   )

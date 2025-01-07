@@ -32,7 +32,7 @@ const Page = async () => {
   return (
     <>
       <HeaderLayout>
-        <Title type='h2' className='text-white'>
+        <Title type="h2" className="text-white">
           AdminUI
         </Title>
       </HeaderLayout>
@@ -64,17 +64,20 @@ const Page = async () => {
                     </CardHeader>
                     <CardContent>
                       <ImageFrame>
-                        <Image src={product.image} alt={product.name}
-                               sizes='(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'
-                               width={200}
-                               height={300}
-                              className='w-full' />
+                        <Image
+                          src={product.image}
+                          alt={product.name}
+                          sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                          width={200}
+                          height={300}
+                          className="w-full"
+                        />
                       </ImageFrame>
                       <Space className="space--top-1">
                         <Paragraph>{product.price} €</Paragraph>
                       </Space>
                     </CardContent>
-                    <CardFooter className='gap-1'>
+                    <CardFooter className="gap-1">
                       <Link href={`/admin/product/edit/${product.id}`}>
                         <Button>
                           <Pencil /> bewerken

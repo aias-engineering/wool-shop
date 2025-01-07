@@ -10,7 +10,7 @@ export {
 } from './error-in-cosmos-db-access'
 export {
   ProductValidationFailed,
-  isProductValidationFailed
+  isProductValidationFailed,
 } from './product-validation-failed'
 export {
   UserWithEmailNotFound,

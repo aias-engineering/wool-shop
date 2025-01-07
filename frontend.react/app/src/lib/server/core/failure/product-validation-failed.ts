@@ -1,4 +1,4 @@
-import { Failure } from "./failure"
+import { Failure } from './failure'
 
 export interface ProductValidationFailed extends Failure {
   readonly code: 'cpr-01'
@@ -15,7 +15,9 @@ export const ProductValidationFailed: (
   error,
 })
 
-export function isProductValidationFailed(x: unknown): x is ProductValidationFailed {
+export function isProductValidationFailed(
+  x: unknown,
+): x is ProductValidationFailed {
   const failure = x as ProductValidationFailed
   return (
     failure.type === 'failure' &&

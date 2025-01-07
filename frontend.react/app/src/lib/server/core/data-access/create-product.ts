@@ -39,10 +39,9 @@ export interface CreateProductResponse {
   request: CreateProductRequest
 }
 
-export function isCreateProductResponse(x: unknown): x is CreateProductResponse {
+export function isCreateProductResponse(
+  x: unknown,
+): x is CreateProductResponse {
   const response = x as CreateProductResponse
-  return (
-    response.id !== undefined &&
-    isCreateProductRequest(response.request)
-  )
+  return response.id !== undefined && isCreateProductRequest(response.request)
 }

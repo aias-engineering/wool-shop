@@ -47,7 +47,7 @@ export default function ImageUploadButton({
       {({ onImageUpload, onImageUpdate }) => (
         <Button
           onClick={uploadedImages ? onImageUpload : () => onImageUpdate(0)}
-          type='button'
+          type="button"
         >
           {children || (
             <>

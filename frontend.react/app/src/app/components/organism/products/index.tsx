@@ -2,7 +2,6 @@
 
 import Button from '@/app/components/atoms/button'
 import Grid from '@/app/components/atoms/grid'
-import Image from '@/app/components/atoms/image'
 import NextImage from 'next/image'
 import Input from '@/app/components/atoms/input'
 import ImageFrame from '@/app/components/atoms/image-frame'
@@ -95,39 +94,50 @@ export default function Products({ products }: Props) {
       <Sheet>
         <Grid className="grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
           {products.map((product) => {
-            const matchingWishlistItem = wishlist.find(x => x.product.id === product.id)
+            const matchingWishlistItem = wishlist.find(
+              (x) => x.product.id === product.id,
+            )
             return (
               <div key={product.id} className="flex flex-col gap-2">
                 <ImageFrame>
-                  <NextImage src={product.image} alt={product.name}
-                         sizes='(min-width: 1024px) 25vw, (min-width: 768px) 66vw, 50vw'
-                         width={200}
-                         height={300}
-                         className='w-full' />
+                  <NextImage
+                    src={product.image}
+                    alt={product.name}
+                    sizes="(min-width: 1024px) 25vw, (min-width: 768px) 66vw, 50vw"
+                    width={200}
+                    height={300}
+                    className="w-full"
+                  />
                 </ImageFrame>
                 <Title type="h3">{product.name}</Title>
                 <p>{product.price} €</p>
-                { (matchingWishlistItem)
-                    ? ( <div className='flex flex-row'>
-                          <Button onClick={() => removeFromWishlist(product.id)} variant="counter">
-                            <Minus />
-                          </Button>
-                          <div className="m-auto">{matchingWishlistItem.amount}</div>
-                          <Button onClick={() => addToWishlist(product)} variant="counter">
-                            <Plus />
-                          </Button>
-                        </div>)
-                    : ( <Button onClick={() => addToWishlist(product)}>
-                          naar wensenlijst
-                          <ScrollText />
-                        </Button>)
-                }
-                
+                {matchingWishlistItem ? (
+                  <div className="flex flex-row">
+                    <Button
+                      onClick={() => removeFromWishlist(product.id)}
+                      variant="counter"
+                    >
+                      <Minus />
+                    </Button>
+                    <div className="m-auto">{matchingWishlistItem.amount}</div>
+                    <Button
+                      onClick={() => addToWishlist(product)}
+                      variant="counter"
+                    >
+                      <Plus />
+                    </Button>
+                  </div>
+                ) : (
+                  <Button onClick={() => addToWishlist(product)}>
+                    naar wensenlijst
+                    <ScrollText />
+                  </Button>
+                )}
               </div>
             )
           })}
         </Grid>
-        <div className='fixed bottom-1 left-0 grid px-2 w-full'>
+        <div className="fixed bottom-1 left-0 grid px-2 w-full">
           <SheetTrigger asChild>
             <Button>
               <ScrollText />
@@ -150,26 +160,25 @@ export default function Products({ products }: Props) {
               />
             ))}
           </div>
-          <SheetFooter className='text-center justify-self-end'>
+          <SheetFooter className="text-center justify-self-end">
             <div>
-              Laat ons weten wat uw wensen zijn. 
-              Vul uw contactgegevens in en sla uw verlanglijstje op.
-              Wij nemen contact met u op.
+              Laat ons weten wat uw wensen zijn. Vul uw contactgegevens in en
+              sla uw verlanglijstje op. Wij nemen contact met u op.
             </div>
             <form>
-              <Input name='email' type='email' />
+              <Input name="email" type="email" />
               <Button>Bewaar</Button>
             </form>
             <Separator />
             <div>
-              Or sign in and save your wishlist in your profile.
-              Wij nemen contact met u op.
+              Or sign in and save your wishlist in your profile. Wij nemen
+              contact met u op.
             </div>
             <form>
               <Button>
                 <Github />
                 Sign In with Github
-              </Button>  
+              </Button>
             </form>
           </SheetFooter>
         </SheetContent>

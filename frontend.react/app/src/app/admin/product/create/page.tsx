@@ -20,13 +20,12 @@ const Page = async () => {
     .with(P.array(), (imagenames) => (
       <Provider>
         <HeaderLayout>
-          <Title type='h2' className='text-white'>
+          <Title type="h2" className="text-white">
             Admin UI
           </Title>
         </HeaderLayout>
         <Main>
-          <CreateProductWizard urls={imagenames}>
-          </CreateProductWizard>  
+          <CreateProductWizard urls={imagenames}></CreateProductWizard>
         </Main>
       </Provider>
     ))

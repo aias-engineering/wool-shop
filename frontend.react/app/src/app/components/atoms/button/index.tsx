@@ -32,7 +32,14 @@ interface Props extends HasChildren, MightHaveClassName {
   onClick?: (() => Promise<void>) | (() => void)
 }
 
-const Button = ({ className, children, disabled, type='submit', variant, onClick }: Props) => (
+const Button = ({
+  className,
+  children,
+  disabled,
+  type = 'submit',
+  variant,
+  onClick,
+}: Props) => (
   <>
     <button
       className={clsx(buttonVariants({ variant, className }))}

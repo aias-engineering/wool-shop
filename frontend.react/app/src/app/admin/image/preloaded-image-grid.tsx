@@ -6,11 +6,10 @@ import Small from '@/app/components/atoms/small'
 import Grid from '@/app/components/atoms/grid'
 import { imagesFetchAtom } from '@/lib/client/store'
 import { ImagesFetch } from '@/lib/client/store/image'
-import { AspectRatio } from '@radix-ui/react-aspect-ratio'
 import { atom, useAtom, useAtomValue } from 'jotai'
 import { useHydrateAtoms } from 'jotai/utils'
 import { match } from 'ts-pattern'
-import { Annoyed, ImageUp, Trash2 } from 'lucide-react'
+import { Annoyed, ImageUp } from 'lucide-react'
 import {
   Card,
   CardContent,
@@ -39,7 +38,7 @@ export default function PreloadedImagesGrid({ urls }: Props) {
 
   const imagesFetch = useAtomValue(imagesFetchAtom)
   const [imageDeleteState] = useAtom(imageDeleteStateAtom)
-  const [, _] = useAtom(deleteImageAction)
+  const [,] = useAtom(deleteImageAction)
 
   return (
     <>
@@ -62,17 +61,19 @@ export default function PreloadedImagesGrid({ urls }: Props) {
               <Card key={index} className="card--borderless">
                 <CardTitle></CardTitle>
                 <CardContent>
-                  <Image  src={url} alt={url}
-                          sizes='(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'
-                          width={200}
-                          height={300}
-                          className='w-full' />
+                  <Image
+                    src={url}
+                    alt={url}
+                    sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    width={200}
+                    height={300}
+                    className="w-full"
+                  />
                   <Small>{url}</Small>
                 </CardContent>
                 {match(imageDeleteState)
                   .with({ step: 'idle' }, () => (
-                    <CardFooter className="card__footer--onhover">
-                    </CardFooter>
+                    <CardFooter className="card__footer--onhover"></CardFooter>
                   ))
                   .with({ step: 'deleting', imageUrl: url }, () => (
                     <CardFooter>

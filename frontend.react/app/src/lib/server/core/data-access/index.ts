@@ -52,7 +52,7 @@ export interface ListImageBlobsFlat {
 
 export interface DownloadImageBlob {
   downloadImageBlob(
-    imageBlobname: string
+    imageBlobname: string,
   ): Promise<
     ReadableStream | DownloadDidntReturnStream | ErrorInBlobStorageAccess
   >

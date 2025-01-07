@@ -10,7 +10,13 @@ interface Props extends HasChildren, MightHaveClassName {
   disabled?: boolean
 }
 
-export default function Textarea({ name, id, className, children, disabled }: Props) {
+export default function Textarea({
+  name,
+  id,
+  className,
+  children,
+  disabled,
+}: Props) {
   return (
     <textarea
       name={name}

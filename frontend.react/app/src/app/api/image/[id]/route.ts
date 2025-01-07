@@ -15,23 +15,21 @@ interface Route {
 
 export const GET = (_: NextRequest, route: Route): Promise<NextResponse> =>
   route.params
-    .then(
-      ({id}) => withAzureDataAccess(dataAccess => 
-        getImage(id, dataAccess)
-      )
+    .then(({ id }) =>
+      withAzureDataAccess((dataAccess) => getImage(id, dataAccess)),
     )
     .then((result) =>
-    match<ReadableStream | Failure, NextResponse>(result)
-      .with(
-        P.instanceOf(ReadableStream),
-        (imageStream) => new NextResponse(imageStream),
-      )
-      .with(
-        P.when(isFailure),
-        ({ reason }) => new NextResponse(reason, { status: 500 }),
-      )
-      .exhaustive(),
-  )
+      match<ReadableStream | Failure, NextResponse>(result)
+        .with(
+          P.instanceOf(ReadableStream),
+          (imageStream) => new NextResponse(imageStream),
+        )
+        .with(
+          P.when(isFailure),
+          ({ reason }) => new NextResponse(reason, { status: 500 }),
+        )
+        .exhaustive(),
+    )
 
 export async function POST(
   req: NextRequest,
@@ -43,7 +41,11 @@ export async function POST(
     saveImage((await params).id, stream, dataAccess),
   ).then((result) =>
     match(result)
-      .with(P.string, (uploadedImageName) => new NextResponse(uploadedImageName, { status: 200 }))
+      .with(
+        P.string,
+        (uploadedImageName) =>
+          new NextResponse(uploadedImageName, { status: 200 }),
+      )
       .with(P.when(isFailure), (failure) =>
         NextResponse.json(failure, { status: 500 }),
       )
