@@ -7,6 +7,7 @@ interface Props extends HasChildren, MightHaveClassName {
   name: string
   id?: string
   className?: string
+  defaultValue?: string
   disabled?: boolean
 }
 
@@ -15,6 +16,7 @@ export default function Textarea({
   id,
   className,
   children,
+  defaultValue,
   disabled,
 }: Props) {
   return (
@@ -23,6 +25,7 @@ export default function Textarea({
       id={id || toId(name)}
       className={clsx('textarea', className)}
       disabled={disabled}
+      defaultValue={defaultValue}
     >
       {children}
     </textarea>

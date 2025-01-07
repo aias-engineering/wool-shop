@@ -1,9 +1,8 @@
 'use client'
 
-import { AspectRatio } from '@/app/components/atoms/aspect-ratio'
 import Button from '@/app/components/atoms/button'
 import Grid from '@/app/components/atoms/grid'
-import Image from '@/app/components/atoms/image'
+import Image from 'next/image'
 import ImageUploadButton, {
   UploadedImage,
 } from '@/app/components/atoms/image-upload-button'
@@ -21,10 +20,11 @@ import {
 } from '@/app/components/molecules/card'
 import { postImage } from '@/lib/client/post-image'
 import { Failure } from '@/lib/server/core/failure'
-import { MoveLeft } from 'lucide-react'
+import { MoveLeft, Save } from 'lucide-react'
 import { useActionState, useState } from 'react'
 import { match, P } from 'ts-pattern'
 import { createProductOnServer } from './actions'
+import Spinner from '@/app/components/atoms/spinner'
 
 interface Props {
   urls: string[]
@@ -89,15 +89,14 @@ export function CreateProductWizard({}: Props) {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <AspectRatio ratio={1 / 1}>
-                    <Image
-                      className="image--rounded"
+                  <Image
                       src={imageUrl}
                       alt={imageUrl}
-                      width={300}
+                      sizes="(min-width: 1024px) 25vw, (min-width: 768px) 66vw, 50vw"
+                      width={200}
                       height={300}
+                      className="w-full"
                     />
-                  </AspectRatio>
                   <Input type="hidden" name="image" value={imageUrl} required />
                 </CardContent>
                 <CardFooter>
@@ -134,7 +133,11 @@ export function CreateProductWizard({}: Props) {
                   {match(creationState)
                     .with({ step: 'idle' }, () => (
                       <Button type="submit" disabled={pending}>
-                        {'Product creëren'}
+                        {pending
+                          ? (<Spinner />)
+                          : (<Save />)
+                        }
+                        Sparen
                       </Button>
                     ))
                     .with({ step: 'failure' }, ({ failure }) => (

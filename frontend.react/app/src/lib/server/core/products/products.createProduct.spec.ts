@@ -1,6 +1,7 @@
 import { expect, test } from 'vitest'
-import { CreateProduct } from './data-access'
-import { createProduct } from './products'
+import { CreateProduct } from '../data-access'
+import { createProduct } from '../products'
+import { isProductValidationFailed } from '../failure'
 
 const id = Math.random().toString()
 const defaultDataAccess: CreateProduct = {
@@ -55,7 +56,7 @@ test.each([undefined])(
 
     const response = await createProduct(formData, defaultDataAccess)
 
-    expect(response).toMatchObject({ type: 'failure' })
+    expect(isProductValidationFailed(response)).false
   },
 )
 

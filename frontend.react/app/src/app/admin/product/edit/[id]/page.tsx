@@ -1,37 +1,41 @@
-import Grid from '@/app/components/atoms/grid'
-import Image from '@/app/components/atoms/image'
 import ErrorPage from '@/app/components/layout/error-page'
 import { withAzureDataAccess } from '@/lib/server'
-import { isFailure } from '@/lib/server/core/failure'
-import { getProduct } from '@/lib/server/core/products'
-import { match, P } from 'ts-pattern'
+import { Failure, isFailure } from '@/lib/server/core/failure'
+import { getProduct, Product } from '@/lib/server/core/products'
+import { EditProduct } from './edit-product'
+import HeaderLayout from '@/app/components/layout/header'
+import Title from '@/app/components/atoms/title'
+import Main from '@/app/components/main'
+
 
 export default async function Page({
   params,
 }: {
   params: Promise<{ id: string }>
 }) {
-  const product = await withAzureDataAccess(async (dataAccess) => {
-    const p = await params
-    return getProduct(p.id, dataAccess)
-  })
+  const eitherProductOrFailure = 
+    await params
+      .then(
+        ({id}) => withAzureDataAccess(
+          dataAccess => getProduct(id, dataAccess)))
+
+  if (isFailure(eitherProductOrFailure)) {
+    const failure: Failure = eitherProductOrFailure
+    return (<ErrorPage message={failure.code} />)
+  }
+  
+  const product: Product = eitherProductOrFailure
 
   return (
     <>
-      {match(product)
-        .with(P.when(isFailure), (failure) => (
-          <ErrorPage message={failure.code} />
-        ))
-        .with(P.select(), (product) => (
-          <>
-            <form>
-              <Grid className="grid-cols-2">
-                <Image src={product.image} alt={product.image} />
-              </Grid>
-            </form>
-          </>
-        ))
-        .exhaustive()}
+      <HeaderLayout>
+        <Title type="h2" className="text-white">
+          Admin UI
+        </Title>
+      </HeaderLayout>
+      <Main>
+        <EditProduct product={product} />
+      </Main>
     </>
   )
 }

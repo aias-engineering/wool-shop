@@ -6,13 +6,32 @@ import {
   ReadAllProducts,
   ReadProduct,
   DeleteProduct,
-} from './data-access'
+} from '../data-access'
 import {
   ErrorInCosmosDbAccess,
   ProductValidationFailed,
   ProductWithIdNotFound,
-} from './failure'
-import { Product, Unit } from './types'
+} from '../failure'
+import { Unit } from '../types'
+
+export interface Product {
+  id: string
+  name: string
+  descripiton: string | null
+  price: string
+  image: string
+}
+
+export function isProduct(x: unknown): x is Product {
+  const product = x as Product
+  return (
+    product.id !== undefined &&
+    product.name !== undefined &&
+    product.descripiton !== undefined &&
+    product.price !== undefined &&
+    product.image !== undefined
+  )
+}
 
 export const getAllProducts = (
   dataAccess: ReadAllProducts,

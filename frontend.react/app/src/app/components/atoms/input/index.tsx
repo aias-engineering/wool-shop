@@ -5,6 +5,7 @@ import { MightHaveClassName } from '@/lib/client/react'
 
 interface Props extends MightHaveClassName {
   type: 'text' | 'number' | 'hidden' | 'email' | 'password'
+  defaultValue?: string
   disabled?: boolean
   name: string
   required?: boolean
@@ -20,6 +21,7 @@ export function toId(name: string) {
 
 export default function Input({
   type,
+  defaultValue,
   disabled,
   name,
   required,
@@ -32,6 +34,7 @@ export default function Input({
   return (
     <input
       type={type}
+      defaultValue={defaultValue}
       disabled={disabled}
       name={name}
       required={required}
