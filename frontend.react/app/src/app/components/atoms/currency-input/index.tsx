@@ -7,17 +7,19 @@ import { toId } from '../input'
 import { Euro } from 'lucide-react'
 
 interface Props extends MightHaveClassName {
-  defaultValue?: string
+  defaultValue?: string | number
   disabled?: boolean
   id?: string
   name: string
 }
 
 const parseDefaultValue = (
-  defaultValue: string | undefined,
+  defaultValue: string | number | undefined,
 ): [number, number, number] => {
   if (!defaultValue) return [0, 0, 0.0]
-  const fullDefault = Number.parseFloat(defaultValue)
+  const asFloat = (input: string | number) =>
+    typeof input === 'string' ? Number.parseFloat(input) : input
+  const fullDefault = asFloat(defaultValue)
   const defaultRight = fullDefault % 1
   const defaultLeft = fullDefault - defaultRight
   return [defaultLeft, defaultRight, fullDefault]
@@ -37,13 +39,16 @@ export default function CurrencyInput({
   const [right, setRight] = useState<string>(defaultRight.toFixed(0))
   const [full, setFull] = useState<number>(defaultFull)
 
-  const handleUpdate = ([leftUpdateString, rightUpdateString]: [string, string]): void => {
+  const handleUpdate = ([leftUpdateString, rightUpdateString]: [
+    string,
+    string,
+  ]): void => {
     setLeft(leftUpdateString)
     setRight(rightUpdateString)
-    
+
     const leftUpdate = Number.parseInt(leftUpdateString) || 0
     const rightUpdate = Number.parseInt(rightUpdateString) || 0
-    
+
     const unroundedFull = leftUpdate + rightUpdate / 100
     const full = Math.round((unroundedFull + Number.EPSILON) * 100) / 100
     setFull(full)

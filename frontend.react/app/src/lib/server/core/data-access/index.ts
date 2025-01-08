@@ -11,7 +11,13 @@ import { CreateUser } from './create-user'
 import { User } from '../users'
 import { UserWithIdNotFound } from '../users/failure'
 import { CreateAccount, ReadAccountsByProviderAccount } from './accounts'
-import { ReadAllProducts, ReadProduct, ReadProductsWithImage, DeleteProduct, UpsertProduct } from './products'
+import {
+  ReadAllProducts,
+  ReadProduct,
+  ReadProductsWithImage,
+  DeleteProduct,
+  UpsertProduct,
+} from './products'
 import { CreateSession, DeleteSession, ReadSessionsByToken } from './sessions'
 export * from './create-product'
 export * from './create-user'
@@ -24,7 +30,7 @@ export {
   type ReadAllProducts,
   type ReadProduct,
   type ReadProductsWithImage,
-  type DeleteProduct
+  type DeleteProduct,
 } from './products'
 export {
   type CreateSession,

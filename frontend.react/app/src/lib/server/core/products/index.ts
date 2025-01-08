@@ -79,6 +79,5 @@ export const deleteProduct = (
 
 export const saveProduct = (
   product: Product,
-  dataAccess: UpsertProduct
-): Promise<Unit | ErrorInCosmosDbAccess> => 
-  dataAccess.upsertProduct(product)
+  dataAccess: UpsertProduct,
+): Promise<Unit | ErrorInCosmosDbAccess> => dataAccess.upsertProduct(product)

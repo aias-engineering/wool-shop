@@ -1,6 +1,6 @@
-import { ErrorInCosmosDbAccess, ProductWithIdNotFound } from "../failure"
-import { Product } from "../products"
-import { Unit } from "../types"
+import { ErrorInCosmosDbAccess, ProductWithIdNotFound } from '../failure'
+import { Product } from '../products'
+import { Unit } from '../types'
 
 export interface ReadAllProducts {
   readAllProducts(): Promise<Product[] | ErrorInCosmosDbAccess>

@@ -62,8 +62,8 @@ export function EditProduct({ product }: Props) {
 
   return (
     <form action={formAction}>
-      <Grid className="grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-2">
-        <Card>
+      <Grid className="grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-2">
+        <Card className="grid">
           <CardHeader>
             <CardTitle>
               <Title type="h4">Product afbeelding</Title>
@@ -76,7 +76,7 @@ export function EditProduct({ product }: Props) {
                   <Image
                     src={imageUrl}
                     alt={imageUrl}
-                    sizes="(min-width:1024px) 20vw,(min-width: 640px) 33vw, 100vw"
+                    sizes="(min-width:1280px) 20vw,(min-width: 768px) 33vw, 100vw"
                     width={200}
                     height={300}
                     className="w-full"
@@ -92,26 +92,21 @@ export function EditProduct({ product }: Props) {
               ))
               .exhaustive()}
           </CardContent>
-          <CardFooter>
+          <CardFooter className="justify-end">
             <ImageUploadButton
               onImageAtomUploaded={async () => {}}
               onImageUploaded={handleImageUploaded}
             />
           </CardFooter>
         </Card>
-        <Card className='col-span-2'>
+        <Card className="grid col-span-2">
           <CardHeader>
             <Title type="h4">Productinformatie in nederlands</Title>
           </CardHeader>
           <CardContent>
             <Label htmlFor={toId('id')}>id</Label>
             <span>{product.id}</span>
-            <Input
-              name="id"
-              type="hidden"
-              defaultValue={product.id}
-              required
-            />
+            <Input name="id" type="hidden" defaultValue={product.id} required />
             <Label htmlFor={toId('name')}>naam</Label>
             <Input
               name="name"
@@ -125,13 +120,18 @@ export function EditProduct({ product }: Props) {
             <Label htmlFor={toId('price')}>prijs in euro</Label>
             <CurrencyInput name="price" defaultValue={product.price} />
           </CardContent>
-          <CardFooter>
+          <CardFooter className="justify-end">
             {match(saveProductState)
               .with('idle', () => (
                 <Button type="submit" disabled={pending}>
                   {pending ? <Spinner /> : <Save />}
                   Opslaan
                 </Button>
+              ))
+              .with({ state: 'failure' }, ({ failure }) => (
+                <div>
+                  {failure.code} {failure.reason}
+                </div>
               ))
               .exhaustive()}
           </CardFooter>

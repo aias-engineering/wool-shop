@@ -10,7 +10,7 @@ import {
   ReadAllProducts,
   ReadProduct,
   ReadProductsWithImage,
-  UpsertProduct
+  UpsertProduct,
 } from '@/lib/server/core/data-access/products'
 import {
   CreateProduct,
@@ -74,11 +74,11 @@ const createProduct = (
 
 const upsertProduct = (
   product: Product,
-): Promise<Unit | ErrorInCosmosDbAccess> => 
+): Promise<Unit | ErrorInCosmosDbAccess> =>
   products()
-    .then(container => container.items.upsert(product))
+    .then((container) => container.items.upsert(product))
     .then(() => Unit.done)
-    .catch(error => ErrorInCosmosDbAccess(error))
+    .catch((error) => ErrorInCosmosDbAccess(error))
 
 const productClient: ReadProduct &
   ReadProductsWithImage &
@@ -91,7 +91,7 @@ const productClient: ReadProduct &
   readAllProducts,
   deleteProduct,
   createProduct,
-  upsertProduct
+  upsertProduct,
 }
 
 export default productClient

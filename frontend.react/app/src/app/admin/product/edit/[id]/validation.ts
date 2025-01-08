@@ -1,5 +1,5 @@
-import { z } from "zod";
-import { zfd } from "zod-form-data";
+import { z } from 'zod'
+import { zfd } from 'zod-form-data'
 
 export const ProductFormSchema = z.object({
   id: zfd.text(z.string()),
