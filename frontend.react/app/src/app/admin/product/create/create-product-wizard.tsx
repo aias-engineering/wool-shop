@@ -57,7 +57,9 @@ export function CreateProductWizard({}: Props) {
 
   return (
     <form action={formAction}>
-      <Title type="h3">Een product creëren</Title>
+      <Title type="h3" className="py-4">
+        Een product creëren
+      </Title>
       <Grid className="grid-cols-1 sm:grid-cols-2 gap-2">
         {match(state)
           .with({ step: 'idle' }, ({}) => (

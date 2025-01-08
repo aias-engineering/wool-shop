@@ -1,6 +1,9 @@
 import HasChildren from '@/lib/client/react/has-children'
-import './_paragraph.css'
+import { MightHaveClassName } from '@/lib/client/react'
+import clsx from 'clsx'
 
-export default function Paragraph({ children }: HasChildren) {
-  return <p className="paragraph">{children}</p>
+interface Props extends HasChildren, MightHaveClassName {}
+
+export default function Paragraph({ children, className }: Props) {
+  return <p className={clsx('leading-7', className)}>{children}</p>
 }

@@ -1,6 +1,5 @@
 'use client'
 
-import './_separator.css'
 import * as React from 'react'
 import * as SeparatorPrimitive from '@radix-ui/react-separator'
 import clsx from 'clsx'
@@ -17,7 +16,11 @@ const Separator = React.forwardRef<
       ref={ref}
       decorative={decorative}
       orientation={orientation}
-      className={clsx('separator', `separator--${orientation}`, className)}
+      className={clsx(
+        'shrink-0 bg-gray-300',
+        orientation === 'horizontal' ? 'h-[1px] w-full' : 'h-full w-[1px]',
+        className,
+      )}
       {...props}
     />
   ),

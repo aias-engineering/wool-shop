@@ -1,3 +1,4 @@
+import { HasId, PromisesParams } from '@/lib/client/react'
 import { withAzureDataAccess } from '@/lib/server'
 import { isFailure, isProductWithIdNotFound } from '@/lib/server/core/failure'
 import { deleteProduct, getProduct } from '@/lib/server/core/products'
@@ -5,11 +6,7 @@ import { isUnit } from '@/lib/server/core/types'
 import { NextResponse } from 'next/server'
 import { match, P } from 'ts-pattern'
 
-interface Route {
-  params: Promise<{ id: string }>
-}
-
-export const GET = async (_: Request, { params }: Route) =>
+export const GET = async (_: Request, { params }: PromisesParams<HasId>) =>
   withAzureDataAccess(async (dataAccess) =>
     getProduct((await params).id, dataAccess),
   ).then((either) =>
@@ -26,7 +23,7 @@ export const GET = async (_: Request, { params }: Route) =>
       .exhaustive(),
   )
 
-export const DELETE = async (_: Request, { params }: Route) =>
+export const DELETE = async (_: Request, { params }: PromisesParams<HasId>) =>
   withAzureDataAccess((dataAccess) =>
     params
       .then(({ id }) => deleteProduct(id, dataAccess))

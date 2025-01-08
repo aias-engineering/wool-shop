@@ -22,7 +22,7 @@ const parseDefaultValue = (
   const fullDefault = asFloat(defaultValue)
   const defaultRight = fullDefault % 1
   const defaultLeft = fullDefault - defaultRight
-  return [defaultLeft, defaultRight, fullDefault]
+  return [defaultLeft, defaultRight * 100, fullDefault]
 }
 
 export default function CurrencyInput({

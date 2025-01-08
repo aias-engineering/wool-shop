@@ -1,8 +1,9 @@
 import Paragraph from '@/app/components/atoms/paragraph'
+import { Separator } from '@/app/components/atoms/separator'
 import Title from '@/app/components/atoms/title'
-import AdminErrorPage from '@/app/components/layout/admin-error-page'
-import HeaderLayout from '@/app/components/layout/header'
-import Main from '@/app/components/main'
+import { AdminMain } from '@/app/components/layout/admin'
+import AdminErrorPage from '@/app/components/layout/admin/error-page'
+import AdminHeaderLayout from '@/app/components/layout/admin/header'
 import {
   Table,
   TableBody,
@@ -23,16 +24,16 @@ export default async function Page() {
 
   return (
     <>
-      <HeaderLayout>
-        <Title type="h2">AdminUI</Title>
-      </HeaderLayout>
-      <Main>
-        <Title type="h3">Wensenlijstjes</Title>
+      <AdminHeaderLayout></AdminHeaderLayout>
+      <AdminMain>
+        <div className="py-4 pr-2 w-full">
+          <Title type="h3">Wensenlijstjes</Title>
+        </div>
+        <Separator className="my-4" />
         {match(eitherWishlistsOrError)
           .with([], () => (
             <>
-              <Paragraph>er zijn nog geen verlanglijstjes</Paragraph>
-              <Paragraph>sorry</Paragraph>
+              <Paragraph>sorry, er zijn nog geen verlanglijstjes</Paragraph>
             </>
           ))
           .with(P.array(), (wishlists) => (
@@ -79,10 +80,10 @@ export default async function Page() {
             </>
           ))
           .with(P.when(isErrorInCosmosDbAccess), (failure) => (
-            <AdminErrorPage code={failure.code} reason={failure.code} />
+            <AdminErrorPage failure={failure} />
           ))
           .exhaustive()}
-      </Main>
+      </AdminMain>
     </>
   )
 }

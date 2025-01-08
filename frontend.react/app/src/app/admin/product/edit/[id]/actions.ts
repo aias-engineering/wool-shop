@@ -31,7 +31,7 @@ export async function saveProductOnServer(
         ? ({
             id: result.data.id,
             name: result.data.name,
-            descripiton: result.data.description,
+            description: result.data.description,
             price: result.data.price,
             image: result.data.image,
           } as Product)

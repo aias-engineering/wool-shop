@@ -18,7 +18,7 @@ import { Unit } from '../types'
 export interface Product {
   id: string
   name: string
-  descripiton: string | null
+  description: string | null
   price: number
   image: string
 }
@@ -28,7 +28,7 @@ export function isProduct(x: unknown): x is Product {
   return (
     product.id !== undefined &&
     product.name !== undefined &&
-    product.descripiton !== undefined &&
+    product.description !== undefined &&
     product.price !== undefined &&
     product.image !== undefined
   )

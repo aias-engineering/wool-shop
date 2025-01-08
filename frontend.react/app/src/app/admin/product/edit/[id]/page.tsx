@@ -1,38 +1,31 @@
-import ErrorPage from '@/app/components/layout/error-page'
 import { withAzureDataAccess } from '@/lib/server'
-import { Failure, isFailure } from '@/lib/server/core/failure'
-import { getProduct, Product } from '@/lib/server/core/products'
+import { isFailure } from '@/lib/server/core/failure'
+import { getProduct, isProduct } from '@/lib/server/core/products'
 import { EditProduct } from './edit-product'
-import HeaderLayout from '@/app/components/layout/header'
-import Title from '@/app/components/atoms/title'
-import Main from '@/app/components/main'
+import AdminHeaderLayout from '@/app/components/layout/admin/header'
+import { AdminMain } from '@/app/components/layout/admin'
+import { match, P } from 'ts-pattern'
+import AdminErrorPage from '@/app/components/layout/admin/error-page'
+import { HasId, PromisesParams } from '@/lib/client/react'
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ id: string }>
-}) {
+export default async function Page({ params }: PromisesParams<HasId>) {
   const eitherProductOrFailure = await params.then(({ id }) =>
     withAzureDataAccess((dataAccess) => getProduct(id, dataAccess)),
   )
 
-  if (isFailure(eitherProductOrFailure)) {
-    const failure: Failure = eitherProductOrFailure
-    return <ErrorPage message={failure.code} />
-  }
-
-  const product: Product = eitherProductOrFailure
-
   return (
     <>
-      <HeaderLayout>
-        <Title type="h2" className="text-white">
-          Admin UI
-        </Title>
-      </HeaderLayout>
-      <Main>
-        <EditProduct product={product} />
-      </Main>
+      <AdminHeaderLayout></AdminHeaderLayout>
+      <AdminMain>
+        {match(eitherProductOrFailure)
+          .with(P.when(isProduct), (product) => (
+            <EditProduct product={product} />
+          ))
+          .with(P.when(isFailure), (failure) => (
+            <AdminErrorPage failure={failure} />
+          ))
+          .exhaustive()}
+      </AdminMain>
     </>
   )
 }
