@@ -7,6 +7,7 @@ import {
   ReadProduct,
   DeleteProduct,
 } from '../data-access'
+import { UpsertProduct } from '../data-access/products'
 import {
   ErrorInCosmosDbAccess,
   ProductValidationFailed,
@@ -18,7 +19,7 @@ export interface Product {
   id: string
   name: string
   descripiton: string | null
-  price: string
+  price: number
   image: string
 }
 
@@ -71,7 +72,13 @@ export const createProduct = async (
         : either,
     )
 
-export const deleteProduct = async (
+export const deleteProduct = (
   id: string,
   dataAccess: DeleteProduct,
 ): Promise<Unit | ErrorInCosmosDbAccess> => dataAccess.deleteProduct(id)
+
+export const saveProduct = (
+  product: Product,
+  dataAccess: UpsertProduct
+): Promise<Unit | ErrorInCosmosDbAccess> => 
+  dataAccess.upsertProduct(product)

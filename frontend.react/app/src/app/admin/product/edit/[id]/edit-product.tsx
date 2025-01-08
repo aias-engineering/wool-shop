@@ -62,7 +62,7 @@ export function EditProduct({ product }: Props) {
 
   return (
     <form action={formAction}>
-      <Grid className="grid-cols-1 sm:grid-cols-2 gap-2">
+      <Grid className="grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-2">
         <Card>
           <CardHeader>
             <CardTitle>
@@ -76,7 +76,7 @@ export function EditProduct({ product }: Props) {
                   <Image
                     src={imageUrl}
                     alt={imageUrl}
-                    sizes="(min-width: 640px) 50vw, 100vw"
+                    sizes="(min-width:1024px) 20vw,(min-width: 640px) 33vw, 100vw"
                     width={200}
                     height={300}
                     className="w-full"
@@ -99,7 +99,7 @@ export function EditProduct({ product }: Props) {
             />
           </CardFooter>
         </Card>
-        <Card>
+        <Card className='col-span-2'>
           <CardHeader>
             <Title type="h4">Productinformatie in nederlands</Title>
           </CardHeader>

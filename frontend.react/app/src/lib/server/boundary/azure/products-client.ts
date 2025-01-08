@@ -6,13 +6,16 @@ import {
 import { Product, Unit } from '@/lib/server/core/types'
 import { Container } from '@azure/cosmos'
 import {
-  CreateProduct,
-  CreateProductRequest,
-  CreateProductResponse,
   DeleteProduct,
   ReadAllProducts,
   ReadProduct,
   ReadProductsWithImage,
+  UpsertProduct
+} from '@/lib/server/core/data-access/products'
+import {
+  CreateProduct,
+  CreateProductRequest,
+  CreateProductResponse,
 } from '@/lib/server/core/data-access'
 
 async function products(): Promise<Container> {
@@ -69,16 +72,26 @@ const createProduct = (
     .then((result) => ({ id: result.item.id, request: request }))
     .catch((error) => ErrorInCosmosDbAccess(error))
 
+const upsertProduct = (
+  product: Product,
+): Promise<Unit | ErrorInCosmosDbAccess> => 
+  products()
+    .then(container => container.items.upsert(product))
+    .then(() => Unit.done)
+    .catch(error => ErrorInCosmosDbAccess(error))
+
 const productClient: ReadProduct &
   ReadProductsWithImage &
   ReadAllProducts &
   DeleteProduct &
-  CreateProduct = {
+  CreateProduct &
+  UpsertProduct = {
   readProduct,
   readProductsWithImage,
   readAllProducts,
   deleteProduct,
   createProduct,
+  upsertProduct
 }
 
 export default productClient

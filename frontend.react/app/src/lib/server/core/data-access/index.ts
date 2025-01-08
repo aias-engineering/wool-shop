@@ -1,10 +1,9 @@
-import { Product, Unit } from '@/lib/server/core/types'
+import { Unit } from '@/lib/server/core/types'
 import {
   DownloadDidntReturnStream,
   ErrorInBlobStorageAccess,
   ErrorInCosmosDbAccess,
   MultipleUsersWithEmailFound,
-  ProductWithIdNotFound,
   UserWithEmailNotFound,
 } from '../failure'
 import { CreateProduct } from './create-product'
@@ -12,6 +11,7 @@ import { CreateUser } from './create-user'
 import { User } from '../users'
 import { UserWithIdNotFound } from '../users/failure'
 import { CreateAccount, ReadAccountsByProviderAccount } from './accounts'
+import { ReadAllProducts, ReadProduct, ReadProductsWithImage, DeleteProduct, UpsertProduct } from './products'
 import { CreateSession, DeleteSession, ReadSessionsByToken } from './sessions'
 export * from './create-product'
 export * from './create-user'
@@ -21,30 +21,16 @@ export {
   type CreateAccountResponse,
 } from './accounts'
 export {
+  type ReadAllProducts,
+  type ReadProduct,
+  type ReadProductsWithImage,
+  type DeleteProduct
+} from './products'
+export {
   type CreateSession,
   type CreateSessionRequest,
   type CreateSessionResponse,
 } from './sessions'
-
-export interface ReadAllProducts {
-  readAllProducts(): Promise<Product[] | ErrorInCosmosDbAccess>
-}
-
-export interface ReadProductsWithImage {
-  readProductsWithImage(
-    imagename: string,
-  ): Promise<Product[] | ErrorInCosmosDbAccess>
-}
-
-export interface ReadProduct {
-  readProduct(
-    id: string,
-  ): Promise<Product | ProductWithIdNotFound | ErrorInCosmosDbAccess>
-}
-
-export interface DeleteProduct {
-  deleteProduct(id: string): Promise<Unit | ErrorInCosmosDbAccess>
-}
 
 export interface ListImageBlobsFlat {
   listImageBlobsFlat(): Promise<string[] | ErrorInBlobStorageAccess>
@@ -91,6 +77,7 @@ export type DataAccessFacade = ReadAllProducts &
   ReadProduct &
   DeleteProduct &
   CreateProduct &
+  UpsertProduct &
   ListImageBlobsFlat &
   DownloadImageBlob &
   UploadImageBlob &
