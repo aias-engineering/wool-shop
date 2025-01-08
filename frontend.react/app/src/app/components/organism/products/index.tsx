@@ -6,6 +6,7 @@ import NextImage from 'next/image'
 import Input from '@/app/components/atoms/input'
 import ImageFrame from '@/app/components/atoms/image-frame'
 import { Separator } from '@/app/components/atoms/separator'
+import Small from '@/app/components/atoms/small'
 import Title from '@/app/components/atoms/title'
 import {
   Sheet,
@@ -109,8 +110,10 @@ export default function Products({ products }: Props) {
                     className="w-full"
                   />
                 </ImageFrame>
-                <Title type="h3">{product.name}</Title>
-                <p>{product.price} €</p>
+                <Title type="h3" className="text-base">
+                  {product.name}
+                </Title>
+                <Small className="text-end">{product.price} €</Small>
                 {matchingWishlistItem ? (
                   <div className="flex flex-row">
                     <Button

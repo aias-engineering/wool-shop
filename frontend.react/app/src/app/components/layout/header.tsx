@@ -6,7 +6,7 @@ import { HasChildren } from '@/lib/client/react'
 const HeaderLayout = ({ children }: HasChildren) => (
   <>
     <Header>
-      <Title type="h1" className="text-white">
+      <Title type="h1">
         <Logo />
         Naqab Bedouin Design
       </Title>

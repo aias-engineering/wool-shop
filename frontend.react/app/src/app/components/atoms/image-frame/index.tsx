@@ -1,5 +1,4 @@
 import { HasChildren, MightHaveClassName } from '@/lib/client/react'
-import './_image-frame.css'
 import clsx from 'clsx'
 
 export default function ImageFrame({
@@ -7,7 +6,12 @@ export default function ImageFrame({
   className,
 }: HasChildren & MightHaveClassName) {
   return (
-    <div className={clsx('image-frame grid justify-center', className)}>
+    <div
+      className={clsx(
+        'image-frame grid justify-center overflow-hidden',
+        className,
+      )}
+    >
       {children}
     </div>
   )

@@ -19,6 +19,7 @@ import {
   UpsertProduct,
 } from './products'
 import { CreateSession, DeleteSession, ReadSessionsByToken } from './sessions'
+import { ReadAllWishlists } from './wishlists'
 export * from './create-product'
 export * from './create-user'
 export {
@@ -95,4 +96,5 @@ export type DataAccessFacade = ReadAllProducts &
   CreateAccount &
   ReadSessionsByToken &
   CreateSession &
-  DeleteSession
+  DeleteSession &
+  ReadAllWishlists

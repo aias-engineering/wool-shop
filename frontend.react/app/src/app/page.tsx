@@ -9,6 +9,7 @@ import { withAzureDataAccess } from '@/lib/server'
 import { isFailure } from '@/lib/server/core/failure'
 import { getAllProducts } from '@/lib/server/core/products'
 import { match, P } from 'ts-pattern'
+import Paragraph from './components/atoms/paragraph'
 
 export default async function Home() {
   const products = await withAzureDataAccess((dataAccess) =>
@@ -18,7 +19,7 @@ export default async function Home() {
   return (
     <>
       <Header>
-        <Title type="h1" className="text-white">
+        <Title type="h1">
           <Logo></Logo>
           Naqab Bedouin Design
         </Title>
@@ -31,7 +32,19 @@ export default async function Home() {
               nog eens bij ons terug.
             </Small>
           ))
-          .with(P.array(), (products) => <Products products={products} />)
+          .with(P.array(), (products) => (
+            <>
+              <Paragraph>
+                Hoi <br />
+                Wij zijn een kleine wolfabriek uit Jordanië. Je kunt hier niets
+                bestellen, maar bekijk in ieder geval onze producten - en vertel
+                ons over je wensen.
+                <br />
+                Dit zijn onze producten:
+              </Paragraph>
+              <Products products={products} />
+            </>
+          ))
           .with(P.when(isFailure), (failure) => (
             <ErrorPage message={failure.reason} />
           ))
