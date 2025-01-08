@@ -130,7 +130,7 @@ export function CreateProductWizard({}: Props) {
                     .with({ step: 'idle' }, () => (
                       <Button type="submit" disabled={pending}>
                         {pending ? <Spinner /> : <Save />}
-                        Sparen
+                        Opslaan
                       </Button>
                     ))
                     .with({ step: 'failure' }, ({ failure }) => (

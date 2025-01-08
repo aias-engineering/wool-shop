@@ -105,11 +105,11 @@ export function EditProduct({ product }: Props) {
           </CardHeader>
           <CardContent>
             <Label htmlFor={toId('id')}>id</Label>
+            <span>{product.id}</span>
             <Input
               name="id"
-              type="text"
+              type="hidden"
               defaultValue={product.id}
-              disabled
               required
             />
             <Label htmlFor={toId('name')}>naam</Label>
@@ -130,7 +130,7 @@ export function EditProduct({ product }: Props) {
               .with('idle', () => (
                 <Button type="submit" disabled={pending}>
                   {pending ? <Spinner /> : <Save />}
-                  Sparen
+                  Opslaan
                 </Button>
               ))
               .exhaustive()}

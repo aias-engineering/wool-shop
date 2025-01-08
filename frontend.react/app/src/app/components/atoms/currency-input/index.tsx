@@ -33,15 +33,19 @@ export default function CurrencyInput({
   const [defaultLeft, defaultRight, defaultFull] =
     parseDefaultValue(defaultValue)
 
-  const [left, setLeft] = useState<number>(defaultLeft)
-  const [right, setRight] = useState<number>(defaultRight)
+  const [left, setLeft] = useState<string>(defaultLeft.toFixed(0))
+  const [right, setRight] = useState<string>(defaultRight.toFixed(0))
   const [full, setFull] = useState<number>(defaultFull)
 
-  const handleUpdate = ([left, right]: [number, number]): void => {
-    const unroundedFull = left + right / 100
+  const handleUpdate = ([leftUpdateString, rightUpdateString]: [string, string]): void => {
+    setLeft(leftUpdateString)
+    setRight(rightUpdateString)
+    
+    const leftUpdate = Number.parseInt(leftUpdateString) || 0
+    const rightUpdate = Number.parseInt(rightUpdateString) || 0
+    
+    const unroundedFull = leftUpdate + rightUpdate / 100
     const full = Math.round((unroundedFull + Number.EPSILON) * 100) / 100
-    setLeft(left)
-    setRight(right)
     setFull(full)
   }
 
@@ -60,7 +64,7 @@ export default function CurrencyInput({
         disabled={disabled}
         min={0}
         max={10000}
-        onChange={(e) => handleUpdate([e.target.valueAsNumber, right])}
+        onChange={(e) => handleUpdate([e.target.value, right])}
       />
       <div className="flex items-end py-1">.</div>
       <input
@@ -76,7 +80,7 @@ export default function CurrencyInput({
         disabled={disabled}
         min={0}
         max={99}
-        onChange={(e) => handleUpdate([left, e.target.valueAsNumber])}
+        onChange={(e) => handleUpdate([left, e.target.value])}
       />
       <div className="flex items-end py-1">
         <Euro />
