@@ -5,19 +5,20 @@ import {
   ErrorMessage,
   ErrorTitle,
 } from '@/app/components/molecules/error'
+import { Failure } from '@/lib/client/failure'
 
 interface Props {
-  message: string
+  failure: Failure
 }
 
-export default function ErrorPage({ message }: Props) {
+export default function ErrorPage({ failure }: Props) {
   return (
     <>
       <Error>
         <ErrorTitle />
         <ErrorMessage>
           <Paragraph>De server reageerde met:</Paragraph>
-          <Small>{message}</Small>
+          <Small>{failure.code}</Small>
         </ErrorMessage>
       </Error>
     </>

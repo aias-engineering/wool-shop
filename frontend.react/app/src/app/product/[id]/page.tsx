@@ -1,18 +1,19 @@
 import Logo from '@/app/components/atoms/logo'
-import Small from '@/app/components/atoms/small'
 import Title from '@/app/components/atoms/title'
 import Header from '@/app/components/header'
 import ErrorPage from '@/app/components/layout/error-page'
 import Main from '@/app/components/main'
+import { HasId, PromisesParams } from '@/lib/client/react'
 import { withAzureDataAccess } from '@/lib/server'
 import { isFailure } from '@/lib/server/core/failure'
-import { getAllProducts } from '@/lib/server/core/products'
+import { getProduct, isProduct } from '@/lib/server/core/products'
 import { match, P } from 'ts-pattern'
-import ProductsShop from './products-shop'
+import ProductDetail from './product-detail'
 
-export default async function Home() {
-  const products = await withAzureDataAccess((dataAccess) =>
-    getAllProducts(dataAccess),
+export default async function Page({ params }: PromisesParams<HasId>) {
+  const { id } = await params
+  const eitherProductOrError = await withAzureDataAccess((dataAccess) =>
+    getProduct(id, dataAccess),
   )
 
   return (
@@ -24,16 +25,10 @@ export default async function Home() {
         </Title>
       </Header>
       <Main>
-        {match(products)
-          .with([], () => (
-            <Small>
-              Oeps, we hebben onze producten nog niet gedefinieerd. Kom later
-              nog eens bij ons terug.
-            </Small>
-          ))
-          .with(P.array(), (products) => (
+        {match(eitherProductOrError)
+          .with(P.when(isProduct), (product) => (
             <>
-              <ProductsShop products={products} />
+              <ProductDetail product={product} />
             </>
           ))
           .with(P.when(isFailure), (failure) => <ErrorPage failure={failure} />)
