@@ -71,7 +71,7 @@ export default async function Page() {
                         €
                       </TableCell>
                       <TableCell>
-                        {wishlist.submitDate.toLocaleString()}
+                        {wishlist.submitDate?.toLocaleString()}
                       </TableCell>
                     </TableRow>
                   ))}

@@ -12,6 +12,7 @@ interface Props extends MightHaveClassName {
   step?: string
   value?: string
   id?: string
+  onChange?: React.ChangeEventHandler<HTMLInputElement> | undefined
   placeholder?: string
 }
 
@@ -29,6 +30,7 @@ export default function Input({
   step,
   id,
   className,
+  onChange,
   placeholder,
 }: Props) {
   return (
@@ -42,6 +44,7 @@ export default function Input({
       value={value}
       id={id || toId(name)}
       className={clsx('input', className)}
+      onChange={onChange}
       placeholder={placeholder}
     />
   )

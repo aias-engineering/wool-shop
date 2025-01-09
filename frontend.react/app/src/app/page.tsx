@@ -1,15 +1,15 @@
 import Logo from '@/app/components/atoms/logo'
+import Paragraph from '@/app/components/atoms/paragraph'
 import Small from '@/app/components/atoms/small'
 import Title from '@/app/components/atoms/title'
 import Header from '@/app/components/header'
 import ErrorPage from '@/app/components/layout/error-page'
 import Main from '@/app/components/main'
-import Products from '@/app/components/organism/products'
 import { withAzureDataAccess } from '@/lib/server'
 import { isFailure } from '@/lib/server/core/failure'
 import { getAllProducts } from '@/lib/server/core/products'
 import { match, P } from 'ts-pattern'
-import Paragraph from './components/atoms/paragraph'
+import ProductsShop from './products-shop'
 
 export default async function Home() {
   const products = await withAzureDataAccess((dataAccess) =>
@@ -42,7 +42,7 @@ export default async function Home() {
                 <br />
                 Dit zijn onze producten:
               </Paragraph>
-              <Products products={products} />
+              <ProductsShop products={products} />
             </>
           ))
           .with(P.when(isFailure), (failure) => (

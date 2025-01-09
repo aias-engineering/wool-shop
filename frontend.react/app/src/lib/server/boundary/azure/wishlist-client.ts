@@ -1,8 +1,12 @@
-import { ReadAllWishlists } from '@/lib/server/core/data-access/wishlists'
+import {
+  CreateWishlist,
+  ReadAllWishlists,
+} from '@/lib/server/core/data-access/wishlists'
 import { ErrorInCosmosDbAccess } from '@/lib/server/core/failure'
-import { Wishlist } from '@/lib/server/core/wishlists'
+import { CreateWishlistRequest, Wishlist } from '@/lib/server/core/wishlists'
 import { Container } from '@azure/cosmos'
 import { woolshopDatabase } from './cosmos-db-client'
+import { Unit } from '../../core/types'
 
 function wishlists(): Promise<Container> {
   return woolshopDatabase()
@@ -21,8 +25,17 @@ const readAllWishlists = (): Promise<Wishlist[] | ErrorInCosmosDbAccess> =>
     .then((response) => response.resources)
     .catch((error) => ErrorInCosmosDbAccess(error))
 
-const wishlistClient: ReadAllWishlists = {
+const createWishlist = (
+  request: CreateWishlistRequest,
+): Promise<Unit | ErrorInCosmosDbAccess> =>
+  wishlists()
+    .then((container) => container.items.create(request))
+    .then(() => Unit.done)
+    .catch((error) => ErrorInCosmosDbAccess(error))
+
+const wishlistClient: ReadAllWishlists & CreateWishlist = {
   readAllWishlists,
+  createWishlist,
 }
 
 export default wishlistClient

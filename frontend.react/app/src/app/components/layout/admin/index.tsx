@@ -26,7 +26,7 @@ export function AdminMain({ children }: Props) {
             <NavigationLink href="/admin/image">Afbeeldingen</NavigationLink>
           </Navigation>
         </div>
-        <section className="md:pl-10">{children}</section>
+        <section className="md:pl-10 w-full">{children}</section>
       </div>
     </Main>
   )

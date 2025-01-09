@@ -1,5 +1,6 @@
-import { ReadAllWishlists } from '../data-access/wishlists'
+import { CreateWishlist, ReadAllWishlists } from '../data-access/wishlists'
 import { ErrorInCosmosDbAccess } from '../failure'
+import { Unit } from '../types'
 
 export interface WishlistItem {
   amount: number
@@ -38,3 +39,13 @@ export function isWishlist(x: unknown): x is Wishlist {
 export const getAllWishlists = (
   dataAccess: ReadAllWishlists,
 ): Promise<Wishlist[] | ErrorInCosmosDbAccess> => dataAccess.readAllWishlists()
+
+export const createWithlist = (
+  request: CreateWishlistRequest,
+  dataAccess: CreateWishlist,
+): Promise<Unit | ErrorInCosmosDbAccess> => dataAccess.createWishlist(request)
+
+export interface CreateWishlistRequest {
+  email: string
+  items: WishlistItem[]
+}
