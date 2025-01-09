@@ -23,7 +23,12 @@ import { FormEvent, useState } from 'react'
 import { saveWishlistOnServer, SaveWishlistState } from './server-actions'
 import { match, P } from 'ts-pattern'
 import { CreateWishlistRequest } from '@/lib/server/core/wishlists'
-import { addToWishlist, removeFromWishlist, WishlistItem } from './store'
+import {
+  addToWishlist,
+  removeFromWishlist,
+  sumWishlist,
+  WishlistItem,
+} from './store'
 import WishListItem from './wish-list-item'
 import { HasChildren } from '@/lib/client/react'
 
@@ -91,7 +96,7 @@ export default function Shop({ children, wishlistAtom }: Props) {
                   <>
                     {wishlist.map((item) => (
                       <WishListItem
-                        key={item.toString()}
+                        key={item.product.id}
                         item={item}
                         add={() =>
                           setWishlist((prev) =>
@@ -105,16 +110,19 @@ export default function Shop({ children, wishlistAtom }: Props) {
                         }
                       />
                     ))}
+                    <Separator className="my-4" />
+                    <Paragraph className="text-end">
+                      {sumWishlist(wishlist).toFixed(2)} €
+                    </Paragraph>
                   </>
                 ))
                 .exhaustive()}
             </div>
-            <SheetFooter className="justify-self-end w-full">
+            <SheetFooter className="justify-self-end w-full pt-10">
               {match(wishlist)
                 .with([], () => <></>)
                 .with(P.array(), () => (
                   <>
-                    <Separator className="my-4" />
                     {match(saveWishlistState)
                       .with(P.union('idle', 'pending'), (state) => (
                         <>

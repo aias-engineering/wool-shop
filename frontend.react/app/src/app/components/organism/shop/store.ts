@@ -39,3 +39,14 @@ export function removeFromWishlist(
   }
   return prev
 }
+
+export function sumWishlist(wishlist: WishlistItem[]) {
+  return wishlist.reduce((prev, wishlistItem) => {
+    const unroundedPositionPrice =
+      wishlistItem.amount * wishlistItem.product.price
+    const roundedPositionPrice =
+      Math.round((unroundedPositionPrice + Number.EPSILON) * 100) / 100
+    const sumUnrounded = prev + roundedPositionPrice
+    return Math.round((sumUnrounded + Number.EPSILON) * 100) / 100
+  }, 0.0)
+}

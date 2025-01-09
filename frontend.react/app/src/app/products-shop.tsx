@@ -41,7 +41,10 @@ export default function ProductsShop({ products }: Props) {
             (x) => x.product.id === product.id,
           )
           return (
-            <Link key={product.id} href={`/product/${product.id}`}>
+            <Link
+              key={product.id}
+              href={`/product/${product.id}`}
+            >
               <div className="flex flex-col gap-2">
                 <ImageFrame>
                   <Image

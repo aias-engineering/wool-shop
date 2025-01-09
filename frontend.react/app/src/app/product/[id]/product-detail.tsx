@@ -15,6 +15,7 @@ import { Minus, MoveLeft, Plus, ScrollText } from 'lucide-react'
 import { useAtom } from 'jotai'
 import Link from 'next/link'
 import Shop from '@/app/components/organism/shop'
+import Space from '@/app/components/atoms/space'
 
 interface Props {
   product: Product
@@ -28,6 +29,9 @@ export default function ProductDetail({ product }: Props) {
   return (
     <Shop wishlistAtom={wishlistAtom}>
       <div className="flex flex-col gap-4">
+        <Link href={'/'}>
+          <MoveLeft /> Terug
+        </Link>
         <Title type="h2">{product.name}</Title>
         <ImageFrame>
           <Image
@@ -69,12 +73,7 @@ export default function ProductDetail({ product }: Props) {
             <ScrollText />
           </Button>
         )}
-        <Link href={'/'}>
-          <Button variant="outline">
-            <MoveLeft />
-            Terug
-          </Button>
-        </Link>
+        <Space className="h-20" />
       </div>
     </Shop>
   )
