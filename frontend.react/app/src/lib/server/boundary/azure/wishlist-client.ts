@@ -27,11 +27,13 @@ const readAllWishlists = (): Promise<Wishlist[] | ErrorInCosmosDbAccess> =>
     .then((response) => response.resources)
     .catch((error) => ErrorInCosmosDbAccess(error))
 
-const readWishlist = (id: string): Promise<Wishlist | WishlistWithIdNotFound | ErrorInCosmosDbAccess> =>
+const readWishlist = (
+  id: string,
+): Promise<Wishlist | WishlistWithIdNotFound | ErrorInCosmosDbAccess> =>
   wishlists()
-    .then(container => container.item(id, id).read<Wishlist>())
-    .then(response => response.resource || WishlistWithIdNotFound(id))
-    .catch(error => ErrorInCosmosDbAccess(error))
+    .then((container) => container.item(id, id).read<Wishlist>())
+    .then((response) => response.resource || WishlistWithIdNotFound(id))
+    .catch((error) => ErrorInCosmosDbAccess(error))
 
 const createWishlist = (
   request: CreateWishlistRequest,

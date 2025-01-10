@@ -8,7 +8,9 @@ export interface ReadAllWishlists {
 }
 
 export interface ReadWishlist {
-  readWishlist(id: string): Promise<Wishlist | WishlistWithIdNotFound | ErrorInCosmosDbAccess>
+  readWishlist(
+    id: string,
+  ): Promise<Wishlist | WishlistWithIdNotFound | ErrorInCosmosDbAccess>
 }
 
 export interface CreateWishlist {

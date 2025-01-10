@@ -48,21 +48,10 @@ function SignIn() {
               <Title type="h2" className="border-b-0">
                 login
               </Title>
-              <Paragraph>log in met uw e-mailadres</Paragraph>
             </div>
-            <form action={handleCheckEmail}>
-              <div className="pt-6 px-1 grid gap-1">
-                <Input
-                  name="email"
-                  type="email"
-                  placeholder="name@example.com"
-                />
-                <Button>aanmelden met e-mail</Button>
-              </div>
-            </form>
             <form action={() => signInViaGithub(callbackUrl)}>
-              <div className="px-1 grid grap-1">
-                <Separator />
+              <div className="px-1 grid gap-4">
+                <Separator className='my-4' />
                 <Button>
                   <Github></Github>
                   aanmelden met github

@@ -1,4 +1,4 @@
-import {type Failure} from '../failure'
+import { type Failure } from '../failure'
 
 export interface WishlistWithIdNotFound extends Failure {
   readonly code: 'cwl-01'
@@ -12,7 +12,9 @@ export const WishlistWithIdNotFound = (id: string): WishlistWithIdNotFound => ({
   id,
 })
 
-export function isWishlistWithIdNotFound(x: unknown): x is WishlistWithIdNotFound {
+export function isWishlistWithIdNotFound(
+  x: unknown,
+): x is WishlistWithIdNotFound {
   const failure = x as WishlistWithIdNotFound
   return (
     failure.type === 'failure' &&

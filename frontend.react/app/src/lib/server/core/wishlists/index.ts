@@ -1,4 +1,8 @@
-import { CreateWishlist, ReadAllWishlists, ReadWishlist } from '../data-access/wishlists'
+import {
+  CreateWishlist,
+  ReadAllWishlists,
+  ReadWishlist,
+} from '../data-access/wishlists'
 import { ErrorInCosmosDbAccess } from '../failure'
 import { Unit } from '../types'
 import { WishlistWithIdNotFound } from './failure'
@@ -49,29 +53,39 @@ export const getAllWishlists = (
 
 export const getWishlist = (
   id: string,
-  dataAccess: ReadWishlist
-): Promise<Wishlist | WishlistWithIdNotFound | ErrorInCosmosDbAccess> => dataAccess.readWishlist(id)
+  dataAccess: ReadWishlist,
+): Promise<Wishlist | WishlistWithIdNotFound | ErrorInCosmosDbAccess> =>
+  dataAccess.readWishlist(id)
+
+const setSubmitDate = async (
+  wishlist: CreateWishlistRequest,
+): Promise<CreateWishlistRequest> => ({
+  ...wishlist,
+  submitDate: new Date(Date.now()),
+})
 
 export const createWithlist = (
   request: CreateWishlistRequest,
   dataAccess: CreateWishlist,
-): Promise<Unit | ErrorInCosmosDbAccess> => dataAccess.createWishlist(request)
+): Promise<Unit | ErrorInCosmosDbAccess> =>
+  setSubmitDate(request).then((request) => dataAccess.createWishlist(request))
 
 export interface CreateWishlistRequest {
   email: string
   items: WishlistItem[]
+  submitDate?: Date
 }
 
 const roundResult = (result: number): number =>
   Math.round((result + Number.EPSILON) * 100) / 100
 
-export const calculatePositionPrice = (position: HasAmount & HasPrice) => 
-  roundResult(
-    position.amount * position.price
-  )
+export const calculatePositionPrice = (position: HasAmount & HasPrice) =>
+  roundResult(position.amount * position.price)
 
-export const calculateTotal = (positions: (HasAmount & HasPrice)[]): number => 
+export const calculateTotal = (positions: (HasAmount & HasPrice)[]): number =>
   roundResult(
     positions.reduce(
-      (sum, position) => sum + calculatePositionPrice(position), 0.0)
+      (sum, position) => sum + calculatePositionPrice(position),
+      0.0,
+    ),
   )

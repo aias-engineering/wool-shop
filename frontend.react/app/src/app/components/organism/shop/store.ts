@@ -1,5 +1,9 @@
 import { Product } from '@/lib/server/core/products'
-import { calculateTotal, HasAmount, HasPrice } from '@/lib/server/core/wishlists'
+import {
+  calculateTotal,
+  HasAmount,
+  HasPrice,
+} from '@/lib/server/core/wishlists'
 import { withImmer } from 'jotai-immer'
 import { atomWithStorage } from 'jotai/utils'
 
@@ -42,8 +46,11 @@ export function removeFromWishlist(
 }
 
 export function sumWishlist(wishlist: WishlistItem[]) {
-
   return calculateTotal(
-    wishlist.map(item => ({amount: item.amount, price: item.product.price}) as (HasAmount & HasPrice))
+    wishlist.map(
+      (item) =>
+        ({ amount: item.amount, price: item.product.price }) as HasAmount &
+          HasPrice,
+    ),
   )
 }

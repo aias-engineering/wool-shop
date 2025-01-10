@@ -30,23 +30,25 @@ export default function ProductDetail({ product }: Props) {
   return (
     <Shop wishlistAtom={wishlistAtom}>
       <Link href={'/'}>
-        <div className='flex gap-1 pb-4 items-center'>
-          <MoveLeft className='h-4' /> <Small>Terug</Small>
+        <div className="flex gap-1 pb-4 items-center">
+          <MoveLeft className="h-4" /> <Small>Terug</Small>
         </div>
       </Link>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:grid-rows-[50px_auto]">  
-        <Title className='md:col-start-2' type="h2">{product.name}</Title>
-        <ImageFrame className='md:row-start-1 md:row-span-2'>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:grid-rows-[50px_auto]">
+        <Title className="md:col-start-2" type="h2">
+          {product.name}
+        </Title>
+        <ImageFrame className="md:row-start-1 md:row-span-2">
           <Image
             src={product.image}
             alt={product.name}
             sizes="100vw"
             width={200}
             height={300}
-            className="w-full"    
+            className="w-full"
           />
         </ImageFrame>
-        <div className='flex flex-col gap-4'>
+        <div className="flex flex-col gap-4">
           <Paragraph>{product.price} €</Paragraph>
           <Paragraph>{product.description}</Paragraph>
           {matchingWishlistItem ? (
@@ -71,7 +73,9 @@ export default function ProductDetail({ product }: Props) {
             </div>
           ) : (
             <Button
-              onClick={() => setWishlist((prev) => addToWishlist(prev, product))}
+              onClick={() =>
+                setWishlist((prev) => addToWishlist(prev, product))
+              }
             >
               naar wensenlijst
               <ScrollText />

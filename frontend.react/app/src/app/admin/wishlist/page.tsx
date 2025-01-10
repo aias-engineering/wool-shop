@@ -58,26 +58,24 @@ export default async function Page() {
                 </TableHeader>
                 <TableBody>
                   {wishlists.map((wishlist) => (
-                    
-                      <TableRow key={wishlist.id}>
-                        <TableCell className="hidden md:table-cell">
-                          {wishlist.id}
-                        </TableCell>
-                        <TableCell>{wishlist.email}</TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          {wishlist.items.length}
-                        </TableCell>
-                        <TableCell>
-                          {calculateTotal(wishlist.items)}{' '}€
-                        </TableCell>
-                        <TableCell>
-                          {wishlist.submitDate?.toLocaleString()}
-                        </TableCell>
-                        <TableCell>
-                          <Link href={`/admin/wishlist/${wishlist.id}`}><MoveRight /></Link>
-                        </TableCell>
-                      </TableRow>
-                    
+                    <TableRow key={wishlist.id}>
+                      <TableCell className="hidden md:table-cell">
+                        {wishlist.id}
+                      </TableCell>
+                      <TableCell>{wishlist.email}</TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        {wishlist.items.length}
+                      </TableCell>
+                      <TableCell>{calculateTotal(wishlist.items)} €</TableCell>
+                      <TableCell>
+                        {wishlist.submitDate?.toUTCString()}
+                      </TableCell>
+                      <TableCell>
+                        <Link href={`/admin/wishlist/${wishlist.id}`}>
+                          <MoveRight />
+                        </Link>
+                      </TableCell>
+                    </TableRow>
                   ))}
                 </TableBody>
               </Table>

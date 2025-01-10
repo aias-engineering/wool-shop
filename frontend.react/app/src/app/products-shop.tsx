@@ -27,7 +27,7 @@ export default function ProductsShop({ products }: Props) {
 
   return (
     <Shop wishlistAtom={wishlistAtom}>
-      <Paragraph className='pb-4'>
+      <Paragraph className="pb-4">
         Hoi <br />
         Wij zijn een kleine wolfabriek uit Jordanië. Je kunt hier niets
         bestellen, maar bekijk in ieder geval onze producten - en vertel ons
