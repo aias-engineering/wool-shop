@@ -1,12 +1,19 @@
-import { CreateWishlist, ReadAllWishlists } from '../data-access/wishlists'
+import { CreateWishlist, ReadAllWishlists, ReadWishlist } from '../data-access/wishlists'
 import { ErrorInCosmosDbAccess } from '../failure'
 import { Unit } from '../types'
+import { WishlistWithIdNotFound } from './failure'
 
-export interface WishlistItem {
+export interface HasAmount {
   amount: number
+}
+
+export interface HasPrice {
+  price: number
+}
+
+export interface WishlistItem extends HasAmount, HasPrice {
   productId: string
   name: string
-  price: number
 }
 
 export interface Wishlist {
@@ -40,6 +47,11 @@ export const getAllWishlists = (
   dataAccess: ReadAllWishlists,
 ): Promise<Wishlist[] | ErrorInCosmosDbAccess> => dataAccess.readAllWishlists()
 
+export const getWishlist = (
+  id: string,
+  dataAccess: ReadWishlist
+): Promise<Wishlist | WishlistWithIdNotFound | ErrorInCosmosDbAccess> => dataAccess.readWishlist(id)
+
 export const createWithlist = (
   request: CreateWishlistRequest,
   dataAccess: CreateWishlist,
@@ -49,3 +61,17 @@ export interface CreateWishlistRequest {
   email: string
   items: WishlistItem[]
 }
+
+const roundResult = (result: number): number =>
+  Math.round((result + Number.EPSILON) * 100) / 100
+
+export const calculatePositionPrice = (position: HasAmount & HasPrice) => 
+  roundResult(
+    position.amount * position.price
+  )
+
+export const calculateTotal = (positions: (HasAmount & HasPrice)[]): number => 
+  roundResult(
+    positions.reduce(
+      (sum, position) => sum + calculatePositionPrice(position), 0.0)
+  )

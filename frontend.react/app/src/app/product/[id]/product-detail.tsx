@@ -16,6 +16,7 @@ import { useAtom } from 'jotai'
 import Link from 'next/link'
 import Shop from '@/app/components/organism/shop'
 import Space from '@/app/components/atoms/space'
+import Small from '@/app/components/atoms/small'
 
 interface Props {
   product: Product
@@ -28,53 +29,57 @@ export default function ProductDetail({ product }: Props) {
 
   return (
     <Shop wishlistAtom={wishlistAtom}>
-      <div className="flex flex-col gap-4">
-        <Link href={'/'}>
-          <MoveLeft /> Terug
-        </Link>
-        <Title type="h2">{product.name}</Title>
-        <ImageFrame>
+      <Link href={'/'}>
+        <div className='flex gap-1 pb-4 items-center'>
+          <MoveLeft className='h-4' /> <Small>Terug</Small>
+        </div>
+      </Link>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:grid-rows-[50px_auto]">  
+        <Title className='md:col-start-2' type="h2">{product.name}</Title>
+        <ImageFrame className='md:row-start-1 md:row-span-2'>
           <Image
             src={product.image}
             alt={product.name}
-            sizes="(min-width: 1024px) 25vw, (min-width: 768px) 66vw, 50vw"
+            sizes="100vw"
             width={200}
             height={300}
-            className="w-full"
+            className="w-full"    
           />
         </ImageFrame>
-        <Paragraph>{product.price} €</Paragraph>
-        <Paragraph>{product.description}</Paragraph>
-        {matchingWishlistItem ? (
-          <div className="flex flex-row">
+        <div className='flex flex-col gap-4'>
+          <Paragraph>{product.price} €</Paragraph>
+          <Paragraph>{product.description}</Paragraph>
+          {matchingWishlistItem ? (
+            <div className="flex flex-row">
+              <Button
+                onClick={() =>
+                  setWishlist((prev) => removeFromWishlist(prev, product.id))
+                }
+                variant="counter"
+              >
+                <Minus />
+              </Button>
+              <div className="m-auto">{matchingWishlistItem.amount}</div>
+              <Button
+                onClick={() =>
+                  setWishlist((prev) => addToWishlist(prev, product))
+                }
+                variant="counter"
+              >
+                <Plus />
+              </Button>
+            </div>
+          ) : (
             <Button
-              onClick={() =>
-                setWishlist((prev) => removeFromWishlist(prev, product.id))
-              }
-              variant="counter"
+              onClick={() => setWishlist((prev) => addToWishlist(prev, product))}
             >
-              <Minus />
+              naar wensenlijst
+              <ScrollText />
             </Button>
-            <div className="m-auto">{matchingWishlistItem.amount}</div>
-            <Button
-              onClick={() =>
-                setWishlist((prev) => addToWishlist(prev, product))
-              }
-              variant="counter"
-            >
-              <Plus />
-            </Button>
-          </div>
-        ) : (
-          <Button
-            onClick={() => setWishlist((prev) => addToWishlist(prev, product))}
-          >
-            naar wensenlijst
-            <ScrollText />
-          </Button>
-        )}
-        <Space className="h-20" />
+          )}
+        </div>
       </div>
+      <Space className="h-20" />
     </Shop>
   )
 }

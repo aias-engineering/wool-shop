@@ -1,4 +1,5 @@
 import { Product } from '@/lib/server/core/products'
+import { calculateTotal, HasAmount, HasPrice } from '@/lib/server/core/wishlists'
 import { withImmer } from 'jotai-immer'
 import { atomWithStorage } from 'jotai/utils'
 
@@ -41,12 +42,8 @@ export function removeFromWishlist(
 }
 
 export function sumWishlist(wishlist: WishlistItem[]) {
-  return wishlist.reduce((prev, wishlistItem) => {
-    const unroundedPositionPrice =
-      wishlistItem.amount * wishlistItem.product.price
-    const roundedPositionPrice =
-      Math.round((unroundedPositionPrice + Number.EPSILON) * 100) / 100
-    const sumUnrounded = prev + roundedPositionPrice
-    return Math.round((sumUnrounded + Number.EPSILON) * 100) / 100
-  }, 0.0)
+
+  return calculateTotal(
+    wishlist.map(item => ({amount: item.amount, price: item.product.price}) as (HasAmount & HasPrice))
+  )
 }

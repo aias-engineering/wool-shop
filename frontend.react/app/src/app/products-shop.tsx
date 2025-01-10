@@ -27,7 +27,7 @@ export default function ProductsShop({ products }: Props) {
 
   return (
     <Shop wishlistAtom={wishlistAtom}>
-      <Paragraph>
+      <Paragraph className='pb-4'>
         Hoi <br />
         Wij zijn een kleine wolfabriek uit Jordanië. Je kunt hier niets
         bestellen, maar bekijk in ieder geval onze producten - en vertel ons
@@ -41,11 +41,8 @@ export default function ProductsShop({ products }: Props) {
             (x) => x.product.id === product.id,
           )
           return (
-            <Link
-              key={product.id}
-              href={`/product/${product.id}`}
-            >
-              <div className="flex flex-col gap-2">
+            <div key={product.id} className="flex flex-col gap-2">
+              <Link href={`/product/${product.id}`}>
                 <ImageFrame>
                   <Image
                     src={product.image}
@@ -56,37 +53,37 @@ export default function ProductsShop({ products }: Props) {
                     className="w-full"
                   />
                 </ImageFrame>
-                <Title type="h3" className="text-base">
-                  {product.name}
-                </Title>
-                <Small className="text-end">{product.price} €</Small>
-                {matchingWishlistItem ? (
-                  <div className="flex flex-row">
-                    <Button
-                      onClick={() =>
-                        setWishlist((prev) =>
-                          removeFromWishlist(prev, product.id),
-                        )
-                      }
-                      variant="counter"
-                    >
-                      <Minus />
-                    </Button>
-                    <div className="m-auto">{matchingWishlistItem.amount}</div>
-                    <Button
-                      onClick={() =>
-                        setWishlist((prev) => addToWishlist(prev, product))
-                      }
-                      variant="counter"
-                    >
-                      <Plus />
-                    </Button>
-                  </div>
-                ) : (
-                  <div></div>
-                )}
-              </div>
-            </Link>
+              </Link>
+              <Title type="h3" className="text-base">
+                {product.name}
+              </Title>
+              <Small className="text-end">{product.price} €</Small>
+              {matchingWishlistItem ? (
+                <div className="flex flex-row">
+                  <Button
+                    onClick={() =>
+                      setWishlist((prev) =>
+                        removeFromWishlist(prev, product.id),
+                      )
+                    }
+                    variant="counter"
+                  >
+                    <Minus />
+                  </Button>
+                  <div className="m-auto">{matchingWishlistItem.amount}</div>
+                  <Button
+                    onClick={() =>
+                      setWishlist((prev) => addToWishlist(prev, product))
+                    }
+                    variant="counter"
+                  >
+                    <Plus />
+                  </Button>
+                </div>
+              ) : (
+                <div></div>
+              )}
+            </div>
           )
         })}
       </Grid>

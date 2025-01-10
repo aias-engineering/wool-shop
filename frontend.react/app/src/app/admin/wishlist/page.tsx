@@ -14,7 +14,9 @@ import {
 } from '@/app/components/molecules/table'
 import { withAzureDataAccess } from '@/lib/server'
 import { isErrorInCosmosDbAccess } from '@/lib/server/core/failure'
-import { getAllWishlists } from '@/lib/server/core/wishlists'
+import { calculateTotal, getAllWishlists } from '@/lib/server/core/wishlists'
+import { MoveRight } from 'lucide-react'
+import Link from 'next/link'
 import { match, P } from 'ts-pattern'
 
 export default async function Page() {
@@ -51,29 +53,31 @@ export default async function Page() {
                     </TableHead>
                     <TableHead>sum</TableHead>
                     <TableHead>date</TableHead>
+                    <TableHead></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {wishlists.map((wishlist) => (
-                    <TableRow key={wishlist.id}>
-                      <TableCell className="hidden md:table-cell">
-                        {wishlist.id}
-                      </TableCell>
-                      <TableCell>{wishlist.email}</TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        {wishlist.items.length}
-                      </TableCell>
-                      <TableCell>
-                        {wishlist.items.reduce(
-                          (prev, item) => prev + item.price,
-                          0.0,
-                        )}{' '}
-                        €
-                      </TableCell>
-                      <TableCell>
-                        {wishlist.submitDate?.toLocaleString()}
-                      </TableCell>
-                    </TableRow>
+                    
+                      <TableRow key={wishlist.id}>
+                        <TableCell className="hidden md:table-cell">
+                          {wishlist.id}
+                        </TableCell>
+                        <TableCell>{wishlist.email}</TableCell>
+                        <TableCell className="hidden md:table-cell">
+                          {wishlist.items.length}
+                        </TableCell>
+                        <TableCell>
+                          {calculateTotal(wishlist.items)}{' '}€
+                        </TableCell>
+                        <TableCell>
+                          {wishlist.submitDate?.toLocaleString()}
+                        </TableCell>
+                        <TableCell>
+                          <Link href={`/admin/wishlist/${wishlist.id}`}><MoveRight /></Link>
+                        </TableCell>
+                      </TableRow>
+                    
                   ))}
                 </TableBody>
               </Table>
