@@ -13,7 +13,7 @@ import {
   isProductValidationFailed,
   ProductValidationFailed,
 } from '@/lib/server/core/failure'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
 
 export type CreateProductState =
@@ -58,7 +58,9 @@ export async function createProductOnServer(
   )
 
   if (result.step === 'done') {
-    revalidatePath('/products')
+    revalidatePath('/')
+    revalidatePath('/admin/product')
+    revalidateTag('products')
     redirect('/admin/product')
   }
 

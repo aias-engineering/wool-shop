@@ -10,7 +10,7 @@ import { isProduct, Product, saveProduct } from '@/lib/server/core/products'
 import { withAzureDataAccess } from '@/lib/server'
 import { match, P } from 'ts-pattern'
 import { isUnit } from '@/lib/server/core/types'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
 
 export type SaveProductState = 'idle' | { state: 'failure'; failure: Failure }
@@ -45,7 +45,9 @@ export async function saveProductOnServer(
     .then((either) =>
       match(either)
         .with(P.when(isUnit), () => {
-          revalidatePath('/products')
+          revalidatePath('/')
+          revalidatePath('/admin/product')
+          revalidateTag('produts')
           redirect('/admin/product')
           return 'idle' as SaveProductState
         })

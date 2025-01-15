@@ -9,11 +9,16 @@ import { isFailure } from '@/lib/server/core/failure'
 import { getAllProducts } from '@/lib/server/core/products'
 import { match, P } from 'ts-pattern'
 import ProductsShop from './products-shop'
+import { unstable_cache } from 'next/cache'
+
+const get = unstable_cache(
+  () => withAzureDataAccess((dataAccess) => getAllProducts(dataAccess)),
+  ['products'],
+  { revalidate: 60, tags: ['products'] }
+)
 
 export default async function Home() {
-  const products = await withAzureDataAccess((dataAccess) =>
-    getAllProducts(dataAccess),
-  )
+  const products = await get()
 
   return (
     <>
