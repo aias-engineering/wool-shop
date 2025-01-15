@@ -14,7 +14,7 @@ import { unstable_cache } from 'next/cache'
 const get = unstable_cache(
   () => withAzureDataAccess((dataAccess) => getAllProducts(dataAccess)),
   ['products'],
-  { revalidate: 60, tags: ['products'] }
+  { revalidate: 60, tags: ['products'] },
 )
 
 export default async function Home() {

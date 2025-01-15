@@ -8,14 +8,13 @@ import { revalidatePath, revalidateTag } from 'next/cache'
 export async function deleteProductAction(productId: string) {
   return withAzureDataAccess(async (dataAccess) =>
     deleteProduct(productId, dataAccess),
+  ).then((either) =>
+    isUnit(either)
+      ? doAndReturn(() => {
+          revalidatePath('/')
+          revalidatePath('/admin/product')
+          revalidateTag('products')
+        }, either)
+      : either,
   )
-  .then(either => isUnit(either)
-    ? doAndReturn(
-      () => {
-        revalidatePath('/')
-        revalidatePath('/admin/product')
-        revalidateTag('products')
-      }, 
-      either)
-    : either)
 }

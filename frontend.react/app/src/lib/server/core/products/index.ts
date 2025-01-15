@@ -75,13 +75,9 @@ export const createProduct = async (
 export const deleteProduct = (
   id: string,
   dataAccess: DeleteProduct,
-): Promise<Unit | ErrorInCosmosDbAccess> =>
-  dataAccess
-    .deleteProduct(id)
+): Promise<Unit | ErrorInCosmosDbAccess> => dataAccess.deleteProduct(id)
 
 export const saveProduct = (
   product: Product,
   dataAccess: UpsertProduct,
-): Promise<Unit | ErrorInCosmosDbAccess> =>
-  dataAccess
-    .upsertProduct(product)
+): Promise<Unit | ErrorInCosmosDbAccess> => dataAccess.upsertProduct(product)
