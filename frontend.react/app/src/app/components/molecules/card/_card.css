@@ -44,13 +44,6 @@
   padding-top: 0;
 }
 
-.card__footer {
-  display: flex;
-  align-items: center;
-  padding: 1.5rem;
-  padding-top: 0;
-}
-
 .card__footer--onhover {
   visibility: hidden;
 }

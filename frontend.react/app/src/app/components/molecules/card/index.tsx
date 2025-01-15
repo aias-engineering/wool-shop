@@ -42,5 +42,5 @@ export function CardFooter({
   className,
   children,
 }: HasChildren & MightHaveClassName) {
-  return <div className={clsx('card__footer', className)}>{children}</div>
+  return <div className={clsx('flex px-6 pb-6', className)}>{children}</div>
 }

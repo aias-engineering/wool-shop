@@ -42,7 +42,7 @@ export default function ProductDetail({ product }: Props) {
           <Image
             src={product.image}
             alt={product.name}
-            sizes="100vw"
+            sizes="(min-width: 1280px) 39rem, (min-width: 1024px) 23rem, 19rem"
             width={200}
             height={300}
             className="w-full"
