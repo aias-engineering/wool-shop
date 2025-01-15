@@ -44,7 +44,7 @@ export default async function Page({ params }: PromisesParams<HasId>) {
                 <Paragraph>email</Paragraph>
                 <Paragraph>{wishlist.email}</Paragraph>
                 <Paragraph>date</Paragraph>
-                <Paragraph>{wishlist.submitDate?.toUTCString()}</Paragraph>
+                <Paragraph>{wishlist.submitDate.toUTCString()}</Paragraph>
               </Grid>
               <Table>
                 <TableHeader>

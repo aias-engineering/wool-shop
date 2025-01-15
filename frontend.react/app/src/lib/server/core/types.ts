@@ -1,3 +1,5 @@
+import { revalidatePath, revalidateTag } from 'next/cache'
+
 export { type Product } from './products'
 
 // overall types
@@ -14,4 +16,17 @@ export const Unit = {
 export function isUnit(x: unknown): x is Unit {
   const failure = x as Unit
   return failure.type === 'unit'
+}
+
+export function revalidateAndReturn<TReturn>(pathAndTag: string, returnValue: TReturn) {
+  return doAndReturn(() => {
+    revalidatePath(pathAndTag)
+    revalidateTag(pathAndTag)
+  },
+  returnValue)}
+
+
+export function doAndReturn<TReturn>(action: () => void, returnValue: TReturn): TReturn {
+  action()
+  return returnValue
 }

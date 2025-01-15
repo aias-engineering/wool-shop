@@ -5,6 +5,7 @@ import Grid from '@/app/components/atoms/grid'
 import ImageFrame from '@/app/components/atoms/image-frame'
 import Paragraph from '@/app/components/atoms/paragraph'
 import Small from '@/app/components/atoms/small'
+import Space from '@/app/components/atoms/space'
 import Title from '@/app/components/atoms/title'
 import { Product } from '@/lib/server/core/products'
 import Image from 'next/image'
@@ -87,6 +88,7 @@ export default function ProductsShop({ products }: Props) {
           )
         })}
       </Grid>
+      <Space className="h-20" />
     </Shop>
   )
 }

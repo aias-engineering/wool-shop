@@ -1,10 +1,11 @@
+import { revalidatePath, revalidateTag, unstable_cache } from 'next/cache'
 import {
   CreateWishlist,
   ReadAllWishlists,
   ReadWishlist,
 } from '../data-access/wishlists'
 import { ErrorInCosmosDbAccess } from '../failure'
-import { Unit } from '../types'
+import { isUnit, revalidateAndReturn, Unit } from '../types'
 import { WishlistWithIdNotFound } from './failure'
 
 export interface HasAmount {
@@ -43,13 +44,19 @@ export function isWishlist(x: unknown): x is Wishlist {
     wishlist.id !== undefined &&
     wishlist.email !== undefined &&
     wishlist.items !== undefined &&
-    wishlist.items.every(isWishlistItem)
+    wishlist.items.every(isWishlistItem) &&
+    wishlist.submitDate !== undefined
   )
 }
 
 export const getAllWishlists = (
   dataAccess: ReadAllWishlists,
-): Promise<Wishlist[] | ErrorInCosmosDbAccess> => dataAccess.readAllWishlists()
+): Promise<Wishlist[] | ErrorInCosmosDbAccess> => 
+  unstable_cache(
+    () => dataAccess.readAllWishlists(),
+    ['wishlists'],
+    { revalidate: 60, tags: ['wishlists'] }
+  )()
 
 export const getWishlist = (
   id: string,
@@ -68,7 +75,11 @@ export const createWithlist = (
   request: CreateWishlistRequest,
   dataAccess: CreateWishlist,
 ): Promise<Unit | ErrorInCosmosDbAccess> =>
-  setSubmitDate(request).then((request) => dataAccess.createWishlist(request))
+  setSubmitDate(request)
+    .then((request) => dataAccess.createWishlist(request))
+    .then(either => isUnit(either)
+      ? revalidateAndReturn('wishlists', either)
+      : either)
 
 export interface CreateWishlistRequest {
   email: string
