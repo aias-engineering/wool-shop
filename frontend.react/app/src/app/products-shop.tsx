@@ -36,13 +36,13 @@ export default function ProductsShop({ products }: Props) {
         <br />
         Dit zijn onze producten:
       </Paragraph>
-      <Grid className="grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+      <Grid className="grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 min-w-[22rem]">
         {products.map((product) => {
           const matchingWishlistItem = wishlist.find(
             (x) => x.product.id === product.id,
           )
           return (
-            <div key={product.id} className="flex flex-col gap-2">
+            <div key={product.id} className="flex flex-col gap-2 min-h-[24rem] md:h-[26rem] lg:h-[24rem] xl:h-[36rem]">
               <Link href={`/product/${product.id}`}>
                 <ImageFrame>
                   <Image
@@ -51,7 +51,7 @@ export default function ProductsShop({ products }: Props) {
                     sizes="(min-width: 1024px) 25vw, (min-width: 768px) 66vw, 50vw"
                     width={200}
                     height={300}
-                    className="w-full"
+                    className="sm:w-full"
                   />
                 </ImageFrame>
               </Link>

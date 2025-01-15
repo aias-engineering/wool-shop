@@ -1,3 +1,4 @@
+import { clsx } from 'clsx'
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 import './globals.css'
@@ -23,7 +24,7 @@ export default function RootLayout({ children }: Readonly<HasChildren>) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} h-dvh bg-amber-50/10`}
+        className={clsx(geistSans.variable, geistMono.variable, `h-dvh bg-amber-50/10`)}
       >
         {children}
       </body>
