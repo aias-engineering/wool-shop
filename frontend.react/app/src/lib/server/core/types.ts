@@ -18,15 +18,20 @@ export function isUnit(x: unknown): x is Unit {
   return failure.type === 'unit'
 }
 
-export function revalidateAndReturn<TReturn>(pathAndTag: string, returnValue: TReturn) {
+export function revalidateAndReturn<TReturn>(
+  pathAndTag: string,
+  returnValue: TReturn,
+) {
   return doAndReturn(() => {
     revalidatePath(pathAndTag)
     revalidateTag(pathAndTag)
-  },
-  returnValue)}
+  }, returnValue)
+}
 
-
-export function doAndReturn<TReturn>(action: () => void, returnValue: TReturn): TReturn {
+export function doAndReturn<TReturn>(
+  action: () => void,
+  returnValue: TReturn,
+): TReturn {
   action()
   return returnValue
 }

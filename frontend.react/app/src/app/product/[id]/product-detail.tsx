@@ -50,7 +50,9 @@ export default function ProductDetail({ product }: Props) {
         </ImageFrame>
         <div className="flex flex-col gap-4">
           <Paragraph>{product.price} €</Paragraph>
-          <Paragraph className='whitespace-pre-line'>{product.description}</Paragraph>
+          <Paragraph className="whitespace-pre-line">
+            {product.description}
+          </Paragraph>
           {matchingWishlistItem ? (
             <div className="flex flex-row">
               <Button

@@ -5,9 +5,9 @@ import {
 } from '@/lib/server/core/data-access/wishlists'
 import { ErrorInCosmosDbAccess, isFailure } from '@/lib/server/core/failure'
 import { Unit } from '@/lib/server/core/types'
-import { CreateWishlistRequest, isWishlist, Wishlist } from '@/lib/server/core/wishlists'
+import { CreateWishlistRequest, Wishlist } from '@/lib/server/core/wishlists'
 import { WishlistWithIdNotFound } from '@/lib/server/core/wishlists/failure'
-import { Container, ItemDefinition } from '@azure/cosmos'
+import { Container } from '@azure/cosmos'
 import { woolshopDatabase } from './cosmos-db-client'
 
 function wishlists(): Promise<Container> {
@@ -21,14 +21,14 @@ function wishlists(): Promise<Container> {
     .then((response) => response.container)
 }
 
-const toWishlist = (item: any): Wishlist => ({
+const toWishlist = (item: Wishlist): Wishlist => ({
   ...item,
-  submitDate: new Date(item.submitDate)
-}) 
+  submitDate: new Date(item.submitDate),
+})
 
 const readAllWishlists = (): Promise<Wishlist[] | ErrorInCosmosDbAccess> =>
   wishlists()
-    .then((container) => container.items.readAll().fetchAll())
+    .then((container) => container.items.readAll<Wishlist>().fetchAll())
     .then((response) => response.resources)
     .then((wishlists) => wishlists.map(toWishlist))
     .catch((error) => ErrorInCosmosDbAccess(error))
@@ -39,9 +39,7 @@ const readWishlist = (
   wishlists()
     .then((container) => container.item(id, id).read<Wishlist>())
     .then((response) => response.resource || WishlistWithIdNotFound(id))
-    .then(either => isFailure(either) 
-      ? either
-      : toWishlist(either))
+    .then((either) => (isFailure(either) ? either : toWishlist(either)))
     .catch((error) => ErrorInCosmosDbAccess(error))
 
 const createWishlist = (

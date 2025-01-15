@@ -36,12 +36,13 @@ export function isProduct(x: unknown): x is Product {
   )
 }
 
-export const getAllProducts: (dataAccess: ReadAllProducts) => Promise<Product[] | ErrorInCosmosDbAccess> = 
-  unstable_cache(
-    (dataAccess) => dataAccess.readAllProducts(),
-    ['products'],
-    { revalidate: 60, tags: ['products'] }
-  )
+export const getAllProducts: (
+  dataAccess: ReadAllProducts,
+) => Promise<Product[] | ErrorInCosmosDbAccess> = unstable_cache(
+  (dataAccess) => dataAccess.readAllProducts(),
+  ['products'],
+  { revalidate: 60, tags: ['products'] },
+)
 
 export const getProduct = (
   id: string,
@@ -76,24 +77,28 @@ export const createProduct = async (
         ? await dataAccess.createProduct(either)
         : either,
     )
-    .then(either => isCreateProductResponse(either)
-      ? revalidateAndReturn('products', either)
-      : either)
+    .then((either) =>
+      isCreateProductResponse(either)
+        ? revalidateAndReturn('products', either)
+        : either,
+    )
 
 export const deleteProduct = (
   id: string,
   dataAccess: DeleteProduct,
-): Promise<Unit | ErrorInCosmosDbAccess> => 
-  dataAccess.deleteProduct(id)
-    .then(either => isUnit(either)
-      ? revalidateAndReturn('products', either)
-      : either)
+): Promise<Unit | ErrorInCosmosDbAccess> =>
+  dataAccess
+    .deleteProduct(id)
+    .then((either) =>
+      isUnit(either) ? revalidateAndReturn('products', either) : either,
+    )
 
 export const saveProduct = (
   product: Product,
   dataAccess: UpsertProduct,
-): Promise<Unit | ErrorInCosmosDbAccess> => 
-  dataAccess.upsertProduct(product)
-    .then(either => isUnit(either)
-      ? revalidateAndReturn('products', either)
-      : either)
+): Promise<Unit | ErrorInCosmosDbAccess> =>
+  dataAccess
+    .upsertProduct(product)
+    .then((either) =>
+      isUnit(either) ? revalidateAndReturn('products', either) : either,
+    )

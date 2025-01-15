@@ -1,4 +1,4 @@
-import { revalidatePath, revalidateTag, unstable_cache } from 'next/cache'
+import { unstable_cache } from 'next/cache'
 import {
   CreateWishlist,
   ReadAllWishlists,
@@ -51,12 +51,11 @@ export function isWishlist(x: unknown): x is Wishlist {
 
 export const getAllWishlists = (
   dataAccess: ReadAllWishlists,
-): Promise<Wishlist[] | ErrorInCosmosDbAccess> => 
-  unstable_cache(
-    () => dataAccess.readAllWishlists(),
-    ['wishlists'],
-    { revalidate: 60, tags: ['wishlists'] }
-  )()
+): Promise<Wishlist[] | ErrorInCosmosDbAccess> =>
+  unstable_cache(() => dataAccess.readAllWishlists(), ['wishlists'], {
+    revalidate: 60,
+    tags: ['wishlists'],
+  })()
 
 export const getWishlist = (
   id: string,
@@ -77,9 +76,9 @@ export const createWithlist = (
 ): Promise<Unit | ErrorInCosmosDbAccess> =>
   setSubmitDate(request)
     .then((request) => dataAccess.createWishlist(request))
-    .then(either => isUnit(either)
-      ? revalidateAndReturn('wishlists', either)
-      : either)
+    .then((either) =>
+      isUnit(either) ? revalidateAndReturn('wishlists', either) : either,
+    )
 
 export interface CreateWishlistRequest {
   email: string

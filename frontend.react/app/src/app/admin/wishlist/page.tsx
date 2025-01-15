@@ -67,9 +67,7 @@ export default async function Page() {
                         {wishlist.items.length}
                       </TableCell>
                       <TableCell>{calculateTotal(wishlist.items)} €</TableCell>
-                      <TableCell>
-                        {wishlist.submitDate.toUTCString()}
-                      </TableCell>
+                      <TableCell>{wishlist.submitDate.toUTCString()}</TableCell>
                       <TableCell>
                         <Link href={`/admin/wishlist/${wishlist.id}`}>
                           <MoveRight />

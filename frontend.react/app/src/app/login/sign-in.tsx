@@ -51,7 +51,7 @@ function SignIn() {
             </div>
             <form action={() => signInViaGithub(callbackUrl)}>
               <div className="px-1 grid gap-4">
-                <Separator className='my-4' />
+                <Separator className="my-4" />
                 <Button>
                   <Github></Github>
                   aanmelden met github
