@@ -10,6 +10,7 @@ import {
   checkEmailOnServer,
   ExistsEmailState,
   signInViaGithub,
+  signInViaGoogle,
 } from './actions'
 import { match, P } from 'ts-pattern'
 import Alert, {
@@ -49,15 +50,21 @@ function SignIn() {
                 login
               </Title>
             </div>
-            <form action={() => signInViaGithub(callbackUrl)}>
+            
               <div className="px-1 grid gap-4">
                 <Separator className="my-4" />
-                <Button>
-                  <Github></Github>
-                  aanmelden met github
-                </Button>
+                <form action={() => signInViaGithub(callbackUrl)}>
+                  <Button type='submit'>
+                    <Github></Github>
+                    aanmelden met github
+                  </Button>
+                </form>
+                <form action={() => signInViaGoogle(callbackUrl)}>
+                  <Button type='submit' variant='outline'>                    
+                    aanmelden met google
+                  </Button>
+                </form>
               </div>
-            </form>
           </>
         ))
         .with(P.union('exists', 'not-exists'), () => (

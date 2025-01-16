@@ -2,6 +2,7 @@ import NextAuth from 'next-auth'
 import { authConfig } from './auth.config'
 import Credentials from 'next-auth/providers/credentials'
 import GitHub from 'next-auth/providers/github'
+import Google from 'next-auth/providers/google'
 import { z } from 'zod'
 import { withAzureDataAccess } from '@/lib/server'
 import { getUserByEmail, isUser } from '@/lib/server/core/users'
@@ -10,6 +11,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
   ...authConfig,
   providers: [
     GitHub,
+    Google,
     Credentials({
       async authorize(credentials) {
         const parsedCredentials = z
