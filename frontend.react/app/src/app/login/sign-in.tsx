@@ -17,9 +17,11 @@ import Alert, {
   AlertDescription,
   AlertTitle,
 } from '../components/molecules/alert'
-import { AlertCircle, Github } from 'lucide-react'
+import { AlertCircle } from 'lucide-react'
 import { Separator } from '../components/atoms/separator'
 import { useSearchParams } from 'next/navigation'
+import { FaGoogle } from 'react-icons/fa'
+import { VscGithub } from 'react-icons/vsc'
 
 export default function SuspensedSignIn() {
   return (
@@ -55,12 +57,13 @@ function SignIn() {
                 <Separator className="my-4" />
                 <form action={() => signInViaGithub(callbackUrl)}>
                   <Button type='submit'>
-                    <Github></Github>
+                    <VscGithub />
                     aanmelden met github
                   </Button>
                 </form>
                 <form action={() => signInViaGoogle(callbackUrl)}>
-                  <Button type='submit' variant='outline'>                    
+                  <Button type='submit' variant='outline'>
+                    <FaGoogle />
                     aanmelden met google
                   </Button>
                 </form>
