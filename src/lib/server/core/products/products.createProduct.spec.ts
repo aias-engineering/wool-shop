@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 import { CreateProduct } from '../data-access'
-import { createProduct } from '../products'
+import { createProduct } from '.'
 import { isProductValidationFailed } from '../failure'
 
 const id = Math.random().toString()
