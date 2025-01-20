@@ -13,9 +13,7 @@ export const authConfig = {
         if (user?.email) {
           if (adminUsersConfigured) {
             const adminUsers = JSON.parse(adminUsersConfigured) as string[]
-            if (adminUsers.filter((admin) => admin === user.email)) {
-              return true
-            }
+            return adminUsers.some((admin) => admin === user.email)
           }
         }
         return false
