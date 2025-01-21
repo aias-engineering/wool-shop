@@ -68,7 +68,11 @@ export default function Shop({ children, wishlistAtom }: Props) {
         {children}
         <div className="fixed bottom-1 left-0 grid px-2 w-full">
           <SheetTrigger asChild>
-            <Button type='button' variant="outline" className='md:w-[40rem] lg:w-[48rem] xl:w-[80rem] mx-auto'>
+            <Button
+              type="button"
+              variant="outline"
+              className="md:w-[40rem] lg:w-[48rem] xl:w-[80rem] mx-auto"
+            >
               <ScrollText />
               wensenlijst
             </Button>

@@ -11,7 +11,7 @@ export async function deleteProductAction(productId: string) {
   ).then((either) =>
     isUnit(either)
       ? doAndReturn(() => {
-          revalidatePath('/')
+          revalidatePath('')
           revalidatePath('/admin/product')
           revalidateTag('products')
         }, either)

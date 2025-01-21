@@ -81,5 +81,5 @@ export const authorize = async (formData: FormData) =>
 export const signInViaGithub = async (redirectTo: string | null) =>
   signIn('github', { redirectTo: redirectTo ?? undefined })
 
-export const signInViaGoogle = async (redirectTo: string | null) => 
+export const signInViaGoogle = async (redirectTo: string | null) =>
   signIn('google', { redirectTo: redirectTo ?? undefined })

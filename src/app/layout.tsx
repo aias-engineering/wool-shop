@@ -24,7 +24,11 @@ export default function RootLayout({ children }: Readonly<HasChildren>) {
   return (
     <html lang="en">
       <body
-        className={clsx(geistSans.variable, geistMono.variable, `h-dvh bg-amber-50/10`)}
+        className={clsx(
+          geistSans.variable,
+          geistMono.variable,
+          `h-dvh bg-amber-50/10`,
+        )}
       >
         {children}
       </body>

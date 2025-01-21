@@ -45,9 +45,9 @@ export async function saveProductOnServer(
     .then((either) =>
       match(either)
         .with(P.when(isUnit), () => {
-          revalidatePath('/')
+          revalidatePath('')
           revalidatePath('/admin/product')
-          revalidateTag('produts')
+          revalidateTag('products')
           redirect('/admin/product')
           return 'idle' as SaveProductState
         })

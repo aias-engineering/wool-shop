@@ -42,9 +42,12 @@ export default function ProductsShop({ products }: Props) {
             (x) => x.product.id === product.id,
           )
           return (
-            <div key={product.id} className="flex flex-col gap-2 min-h-[24rem] md:h-[26rem] lg:h-[24rem] xl:h-[36rem]">
+            <div
+              key={product.id}
+              className="flex flex-col gap-2 min-h-[24rem] md:h-[26rem] lg:h-[24rem] xl:h-[36rem]"
+            >
               <Link href={`/product/${product.id}`}>
-                <ImageFrame className='h-[16rem] md:h-[19rem] lg:h-[17rem] xl:h-[29rem]' >
+                <ImageFrame className="h-[16rem] md:h-[19rem] lg:h-[17rem] xl:h-[29rem]">
                   <Image
                     src={product.image}
                     alt={product.name}
@@ -52,7 +55,6 @@ export default function ProductsShop({ products }: Props) {
                     width={200}
                     height={300}
                     className="sm:w-full"
-                    
                   />
                 </ImageFrame>
               </Link>

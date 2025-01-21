@@ -116,7 +116,11 @@ export function EditProduct({ product }: Props) {
               required
             />
             <Label htmlFor={toId('description')}>beschrijving</Label>
-            <Textarea name="description" disabled={pending}></Textarea>
+            <Textarea
+              name="description"
+              defaultValue={product.description || undefined}
+              disabled={pending}
+            ></Textarea>
             <Label htmlFor={toId('price')}>prijs in euro</Label>
             <CurrencyInput name="price" defaultValue={product.price} />
           </CardContent>

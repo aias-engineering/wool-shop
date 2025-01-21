@@ -52,22 +52,22 @@ function SignIn() {
                 login
               </Title>
             </div>
-            
-              <div className="px-1 grid gap-4">
-                <Separator className="my-4" />
-                <form action={() => signInViaGithub(callbackUrl)}>
-                  <Button type='submit'>
-                    <VscGithub />
-                    aanmelden met github
-                  </Button>
-                </form>
-                <form action={() => signInViaGoogle(callbackUrl)}>
-                  <Button type='submit' variant='outline'>
-                    <FaGoogle />
-                    aanmelden met google
-                  </Button>
-                </form>
-              </div>
+
+            <div className="px-1 grid gap-4">
+              <Separator className="my-4" />
+              <form action={() => signInViaGithub(callbackUrl)}>
+                <Button type="submit">
+                  <VscGithub />
+                  aanmelden met github
+                </Button>
+              </form>
+              <form action={() => signInViaGoogle(callbackUrl)}>
+                <Button type="submit" variant="outline">
+                  <FaGoogle />
+                  aanmelden met google
+                </Button>
+              </form>
+            </div>
           </>
         ))
         .with(P.union('exists', 'not-exists'), () => (

@@ -58,7 +58,7 @@ export async function createProductOnServer(
   )
 
   if (result.step === 'done') {
-    revalidatePath('/')
+    revalidatePath('')
     revalidatePath('/admin/product')
     revalidateTag('products')
     redirect('/admin/product')

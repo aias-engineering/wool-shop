@@ -77,8 +77,11 @@ const Page = async () => {
                           </Space>
                         </CardContent>
                         <CardFooter className="flex-col justify-center xl:flex-row xl:items-center gap-1">
-                          <Link href={`/admin/product/edit/${product.id}`} className='w-full'>
-                            <Button type='button' className='w-full'>
+                          <Link
+                            href={`/admin/product/edit/${product.id}`}
+                            className="w-full"
+                          >
+                            <Button type="button" className="w-full">
                               <Pencil /> bewerken
                             </Button>
                           </Link>
