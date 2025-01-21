@@ -5,6 +5,7 @@ import './globals.css'
 import { HasChildren } from '@/lib/client/react'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages } from 'next-intl/server'
+import { SessionProvider } from 'next-auth/react'
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -35,9 +36,11 @@ export default async function RootLayout({ children }: Readonly<HasChildren>) {
           `h-dvh bg-amber-50/10`,
         )}
       >
-        <NextIntlClientProvider messages={messages}>
-          {children}
-        </NextIntlClientProvider>
+        <SessionProvider>
+          <NextIntlClientProvider messages={messages}>
+            {children}
+          </NextIntlClientProvider>
+        </SessionProvider>
       </body>
     </html>
   )

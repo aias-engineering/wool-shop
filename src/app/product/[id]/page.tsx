@@ -1,6 +1,3 @@
-import Logo from '@/app/components/atoms/logo'
-import Title from '@/app/components/atoms/title'
-import Header from '@/app/components/header'
 import ErrorPage from '@/app/components/layout/error-page'
 import Main from '@/app/components/main'
 import { HasId, PromisesParams } from '@/lib/client/react'
@@ -9,6 +6,7 @@ import { isFailure } from '@/lib/server/core/failure'
 import { getProduct, isProduct } from '@/lib/server/core/products'
 import { match, P } from 'ts-pattern'
 import ProductDetail from './product-detail'
+import HeaderLayout from '@/app/components/layout/header'
 
 export default async function Page({ params }: PromisesParams<HasId>) {
   const { id } = await params
@@ -18,12 +16,7 @@ export default async function Page({ params }: PromisesParams<HasId>) {
 
   return (
     <>
-      <Header>
-        <Title type="h1">
-          <Logo></Logo>
-          Naqab Bedouin Design
-        </Title>
-      </Header>
+      <HeaderLayout />
       <Main>
         {match(eitherProductOrError)
           .with(P.when(isProduct), (product) => (

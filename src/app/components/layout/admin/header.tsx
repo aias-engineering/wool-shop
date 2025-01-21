@@ -1,9 +1,17 @@
 import { HasChildren } from '@/lib/client/react'
-import HeaderLayout from '../header'
+import Logo from '@/app/components/atoms/logo'
+import Title from '@/app/components/atoms/title'
+import Header from '@/app/components/header'
 
 const AdminHeaderLayout = ({ children }: HasChildren) => (
   <>
-    <HeaderLayout>{children}</HeaderLayout>
+    <Header>
+      <Title type="h1">
+        <Logo />
+        Naqab Bedouin Design
+      </Title>
+      {children}
+    </Header>
   </>
 )
 

@@ -1,7 +1,4 @@
-import Logo from '@/app/components/atoms/logo'
 import Small from '@/app/components/atoms/small'
-import Title from '@/app/components/atoms/title'
-import Header from '@/app/components/header'
 import ErrorPage from '@/app/components/layout/error-page'
 import Main from '@/app/components/main'
 import { withAzureDataAccess } from '@/lib/server'
@@ -11,8 +8,8 @@ import { match, P } from 'ts-pattern'
 import ProductsShop from './products-shop'
 import { unstable_cache } from 'next/cache'
 import { SessionProvider } from 'next-auth/react'
-import { LangTrigger } from './components/atoms/lang-trigger'
 import { getTranslations } from 'next-intl/server'
+import HeaderLayout from './components/layout/header'
 
 const get = unstable_cache(
   () => withAzureDataAccess((dataAccess) => getAllProducts(dataAccess)),
@@ -25,14 +22,8 @@ export default async function Home() {
   const translations = await getTranslations('home')
   
   return (
-    <SessionProvider>
-      <Header className='grid grid-cols-1 md:grid-cols-[90%_auto]'>
-        <LangTrigger className='justify-self-end md:order-2' />
-        <Title type="h1">
-          <Logo></Logo>
-          Naqab Bedouin Design
-        </Title>
-      </Header>
+    <>
+      <HeaderLayout />
       <Main>
         {match(products)
           .with([], () => (
@@ -48,6 +39,6 @@ export default async function Home() {
           .with(P.when(isFailure), (failure) => <ErrorPage failure={failure} />)
           .exhaustive()}
       </Main>
-    </SessionProvider>
+    </>
   )
 }
