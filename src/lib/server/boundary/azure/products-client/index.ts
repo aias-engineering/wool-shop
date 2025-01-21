@@ -1,4 +1,3 @@
-import azureProductV1Client from './v1'
 import {
   ErrorInCosmosDbAccess,
   isErrorInCosmosDbAccess,
@@ -38,12 +37,15 @@ const toProducts = (resources: unknown[]): Product[] =>
 
 const toProduct = (resource: unknown): Product | null => 
   match(resource)
-    .with(P.when(isAzureProductV1), (product => (product as Product)))
-    .with(P.when(isAzureProductV2), (product => ({
+    .with(P.when(isAzureProductV2), (product => (product as Product)))
+    .with(P.when(isAzureProductV1), (product => ({
       id: product.id,
-      name: product.infoNl.name,
-      description: product.infoNl.description,
-      price: product.infoNl.price,
+      infoNl: {
+        name: product.name,
+        description: product.description,
+        price: product.price
+      },
+      infoEn: undefined,
       image: product.image
     } as Product)))
     .otherwise(() => (null))
@@ -101,7 +103,7 @@ const createProduct = (
 const upsertProduct = (
   product: Product,
 ): Promise<Unit | ErrorInCosmosDbAccess> =>
-  azureProductV1Client.upsertProduct(product)
+  azureProductV2Client.upsertProduct(product)
 
 const productClient: ReadProduct &
   ReadProductsWithImage &

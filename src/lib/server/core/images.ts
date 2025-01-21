@@ -49,7 +49,7 @@ export const deleteImage = (
       match(either)
         .with([], () => imagename)
         .with(P.array(), (products: Product[]) =>
-          ImageReferencedByProducts(products.map((x) => x.name)),
+          ImageReferencedByProducts(products.map((x) => x.id)),
         )
         .with(P.when(isFailure), (failure) => failure)
         .exhaustive(),

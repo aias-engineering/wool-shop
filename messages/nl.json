@@ -19,6 +19,10 @@
       "continue": "Verder bladeren"
     },
     "back": "terug",
-    "add-to-wishlist": "naar wensenlijst"
+    "add-to-wishlist": "naar wensenlijst",
+    "no-product-info": {
+      "title": "Missing product information",
+      "message": "for the given product no product information in this language is present"
+    }
   }
 }

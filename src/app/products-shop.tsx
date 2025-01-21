@@ -7,34 +7,48 @@ import Paragraph from '@/app/components/atoms/paragraph'
 import Small from '@/app/components/atoms/small'
 import Space from '@/app/components/atoms/space'
 import Title from '@/app/components/atoms/title'
-import { Product } from '@/lib/server/core/products'
+import { getProductInfo, hasProductInfo, Product, ProductInfo } from '@/lib/server/core/products'
 import Image from 'next/image'
 import { Minus, Plus } from 'lucide-react'
 import {
-  addToWishlist,
-  removeFromWishlist,
-  wishlistAtom,
+  addToLocaleWishlist,
+  getLocalWishlist,
+  removeFromLocaleWishlist,
+  toWishlistProduct,
+  wishlistContainerAtom,
 } from '@/app/components/organism/shop/store'
 import Link from 'next/link'
-import { useAtom } from 'jotai'
+import { useAtomValue } from 'jotai'
 import Shop from './components/organism/shop'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
+import { isProductInfoNotPresent } from '@/lib/server/core/products/failure'
 
 interface Props {
   products: Product[]
 }
 
 export default function ProductsShop({ products }: Props) {
-  const [wishlist, setWishlist] = useAtom(wishlistAtom)
+  const wishlistContainer = useAtomValue(wishlistContainerAtom)
+  const locale = useLocale()
   const translations = useTranslations('home')
 
   return (
-    <Shop wishlistAtom={wishlistAtom}>
+    <Shop wishlistsContainerAtom={wishlistContainerAtom}>
       <Paragraph className="pb-4 whitespace-pre text-pretty">
         {translations('welcome')}
       </Paragraph>
       <Grid className="grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 min-w-[22rem]">
-        {products.map((product) => {
+        {products
+          .filter(product => hasProductInfo(product, locale))
+          .map((product) => {
+            const either = getProductInfo(product, locale)
+            if (isProductInfoNotPresent(either)){
+              // shouldn't happen
+              return (<></>)
+            }
+
+          const productInfo: ProductInfo = either
+          const wishlist = getLocalWishlist(wishlistContainer, locale)
           const matchingWishlistItem = wishlist.find(
             (x) => x.product.id === product.id,
           )
@@ -47,7 +61,7 @@ export default function ProductsShop({ products }: Props) {
                 <ImageFrame className="h-[16rem] md:h-[19rem] lg:h-[17rem] xl:h-[29rem]">
                   <Image
                     src={product.image}
-                    alt={product.name}
+                    alt={productInfo.name}
                     sizes="(min-width:1280px) 310px, 172px"
                     width={200}
                     height={300}
@@ -56,16 +70,14 @@ export default function ProductsShop({ products }: Props) {
                 </ImageFrame>
               </Link>
               <Title type="h3" className="text-base">
-                {product.name}
+                {productInfo.name}
               </Title>
-              <Small className="text-end">{product.price} €</Small>
+              <Small className="text-end">{productInfo.price} €</Small>
               {matchingWishlistItem ? (
                 <div className="flex flex-row">
                   <Button
                     onClick={() =>
-                      setWishlist((prev) =>
-                        removeFromWishlist(prev, product.id),
-                      )
+                      removeFromLocaleWishlist(wishlistContainer, locale, product.id)
                     }
                     variant="counter"
                   >
@@ -74,7 +86,7 @@ export default function ProductsShop({ products }: Props) {
                   <div className="m-auto">{matchingWishlistItem.amount}</div>
                   <Button
                     onClick={() =>
-                      setWishlist((prev) => addToWishlist(prev, product))
+                      addToLocaleWishlist(wishlistContainer, locale, toWishlistProduct(product.id, productInfo.name, productInfo.price))
                     }
                     variant="counter"
                   >

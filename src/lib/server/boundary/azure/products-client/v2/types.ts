@@ -24,6 +24,7 @@ export function isAzureProductV2(x: unknown): x is AzureProductV2 {
 export function isAzureProductInfoV2(x: unknown): x is AzureProductInfoV2 {
   const info = x as AzureProductInfoV2
   return (
+    info !== undefined &&
     info.name !== undefined &&
     info.description !== undefined &&
     info.price !== undefined

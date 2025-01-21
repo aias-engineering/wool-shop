@@ -6,7 +6,10 @@ export interface Failure {
 
 export function isFailure(x: unknown): x is Failure {
   const failure = x as Failure
-  if (!failure.code) return false
-  if (!failure.reason) return false
-  return failure.type === 'failure'
+  return (
+    failure !== undefined &&
+    failure.code !== undefined &&
+    failure.reason !== undefined &&
+    failure.type === 'failure'
+  )
 }

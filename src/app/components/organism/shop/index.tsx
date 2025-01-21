@@ -17,29 +17,32 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/app/components/molecules/sheet'
-import { PrimitiveAtom, Provider, useAtom } from 'jotai'
+import { PrimitiveAtom, Provider, useAtomValue } from 'jotai'
 import { ScrollText } from 'lucide-react'
 import { FormEvent, useState } from 'react'
 import { saveWishlistOnServer, SaveWishlistState } from './server-actions'
 import { match, P } from 'ts-pattern'
 import { CreateWishlistRequest } from '@/lib/server/core/wishlists'
 import {
-  addToWishlist,
-  removeFromWishlist,
   sumWishlist,
-  WishlistItem,
+  WishlistsContainer,
+  getLocalWishlist,
+  addToLocaleWishlist,
+  removeFromLocaleWishlist,
+  setLocalWishlist,
 } from './store'
 import WishListItem from './wish-list-item'
 import { HasChildren } from '@/lib/client/react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 
 interface Props extends HasChildren {
-  wishlistAtom: PrimitiveAtom<WishlistItem[]>
+  wishlistsContainerAtom: PrimitiveAtom<WishlistsContainer>
 }
 
-export default function Shop({ children, wishlistAtom }: Props) {
+export default function Shop({ children, wishlistsContainerAtom }: Props) {
+  const locale = useLocale()
   const [email, setEmail] = useState('')
-  const [wishlist, setWishlist] = useAtom(wishlistAtom)
+  const wishlistsContainer = useAtomValue(wishlistsContainerAtom)
   const [saveWishlistState, setSaveWishlistState] =
     useState<SaveWishlistState>('idle')
   const translations = useTranslations('shop')
@@ -48,7 +51,7 @@ export default function Shop({ children, wishlistAtom }: Props) {
     event.preventDefault()
     const request: CreateWishlistRequest = {
       email,
-      items: wishlist.map((x) => ({
+      items: getLocalWishlist(wishlistsContainer, locale).map((x) => ({
         amount: x.amount,
         productId: x.product.id,
         name: x.product.name,
@@ -60,7 +63,7 @@ export default function Shop({ children, wishlistAtom }: Props) {
     setSaveWishlistState(result)
 
     if (result === 'submitted') {
-      setWishlist([])
+      setLocalWishlist(wishlistsContainer, locale, [])
     }
   }
 
@@ -87,7 +90,7 @@ export default function Shop({ children, wishlistAtom }: Props) {
               <SheetDescription>{translations('description')}</SheetDescription>
             </SheetHeader>
             <div>
-              {match(wishlist)
+              {match(getLocalWishlist(wishlistsContainer, locale))
                 .with([], () => (
                   <>
                     <Paragraph>{translations('wishlist-empty')}</Paragraph>
@@ -100,19 +103,16 @@ export default function Shop({ children, wishlistAtom }: Props) {
                 ))
                 .with(P.array(), (wishlist) => (
                   <>
-                    {wishlist.map((item) => (
+                    {wishlist
+                      .map((item) => (
                       <WishListItem
                         key={item.product.id}
                         item={item}
                         add={() =>
-                          setWishlist((prev) =>
-                            addToWishlist(prev, item.product),
-                          )
+                          addToLocaleWishlist(wishlistsContainer, locale, item.product)
                         }
                         remove={() =>
-                          setWishlist((prev) =>
-                            removeFromWishlist(prev, item.product.id),
-                          )
+                          removeFromLocaleWishlist(wishlistsContainer, locale, item.product.id)
                         }
                       />
                     ))}
@@ -125,7 +125,7 @@ export default function Shop({ children, wishlistAtom }: Props) {
                 .exhaustive()}
             </div>
             <SheetFooter className="justify-self-end w-full pt-10">
-              {match(wishlist)
+              {match(getLocalWishlist(wishlistsContainer, locale))
                 .with([], () => <></>)
                 .with(P.array(), () => (
                   <>

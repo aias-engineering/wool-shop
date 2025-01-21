@@ -4,14 +4,13 @@ import Button from '@/app/components/atoms/button'
 import Paragraph from '@/app/components/atoms/paragraph'
 import Title from '@/app/components/atoms/title'
 import { MightHaveClassName } from '@/lib/client/react'
-import { Product } from '@/lib/server/core/products'
 import clsx from 'clsx'
 import { Minus, Plus } from 'lucide-react'
-import { WishlistItem } from './store'
+import { WishlistItem, WishlistProduct } from './store'
 
 export interface WishListItemProps extends MightHaveClassName {
   item: WishlistItem
-  add: (product: Product) => void
+  add: (product: WishlistProduct) => void
   remove: (productId: string) => void
 }
 

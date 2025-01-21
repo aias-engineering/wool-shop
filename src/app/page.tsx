@@ -7,7 +7,6 @@ import { getAllProducts } from '@/lib/server/core/products'
 import { match, P } from 'ts-pattern'
 import ProductsShop from './products-shop'
 import { unstable_cache } from 'next/cache'
-import { SessionProvider } from 'next-auth/react'
 import { getTranslations } from 'next-intl/server'
 import HeaderLayout from './components/layout/header'
 

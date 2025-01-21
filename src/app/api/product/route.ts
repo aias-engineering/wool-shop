@@ -11,6 +11,9 @@ import { Product } from '@/lib/server/core/types'
 import { NextRequest, NextResponse } from 'next/server'
 import { match, P } from 'ts-pattern'
 
+/**
+ * @deprecated
+ */
 export async function GET(): Promise<NextResponse> {
   const result = await withAzureDataAccess((dataAccess) =>
     getAllProducts(dataAccess),
@@ -25,6 +28,9 @@ export async function GET(): Promise<NextResponse> {
     .exhaustive()
 }
 
+/**
+ * @deprecated
+ */
 export const POST = (req: NextRequest): Promise<NextResponse> =>
   req
     .formData()

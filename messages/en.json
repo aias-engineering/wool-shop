@@ -19,6 +19,10 @@
       "continue": "Continue browsing"
     },
     "back": "back",
-    "add-to-wishlist": "Add to wishlist"
+    "add-to-wishlist": "Add to wishlist",
+    "no-product-info": {
+      "title": "Missing product information",
+      "message": "for the given product no product information in this language is present"
+    }
   }
 }

@@ -1,3 +1,4 @@
+import { match } from 'ts-pattern'
 import {
   CreateProduct,
   CreateProductResponse,
@@ -14,12 +15,13 @@ import {
 } from '../failure'
 import { Unit } from '../types'
 import { validateCreateProductRequest } from './validation'
+import { isProductInfoNotPresent, ProductInfoNotPresent } from './failure'
+import { HasPrice } from '../wishlists'
 
 export interface Product {
   id: string
-  name: string
-  description: string | null
-  price: number
+  infoNl: ProductInfo,
+  infoEn?: ProductInfo
   image: string
 }
 
@@ -27,17 +29,15 @@ export function isProduct(x: unknown): x is Product {
   const product = x as Product
   return (
     product.id !== undefined &&
-    product.name !== undefined &&
-    product.description !== undefined &&
-    product.price !== undefined &&
+    isProductInfo(product.infoNl) &&
+    (product.infoEn === undefined || isProductInfo(product.infoEn)) &&
     product.image !== undefined
   )
 }
 
-export interface ProductInfo {
+export interface ProductInfo extends HasPrice {
   name: string
   description: string | null
-  price: number
 }
 
 export function isProductInfo(x: unknown): x is ProductInfo {
@@ -48,6 +48,27 @@ export function isProductInfo(x: unknown): x is ProductInfo {
     info.price !== undefined
   )
 }
+
+export const hasProductInfo = (product: Product, locale: string): boolean =>
+  match(locale)
+    .with('nl', () => true)
+    .with('en', () => !!product.infoEn)
+    .otherwise(() => false)
+
+export const getProductInfo = (product: Product, locale: string): ProductInfo | ProductInfoNotPresent => 
+  match(locale)
+    .with('nl', () => product.infoNl)
+    .with('en', () => product.infoEn || ProductInfoNotPresent(product.id, locale))
+    .otherwise(() => ProductInfoNotPresent(product.id, locale))
+
+export const getProductInfoOrDefault = (product: Product, locale: string): ProductInfo => 
+  {
+    const either = getProductInfo(product, locale)
+    if (isProductInfoNotPresent(either))
+      return product.infoNl
+    else 
+      return either
+  }
 
 export const getAllProducts = (
   dataAccess: ReadAllProducts,
