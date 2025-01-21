@@ -10,6 +10,9 @@ import { getAllProducts } from '@/lib/server/core/products'
 import { match, P } from 'ts-pattern'
 import ProductsShop from './products-shop'
 import { unstable_cache } from 'next/cache'
+import { SessionProvider } from 'next-auth/react'
+import { ChangeLang } from './ChangeLang'
+import { LangTrigger } from './components/atoms/lang-trigger'
 
 const get = unstable_cache(
   () => withAzureDataAccess((dataAccess) => getAllProducts(dataAccess)),
@@ -17,12 +20,15 @@ const get = unstable_cache(
   { revalidate: 60, tags: ['products'] },
 )
 
+
+
 export default async function Home() {
   const products = await get()
-
+  
   return (
-    <>
-      <Header>
+    <SessionProvider>
+      <Header className='grid grid-cols-1 md:grid-cols-[90%_auto]'>
+        <LangTrigger className='justify-self-end md:order-2' />
         <Title type="h1">
           <Logo></Logo>
           Naqab Bedouin Design
@@ -44,6 +50,6 @@ export default async function Home() {
           .with(P.when(isFailure), (failure) => <ErrorPage failure={failure} />)
           .exhaustive()}
       </Main>
-    </>
+    </SessionProvider>
   )
 }
