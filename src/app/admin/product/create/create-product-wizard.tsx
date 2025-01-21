@@ -120,12 +120,12 @@ export function CreateProductWizard({}: Props) {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <Label htmlFor={toId('name')}>naam</Label>
-                  <Input name="name" type="text" disabled={pending} required />
-                  <Label htmlFor={toId('description')}>beschrijving</Label>
-                  <Textarea name="description" disabled={pending}></Textarea>
-                  <Label htmlFor={toId('price')}>prijs in euro</Label>
-                  <CurrencyInput name="price" disabled={pending} />
+                  <Label htmlFor={toId('infoNl.name')}>naam</Label>
+                  <Input name="infoNl.name" type="text" disabled={pending} required />
+                  <Label htmlFor={toId('infoNl.description')}>beschrijving</Label>
+                  <Textarea name="infoNl.description" disabled={pending}></Textarea>
+                  <Label htmlFor={toId('infoNl.price')}>prijs in euro</Label>
+                  <CurrencyInput name="infoNl.price" disabled={pending} />
                 </CardContent>
                 <CardFooter>
                   {match(creationState)

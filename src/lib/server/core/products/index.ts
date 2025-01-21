@@ -1,11 +1,10 @@
 import {
   CreateProduct,
-  CreateProductRequest,
   CreateProductResponse,
-  CreateProductRequestFormSchema,
   ReadAllProducts,
   ReadProduct,
   DeleteProduct,
+  isCreateProductRequest,
 } from '../data-access'
 import { UpsertProduct } from '../data-access/products'
 import {
@@ -14,6 +13,7 @@ import {
   ProductWithIdNotFound,
 } from '../failure'
 import { Unit } from '../types'
+import { validateCreateProductRequest } from './validation'
 
 export interface Product {
   id: string
@@ -34,6 +34,21 @@ export function isProduct(x: unknown): x is Product {
   )
 }
 
+export interface ProductInfo {
+  name: string
+  description: string | null
+  price: number
+}
+
+export function isProductInfo(x: unknown): x is ProductInfo {
+  const info = x as ProductInfo
+  return (
+    info.name !== undefined &&
+    info.description !== undefined &&
+    info.price !== undefined
+  )
+}
+
 export const getAllProducts = (
   dataAccess: ReadAllProducts,
 ): Promise<Product[] | ErrorInCosmosDbAccess> => dataAccess.readAllProducts()
@@ -50,26 +65,16 @@ export const createProduct = async (
 ): Promise<
   CreateProductResponse | ProductValidationFailed | ErrorInCosmosDbAccess
 > =>
-  CreateProductRequestFormSchema.safeParseAsync({
-    name: formData.get('name'),
-    description: formData.get('description'),
-    price: formData.get('price'),
-    image: formData.get('image'),
-  })
-    .then((result) =>
-      result.success
-        ? new CreateProductRequest(
-            result.data.name,
-            result.data.description,
-            result.data.price,
-            result.data.image,
-          )
-        : ProductValidationFailed(result.error),
+  validateCreateProductRequest(formData)
+    .then(either => 
+      either.success 
+        ? either.data
+        : ProductValidationFailed(either.error)
     )
-    .then(async (either) =>
-      either instanceof CreateProductRequest
-        ? await dataAccess.createProduct(either)
-        : either,
+    .then(async either => 
+      isCreateProductRequest(either)
+        ? dataAccess.createProduct(either)
+        : either
     )
 
 export const deleteProduct = (

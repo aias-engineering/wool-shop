@@ -1,6 +1,5 @@
 import { ErrorInCosmosDbAccess } from '@/lib/server/core/failure'
-import { z } from 'zod'
-import { zfd } from 'zod-form-data'
+import { ProductInfo, isProductInfo } from '../products'
 
 export interface CreateProduct {
   createProduct(
@@ -8,40 +7,26 @@ export interface CreateProduct {
   ): Promise<CreateProductResponse | ErrorInCosmosDbAccess>
 }
 
-export class CreateProductRequest {
-  constructor(
-    readonly name: string,
-    readonly description: string | null,
-    readonly price: number,
-    readonly image: string,
-  ) {}
+export interface CreateProductRequest {
+  readonly infoNl: ProductInfo
+  readonly image: string
 }
 
 export function isCreateProductRequest(x: unknown): x is CreateProductRequest {
   const request = x as CreateProductRequest
   return (
-    request.name !== undefined &&
-    request.description !== undefined &&
-    request.price !== undefined &&
+    isProductInfo(request.infoNl) &&
     request.image !== undefined
   )
 }
 
-export const CreateProductRequestFormSchema = z.object({
-  name: zfd.text(z.string().min(1)),
-  description: zfd.text().nullable(),
-  price: zfd.numeric(z.number().gte(0)),
-  image: zfd.text(z.string()),
-})
-
 export interface CreateProductResponse {
   id: string
-  request: CreateProductRequest
 }
 
 export function isCreateProductResponse(
   x: unknown,
 ): x is CreateProductResponse {
   const response = x as CreateProductResponse
-  return response.id !== undefined && isCreateProductRequest(response.request)
+  return response.id !== undefined
 }

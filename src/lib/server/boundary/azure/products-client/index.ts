@@ -1,6 +1,7 @@
 import azureProductV1Client from './v1'
 import {
   ErrorInCosmosDbAccess,
+  isErrorInCosmosDbAccess,
   ProductWithIdNotFound,
 } from '@/lib/server/core/failure'
 import { Product, Unit } from '@/lib/server/core/types'
@@ -16,6 +17,7 @@ import {
   CreateProductRequest,
   CreateProductResponse,
 } from '@/lib/server/core/data-access'
+import { AzureCreateProductRequestV1, isAzureCreateProductRequestV1 } from './v1/types'
 
 const readAllProducts = (): Promise<ErrorInCosmosDbAccess | Product[]> =>
   azureProductV1Client.readAllProducts()
@@ -36,7 +38,16 @@ const deleteProduct = (id: string): Promise<Unit | ErrorInCosmosDbAccess> =>
 const createProduct = (
   request: CreateProductRequest,
 ): Promise<CreateProductResponse | ErrorInCosmosDbAccess> =>
-  azureProductV1Client.createProduct(request)
+  azureProductV1Client.createProduct({
+    name: request.infoNl.name, 
+    description: request.infoNl.description, 
+    price: request.infoNl.price, 
+    image: request.image} as AzureCreateProductRequestV1)
+    .then(either => 
+      isErrorInCosmosDbAccess(either)
+        ? either
+        : ({ id: either.id }) as CreateProductResponse
+    )
 
 const upsertProduct = (
   product: Product,
