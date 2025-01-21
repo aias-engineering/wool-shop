@@ -18,6 +18,7 @@ import {
 import Link from 'next/link'
 import { useAtom } from 'jotai'
 import Shop from './components/organism/shop'
+import { useTranslations } from 'next-intl'
 
 interface Props {
   products: Product[]
@@ -25,16 +26,12 @@ interface Props {
 
 export default function ProductsShop({ products }: Props) {
   const [wishlist, setWishlist] = useAtom(wishlistAtom)
+  const translations = useTranslations('home')
 
   return (
     <Shop wishlistAtom={wishlistAtom}>
-      <Paragraph className="pb-4">
-        Hoi <br />
-        Wij zijn een kleine wolfabriek uit Jordanië. Je kunt hier niets
-        bestellen, maar bekijk in ieder geval onze producten - en vertel ons
-        over je wensen.
-        <br />
-        Dit zijn onze producten:
+      <Paragraph className="pb-4 whitespace-pre text-pretty">
+        {translations('welcome')}
       </Paragraph>
       <Grid className="grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 min-w-[22rem]">
         {products.map((product) => {
