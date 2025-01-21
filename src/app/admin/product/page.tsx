@@ -59,7 +59,9 @@ const Page = async () => {
                     {products.map((product, index) => (
                       <Card key={index}>
                         <CardHeader>
-                          <CardTitle>{product.name}</CardTitle>
+                          <CardTitle className='h-10'>
+                            <Title type='h4'>{product.name}</Title>
+                          </CardTitle>
                         </CardHeader>
                         <CardContent>
                           <ImageFrame>
