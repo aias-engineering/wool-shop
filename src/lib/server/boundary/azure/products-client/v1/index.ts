@@ -16,37 +16,6 @@ async function products(): Promise<Container> {
   return container
 }
 
-const readAllProducts = (): Promise<ErrorInCosmosDbAccess | AzureProductV1[]> =>
-  products()
-    .then((container) => container.items.readAll<AzureProductV1>().fetchAll())
-    .then(
-      (response) => response.resources as AzureProductV1[],
-      (error) => ErrorInCosmosDbAccess(error),
-    )
-
-const readProductsWithImage = (
-  imagename: string,
-): Promise<AzureProductV1[] | ErrorInCosmosDbAccess> =>
-  products()
-    .then((container) =>
-      container.items
-        .query({
-          query: 'SELECT * FROM Products p WHERE p.image = @imagename',
-          parameters: [{ name: '@imagename', value: imagename }],
-        })
-        .fetchAll(),
-    )
-    .then((response) => response.resources as AzureProductV1[])
-    .catch((err) => ErrorInCosmosDbAccess(err))
-
-const readProduct = (
-  id: string,
-): Promise<AzureProductV1 | ProductWithIdNotFound | ErrorInCosmosDbAccess> =>
-  products()
-    .then((container) => container.item(id, id).read<AzureProductV1>())
-    .then((response) => response.resource || ProductWithIdNotFound(id))
-    .catch((error) => ErrorInCosmosDbAccess(error))
-
 const deleteProduct = (id: string): Promise<Unit | ErrorInCosmosDbAccess> =>
   products()
     .then((container) => container.item(id, id).delete())
@@ -70,9 +39,6 @@ const upsertProduct = (
     .catch((error) => ErrorInCosmosDbAccess(error))
 
 const azureProductV1Client = {
-  readProduct,
-  readProductsWithImage,
-  readAllProducts,
   deleteProduct,
   createProduct,
   upsertProduct,

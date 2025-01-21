@@ -10,15 +10,19 @@ const infoSchema = z.object({
 
 const createProductRequestFormSchema = z.object({
   infoNl: infoSchema,
+  infoEn: infoSchema.or(z.undefined()),
   image: zfd.text(z.string()),
 })
 
+const extractInfo = (name: string, formData: FormData) => ({
+  name: formData.get(`${name}.name`),
+  description: formData.get(`${name}.description`),
+  price: formData.get(`${name}.price`)
+}) 
+
 export const validateCreateProductRequest = (formData: FormData): Promise<z.SafeParseReturnType<CreateProductRequest, CreateProductRequest>> =>
   createProductRequestFormSchema.safeParseAsync({
-    infoNl: {
-      name: formData.get('infoNl.name'),
-      description: formData.get('infoNl.description'),
-      price: formData.get('infoNl.price')
-    },
+    infoNl: extractInfo('infoNl', formData),
+    infoEn: extractInfo('infoEn', formData),
     image: formData.get('image'),
   })
