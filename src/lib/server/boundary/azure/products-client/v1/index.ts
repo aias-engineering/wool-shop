@@ -1,22 +1,11 @@
-import { woolshopDatabase } from './cosmos-db-client'
+import { woolshopDatabase } from '../../cosmos-db-client'
 import {
   ErrorInCosmosDbAccess,
   ProductWithIdNotFound,
 } from '@/lib/server/core/failure'
-import { Product, Unit } from '@/lib/server/core/types'
+import { Unit } from '@/lib/server/core/types'
 import { Container } from '@azure/cosmos'
-import {
-  DeleteProduct,
-  ReadAllProducts,
-  ReadProduct,
-  ReadProductsWithImage,
-  UpsertProduct,
-} from '@/lib/server/core/data-access/products'
-import {
-  CreateProduct,
-  CreateProductRequest,
-  CreateProductResponse,
-} from '@/lib/server/core/data-access'
+import { AzureCreateProductRequestV1, AzureCreateProductResponseV1, AzureProductV1 } from './types'
 
 async function products(): Promise<Container> {
   const database = await woolshopDatabase()
@@ -27,17 +16,17 @@ async function products(): Promise<Container> {
   return container
 }
 
-const readAllProducts = (): Promise<ErrorInCosmosDbAccess | Product[]> =>
+const readAllProducts = (): Promise<ErrorInCosmosDbAccess | AzureProductV1[]> =>
   products()
-    .then((container) => container.items.readAll<Product>().fetchAll())
+    .then((container) => container.items.readAll<AzureProductV1>().fetchAll())
     .then(
-      (response) => response.resources as Product[],
+      (response) => response.resources as AzureProductV1[],
       (error) => ErrorInCosmosDbAccess(error),
     )
 
 const readProductsWithImage = (
   imagename: string,
-): Promise<Product[] | ErrorInCosmosDbAccess> =>
+): Promise<AzureProductV1[] | ErrorInCosmosDbAccess> =>
   products()
     .then((container) =>
       container.items
@@ -47,14 +36,14 @@ const readProductsWithImage = (
         })
         .fetchAll(),
     )
-    .then((response) => response.resources as Product[])
+    .then((response) => response.resources as AzureProductV1[])
     .catch((err) => ErrorInCosmosDbAccess(err))
 
 const readProduct = (
   id: string,
-): Promise<Product | ProductWithIdNotFound | ErrorInCosmosDbAccess> =>
+): Promise<AzureProductV1 | ProductWithIdNotFound | ErrorInCosmosDbAccess> =>
   products()
-    .then((container) => container.item(id, id).read<Product>())
+    .then((container) => container.item(id, id).read<AzureProductV1>())
     .then((response) => response.resource || ProductWithIdNotFound(id))
     .catch((error) => ErrorInCosmosDbAccess(error))
 
@@ -65,27 +54,22 @@ const deleteProduct = (id: string): Promise<Unit | ErrorInCosmosDbAccess> =>
     .catch((error) => ErrorInCosmosDbAccess(error))
 
 const createProduct = (
-  request: CreateProductRequest,
-): Promise<CreateProductResponse | ErrorInCosmosDbAccess> =>
+  request: AzureCreateProductRequestV1,
+): Promise<AzureCreateProductResponseV1 | ErrorInCosmosDbAccess> =>
   products()
     .then((container) => container.items.create(request))
     .then((result) => ({ id: result.item.id, request: request }))
     .catch((error) => ErrorInCosmosDbAccess(error))
 
 const upsertProduct = (
-  product: Product,
+  product: AzureProductV1,
 ): Promise<Unit | ErrorInCosmosDbAccess> =>
   products()
     .then((container) => container.items.upsert(product))
     .then(() => Unit.done)
     .catch((error) => ErrorInCosmosDbAccess(error))
 
-const productClient: ReadProduct &
-  ReadProductsWithImage &
-  ReadAllProducts &
-  DeleteProduct &
-  CreateProduct &
-  UpsertProduct = {
+const azureProductV1Client = {
   readProduct,
   readProductsWithImage,
   readAllProducts,
@@ -94,4 +78,4 @@ const productClient: ReadProduct &
   upsertProduct,
 }
 
-export default productClient
+export default azureProductV1Client
