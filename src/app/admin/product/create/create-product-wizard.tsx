@@ -2,163 +2,77 @@
 
 import Button from '@/app/components/atoms/button'
 import Grid from '@/app/components/atoms/grid'
-import Image from 'next/image'
-import ImageUploadButton, {
-  UploadedImage,
-} from '@/app/components/atoms/image-upload-button'
-import Input, { toId } from '@/app/components/atoms/input'
-import Label from '@/app/components/atoms/label'
-import Textarea from '@/app/components/atoms/textarea'
 import Title from '@/app/components/atoms/title'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/app/components/molecules/card'
-import { postImage } from '@/lib/client/post-image'
-import { Failure } from '@/lib/server/core/failure'
-import { MoveLeft, Save } from 'lucide-react'
+import { Save } from 'lucide-react'
 import { useActionState, useState } from 'react'
-import { match, P } from 'ts-pattern'
-import { createProductOnServer } from './actions'
+import { match } from 'ts-pattern'
+import { createProductOnServer, CreateProductState } from './actions'
 import Spinner from '@/app/components/atoms/spinner'
-import CurrencyInput from '@/app/components/atoms/currency-input'
+import { ImageCard, ImageCardState } from './image-card'
+import { ProductInfoCard, ProductInfoState } from './product-info-card'
 
 interface Props {
   urls: string[]
 }
 
-type WizardState =
-  | { step: 'idle' }
-  | { step: 'image-uploaded'; imageUrl: string }
-  | { step: 'error'; failure: Failure }
-
 export function CreateProductWizard({}: Props) {
-  const [state, setState] = useState<WizardState>({ step: 'idle' })
+  const [imageCardState, ] = useState<ImageCardState>('idle')
+  const [nlProductInfoState, setNlProductInfoState] = useState<ProductInfoState>('hide')
+  const [enProductInfoState, setEnProductInfoState] = useState<ProductInfoState>('hide')
   const [creationState, formAction, pending] = useActionState(
     createProductOnServer,
     { step: 'idle' },
   )
-
-  const handleImageUploaded = (image: UploadedImage) =>
-    fetch(image.dataUrl)
-      .then((response) => response.blob())
-      .then((blob) => postImage({ data: blob, name: image.name }))
-      .then((either) =>
-        match(either)
-          .with(P.string, (url) =>
-            setState({ step: 'image-uploaded', imageUrl: url }),
-          )
-          .otherwise((failure) => setState({ step: 'error', failure })),
-      )
 
   return (
     <form action={formAction}>
       <Title type="h3" className="py-4">
         Een product creëren
       </Title>
-      <Grid className="grid-cols-1 sm:grid-cols-2 gap-2">
-        {match(state)
-          .with({ step: 'idle' }, ({}) => (
+      <Grid className="grid-rows-2 grid-cols-1 xl:grid-cols-2 gap-2">
+        <ImageCard className='row-span-2' imageCardState={imageCardState} initialUploadDone={() => setNlProductInfoState('idle')} pending={pending} />
+        <ProductInfoCard name='infoNl' title='Productinformatie in nederlands' productInfoState={nlProductInfoState} pending={pending} >
+          {enProductInfoState === 'hide' && (
             <>
-              <Card>
-                <CardHeader>
-                  <CardTitle>
-                    <Title type="h4">Een afbeelding kiezen</Title>
-                  </CardTitle>
-                  <CardDescription>
-                    In een eerste stap moeten we een afbeelding kiezen voor ons
-                    nieuwe product. Kies uit de volgende opties:
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ImageUploadButton
-                    onImageAtomUploaded={async () => {}}
-                    onImageUploaded={handleImageUploaded}
-                  />
-                </CardContent>
-              </Card>
+              <Button type='button' variant='outline' onClick={() => setEnProductInfoState('idle')} disabled={pending}>
+                voeg Engelse info toe
+              </Button>
+              <SaveButton creationState={creationState} pending={pending} />
             </>
-          ))
-          .with({ step: 'image-uploaded' }, ({ imageUrl }) => (
-            <>
-              <Card>
-                <CardHeader>
-                  <CardTitle>
-                    <Title type="h4">Product afbeelding</Title>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <Image
-                    src={imageUrl}
-                    alt={imageUrl}
-                    sizes="(min-width: 640px) 50vw, 100vw"
-                    width={200}
-                    height={300}
-                    className="w-full"
-                  />
-                  <Input type="hidden" name="image" value={imageUrl} required />
-                </CardContent>
-                <CardFooter>
-                  <Button
-                    onClick={() => setState({ step: 'idle' })}
-                    type="button"
-                    disabled={pending}
-                  >
-                    <MoveLeft />
-                    Kies een andere afbeelding
-                  </Button>
-                </CardFooter>
-              </Card>
-              <Card>
-                <CardHeader>
-                  <CardTitle>
-                    <Title type="h4">Productinformatie in nederlands</Title>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <Label htmlFor={toId('infoNl.name')}>naam</Label>
-                  <Input name="infoNl.name" type="text" disabled={pending} required />
-                  <Label htmlFor={toId('infoNl.description')}>beschrijving</Label>
-                  <Textarea name="infoNl.description" disabled={pending}></Textarea>
-                  <Label htmlFor={toId('infoNl.price')}>prijs in euro</Label>
-                  <CurrencyInput name="infoNl.price" disabled={pending} />
-                </CardContent>
-                <CardFooter>
-                  {match(creationState)
-                    .with({ step: 'idle' }, () => (
-                      <Button type="submit" disabled={pending}>
-                        {pending ? <Spinner /> : <Save />}
-                        Opslaan
-                      </Button>
-                    ))
-                    .with({ step: 'failure' }, ({ failure }) => (
-                      <div>
-                        {failure.code} {failure.reason}
-                      </div>
-                    ))
-                    .with({ step: 'validation-failure' }, ({ failure }) => (
-                      <div>
-                        {failure.code} {failure.reason}
-                        {failure.error.message}
-                      </div>
-                    ))
-                    .with({ step: 'done' }, () => <div>done</div>)
-                    .exhaustive()}
-                </CardFooter>
-              </Card>
-            </>
-          ))
-          .with({ step: 'error' }, ({ failure }) => (
-            <div>
-              {failure.code} {failure.reason}
-            </div>
-          ))
-          .exhaustive()}
+          )}
+        </ProductInfoCard>
+        <ProductInfoCard name='infoEn' title='Productinformatie in engels' productInfoState={enProductInfoState} pending={pending}>
+          <SaveButton creationState={creationState} pending={pending} />
+        </ProductInfoCard>
       </Grid>
     </form>
   )
+}
+
+interface SaveButtonProps {
+  creationState: CreateProductState,
+  pending: boolean
+}
+
+function SaveButton({ creationState, pending }: SaveButtonProps) {
+  return match(creationState)
+    .with({ step: 'idle' }, () => (
+      <Button type="submit" disabled={pending}>
+        {pending ? <Spinner /> : <Save />}
+        Opslaan
+      </Button>
+    ))
+    .with({ step: 'failure' }, ({ failure }) => (
+      <div>
+        {failure.code} {failure.reason}
+      </div>
+    ))
+    .with({ step: 'validation-failure' }, ({ failure }) => (
+      <div>
+        {failure.code} {failure.reason}
+        {failure.error.message}
+      </div>
+    ))
+    .with({ step: 'done' }, () => <div>done</div>)
+    .exhaustive()
 }

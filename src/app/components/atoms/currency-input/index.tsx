@@ -4,13 +4,15 @@ import { MightHaveClassName } from '@/lib/client/react'
 import clsx from 'clsx'
 import { useState } from 'react'
 import { toId } from '../input'
-import { Euro } from 'lucide-react'
+import { DollarSign, Euro } from 'lucide-react'
+import { match } from 'ts-pattern'
 
 interface Props extends MightHaveClassName {
   defaultValue?: string | number
   disabled?: boolean
   id?: string
   name: string
+  currency?: 'euro' | 'dollar'
 }
 
 const parseDefaultValue = (
@@ -31,6 +33,7 @@ export default function CurrencyInput({
   disabled,
   id,
   name,
+  currency = 'euro'
 }: Props) {
   const [defaultLeft, defaultRight, defaultFull] =
     parseDefaultValue(defaultValue)
@@ -88,7 +91,10 @@ export default function CurrencyInput({
         onChange={(e) => handleUpdate([left, e.target.value])}
       />
       <div className="flex items-end py-1">
-        <Euro />
+        {match(currency)
+          .with('euro', () => (<Euro />))
+          .with('dollar', () => (<DollarSign />))
+          .exhaustive()}
       </div>
       <input id={id || toId(name)} type="hidden" name={name} value={full} />
     </div>

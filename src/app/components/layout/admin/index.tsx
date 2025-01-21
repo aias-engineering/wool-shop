@@ -38,7 +38,7 @@ export function AdminMain({ children }: Props) {
       <Separator className="my-4" />
       <div className="flex flex-col md:flex-row">
         <div className="pb-4">
-          <Navigation className="md:flex-col md:w-40 lg:w-60">
+          <Navigation className="md:flex-col md:w-40">
             <NavigationLink href="/admin">Home</NavigationLink>
             <NavigationLink href="/admin/product">Producten</NavigationLink>
             <NavigationLink href="/admin/wishlist">
