@@ -18,7 +18,7 @@ import {
 import Link from 'next/link'
 import { useAtom } from 'jotai'
 import Shop from './components/organism/shop'
-import { useLocale, useTranslations } from 'next-intl'
+import { useTranslations } from 'next-intl'
 
 interface Props {
   products: Product[]
@@ -26,7 +26,6 @@ interface Props {
 
 export default function ProductsShop({ products }: Props) {
   const [wishlist, setWishlist] = useAtom(wishlistAtom)
-  const locale = useLocale()
   const translations = useTranslations('home')
 
   return (

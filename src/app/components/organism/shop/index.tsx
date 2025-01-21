@@ -31,6 +31,7 @@ import {
 } from './store'
 import WishListItem from './wish-list-item'
 import { HasChildren } from '@/lib/client/react'
+import { useTranslations } from 'next-intl'
 
 interface Props extends HasChildren {
   wishlistAtom: PrimitiveAtom<WishlistItem[]>
@@ -41,6 +42,7 @@ export default function Shop({ children, wishlistAtom }: Props) {
   const [wishlist, setWishlist] = useAtom(wishlistAtom)
   const [saveWishlistState, setSaveWishlistState] =
     useState<SaveWishlistState>('idle')
+  const translations = useTranslations('shop')
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
@@ -74,24 +76,24 @@ export default function Shop({ children, wishlistAtom }: Props) {
               className="md:w-[40rem] lg:w-[48rem] xl:w-[80rem] mx-auto"
             >
               <ScrollText />
-              wensenlijst
+              {translations('wishlist')}
             </Button>
           </SheetTrigger>
         </div>
-        <SheetContent side="right" className="bg-white w-full flex flex-col">
+        <SheetContent side="right" className="bg-white flex flex-col">
           <form onSubmit={handleSubmit}>
             <SheetHeader>
-              <SheetTitle>wensenlijst</SheetTitle>
-              <SheetDescription>uw wensenlijst</SheetDescription>
+              <SheetTitle>{translations('wishlist')}</SheetTitle>
+              <SheetDescription>{translations('description')}</SheetDescription>
             </SheetHeader>
             <div>
               {match(wishlist)
                 .with([], () => (
                   <>
-                    <Paragraph>Je wensenlijstje is leeg</Paragraph>
+                    <Paragraph>{translations('wishlist-empty')}</Paragraph>
                     <SheetClose asChild>
                       <Button type="button" className="w-full">
-                        Bekijk onze producten
+                        {translations('browse-products')}
                       </Button>
                     </SheetClose>
                   </>
@@ -130,11 +132,9 @@ export default function Shop({ children, wishlistAtom }: Props) {
                     {match(saveWishlistState)
                       .with(P.union('idle', 'pending'), (state) => (
                         <>
-                          <Title type="h3">Doe een wens</Title>
+                          <Title type="h3">{translations('do-a-wish.title')}</Title>
                           <Paragraph>
-                            Laat ons weten wat uw wensen zijn. Vul uw
-                            contactgegevens in en sla uw verlanglijstje op. Wij
-                            nemen contact met u op.
+                            {translations('do-a-wish.description')}
                           </Paragraph>
                           <div className="flex flex-col gap-4 pt-10">
                             <Label htmlFor={toId('email')}>email</Label>
@@ -147,12 +147,12 @@ export default function Shop({ children, wishlistAtom }: Props) {
                             />
                             {match(state)
                               .with('idle', () => (
-                                <Button type="submit">Opslaan</Button>
+                                <Button type="submit">{translations('do-a-wish.save')}</Button>
                               ))
                               .with('pending', () => (
                                 <Button type="submit" disabled>
                                   <Spinner />
-                                  Opslaan
+                                  {translations('do-a-wish.title')}
                                 </Button>
                               ))
                               .exhaustive()}
@@ -161,14 +161,14 @@ export default function Shop({ children, wishlistAtom }: Props) {
                       ))
                       .with('submitted', () => (
                         <>
-                          <Title type="h3">Dankejewel</Title>
-                          <Paragraph>wij nemen contact met u op</Paragraph>
+                          <Title type="h3">{translations('thank-you.title')}</Title>
+                          <Paragraph>{translations('thank-you.description')}</Paragraph>
                           <SheetClose asChild>
                             <Button
                               type="button"
                               onClick={() => setSaveWishlistState('idle')}
                             >
-                              Verder bladeren
+                              {translations('thank-you.continue')}
                             </Button>
                           </SheetClose>
                         </>

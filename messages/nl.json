@@ -1,5 +1,24 @@
 {
   "home": {
-    "welcome": "Hoi \nWij zijn een kleine wolfabriek uit Jordanië. Je kunt hier niets bestellen, maar bekijk in ieder geval onze producten - en vertel ons over je wensen. \nDit zijn onze producten:"
+    "welcome": "Hoi \nWij zijn een kleine wolfabriek uit Jordanië. Je kunt hier niets bestellen, maar bekijk in ieder geval onze producten - en vertel ons over je wensen. \nDit zijn onze producten:",
+    "empty": "Oeps, we hebben onze producten nog niet gedefinieerd. Kom later nog eens bij ons terug."
+  },
+  "shop": {
+    "wishlist": "wensenlijst",
+    "description": "uw wensenlijst",
+    "wishlist-empty": "Je wensenlijstje is leeg",
+    "browse-products": "Bekijk onze producten",
+    "do-a-wish": {
+      "title": "Doe een wens",
+      "description": "Laat ons weten wat uw wensen zijn. Vul uw contactgegevens in en sla uw verlanglijstje op. Wij nemen contact met u op.",
+      "save": "Opslaan"
+    },
+    "thank-you": {
+      "title": "Dank je wel",
+      "description": "wij nemen contact met u op",
+      "continue": "Verder bladeren"
+    },
+    "back": "terug",
+    "add-to-wishlist": "naar wensenlijst"
   }
 }

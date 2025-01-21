@@ -11,8 +11,8 @@ import { match, P } from 'ts-pattern'
 import ProductsShop from './products-shop'
 import { unstable_cache } from 'next/cache'
 import { SessionProvider } from 'next-auth/react'
-import { ChangeLang } from './ChangeLang'
 import { LangTrigger } from './components/atoms/lang-trigger'
+import { getTranslations } from 'next-intl/server'
 
 const get = unstable_cache(
   () => withAzureDataAccess((dataAccess) => getAllProducts(dataAccess)),
@@ -20,10 +20,9 @@ const get = unstable_cache(
   { revalidate: 60, tags: ['products'] },
 )
 
-
-
 export default async function Home() {
   const products = await get()
+  const translations = await getTranslations('home')
   
   return (
     <SessionProvider>
@@ -38,8 +37,7 @@ export default async function Home() {
         {match(products)
           .with([], () => (
             <Small>
-              Oeps, we hebben onze producten nog niet gedefinieerd. Kom later
-              nog eens bij ons terug.
+              {translations('empty')}
             </Small>
           ))
           .with(P.array(), (products) => (

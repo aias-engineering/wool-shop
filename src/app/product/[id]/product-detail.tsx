@@ -17,6 +17,7 @@ import Link from 'next/link'
 import Shop from '@/app/components/organism/shop'
 import Space from '@/app/components/atoms/space'
 import Small from '@/app/components/atoms/small'
+import { useTranslations } from 'next-intl'
 
 interface Props {
   product: Product
@@ -24,6 +25,7 @@ interface Props {
 
 export default function ProductDetail({ product }: Props) {
   const [wishlist, setWishlist] = useAtom(wishlistAtom)
+  const translations = useTranslations('shop')
 
   const matchingWishlistItem = wishlist.find((x) => x.product.id === product.id)
 
@@ -31,7 +33,7 @@ export default function ProductDetail({ product }: Props) {
     <Shop wishlistAtom={wishlistAtom}>
       <Link href={'/'}>
         <div className="flex gap-1 pb-4 items-center">
-          <MoveLeft className="h-4" /> <Small>Terug</Small>
+          <MoveLeft className="h-4" /> <Small>{translations('back')}</Small>
         </div>
       </Link>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:grid-rows-[50px_auto]">
@@ -79,7 +81,7 @@ export default function ProductDetail({ product }: Props) {
                 setWishlist((prev) => addToWishlist(prev, product))
               }
             >
-              naar wensenlijst
+              {translations('add-to-wishlist')}
               <ScrollText />
             </Button>
           )}

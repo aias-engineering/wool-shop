@@ -1,5 +1,24 @@
 {
   "home": {
-    "welcome": "Hi there \nWe are a small woolshop from Jordania. You cannot order stuff here, but you an browser our products - let us know about your wishes. \nThese are our products:"
+    "welcome": "Hi there \nWe are a small woolshop from Jordania. You cannot order stuff here, but you an browser our products - let us know about your wishes. \nThese are our products:",
+    "empty": "Oops! We haven't yet created our products. Visit us again later."
+  },
+  "shop": {
+    "wishlist": "Wishlist",
+    "description": "Your wishlist",
+    "wishlist-empty": "Your wishlist is empty",
+    "browse-products": "Browser our products",
+    "do-a-wish": {
+      "title": "Do a wish",
+      "description": "Let us know about your wishes. Fill in your contact information and send us your wishlist. We will contact you.",
+      "save": "Send"
+    },
+    "thank-you": {
+      "title": "Thank you",
+      "description": "We will contact you.",
+      "continue": "Continue browsing"
+    },
+    "back": "terug",
+    "add-to-wishlist": "Add to wishlist"
   }
 }
