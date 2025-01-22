@@ -32,7 +32,7 @@ export const validateCreateProductRequest = (
 ): Promise<SafeParseReturnType<CreateProductRequest, CreateProductRequest>> =>
   createProductRequestFormSchema.safeParseAsync({
     infoNl: extractInfo('infoNl', formData),
-    infoEn: extractInfo('infoEn', formData),
+    infoEn: extractInfoOrUndefined('infoEn', formData),
     image: formData.get('image'),
   })
 
