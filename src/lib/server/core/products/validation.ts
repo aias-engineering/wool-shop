@@ -21,6 +21,14 @@ const extractInfo = (name: string, formData: FormData) => ({
   price: formData.get(`${name}.price`),
 })
 
+const extractInfoOrUndefined = (name: string, formData: FormData) => {
+  const data = extractInfo(name, formData)
+  if (data.name || data.description || data.price)
+      return data
+  else
+    return undefined
+}
+
 export const validateCreateProductRequest = (
   formData: FormData,
 ): Promise<SafeParseReturnType<CreateProductRequest, CreateProductRequest>> =>
@@ -38,11 +46,11 @@ const productFormSchema = z.object({
 })
 
 export const validateProduct = (
-    formData: FormData,
-  ): Promise<SafeParseReturnType<Product, Product>> =>
-    productFormSchema.safeParseAsync({
-      id: formData.get('id'),
-      infoNl: extractInfo('infoNl', formData),
-      infoEn: extractInfo('infoEn', formData),
-      image: formData.get('image'),
-    })
+  formData: FormData,
+): Promise<SafeParseReturnType<Product, Product>> =>
+  productFormSchema.safeParseAsync({
+    id: formData.get('id'),
+    infoNl: extractInfo('infoNl', formData),
+    infoEn: extractInfoOrUndefined('infoEn', formData),
+    image: formData.get('image'),
+  })
