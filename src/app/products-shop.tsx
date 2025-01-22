@@ -63,14 +63,14 @@ export default function ProductsShop({ products }: Props) {
             return (
               <div
                 key={product.id}
-                className="flex flex-col gap-2 min-h-[24rem] md:h-[26rem] lg:h-[24rem] xl:h-[36rem]"
+                className="flex flex-col gap-2 min-h-[24rem] md:h-[27rem] lg:h-[25rem] xl:h-[36rem]"
               >
                 <Link href={`/product/${product.id}`}>
                   <ImageFrame className="h-[16rem] md:h-[19rem] lg:h-[17rem] xl:h-[29rem]">
                     <Image
                       src={product.image}
                       alt={productInfo.name}
-                      sizes="(min-width:1280px) 310px, 172px"
+                      sizes="(min-width:1280px) 310px, (min-width:640px) 304px, 172px"
                       width={200}
                       height={300}
                       className="sm:w-full"
