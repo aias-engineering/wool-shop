@@ -20,52 +20,57 @@ import { validateCreateProductRequest } from '@/lib/server/core/products/validat
 
 export type CreateProductState =
   | { step: 'idle' }
-  | { step: 'done', response: CreateProductResponse }
-  | { step: 'validation-failure', failure: ProductValidationFailed }
-  | { step: 'failure', failure: ErrorInCosmosDbAccess }
+  | { step: 'done'; response: CreateProductResponse }
+  | { step: 'validation-failure'; failure: ProductValidationFailed }
+  | { step: 'failure'; failure: ErrorInCosmosDbAccess }
 
 export const createProductOnServer = async (
   prevState: CreateProductState,
   formData: FormData,
-): Promise<CreateProductState> => 
+): Promise<CreateProductState> =>
   validateCreateProductRequest(formData)
-  .then(result => result.success
-    ? result.data
-    : ProductValidationFailed(result.error)
-  )
-  .then(either => isCreateProductRequest(either)
-    ? withAzureDataAccess(dataAccess => createProduct(either, dataAccess))
-    : either
-  )
-  .then((either) => match(either)
-    .with(
-      P.when(isCreateProductResponse),
-      (response) => ({
-        step: 'done',
-        response,
-      }) as CreateProductState
+    .then((result) =>
+      result.success ? result.data : ProductValidationFailed(result.error),
     )
-    .with(
-      P.when(isProductValidationFailed),
-      (failure) => ({
-        step: 'validation-failure',
-        failure,
-      }) as CreateProductState
+    .then((either) =>
+      isCreateProductRequest(either)
+        ? withAzureDataAccess((dataAccess) => createProduct(either, dataAccess))
+        : either,
     )
-    .with(
-      P.when(isErrorInCosmosDbAccess),
-      (failure) => ({
-        step: 'failure',
-        failure,
-      }) as CreateProductState
+    .then((either) =>
+      match(either)
+        .with(
+          P.when(isCreateProductResponse),
+          (response) =>
+            ({
+              step: 'done',
+              response,
+            }) as CreateProductState,
+        )
+        .with(
+          P.when(isProductValidationFailed),
+          (failure) =>
+            ({
+              step: 'validation-failure',
+              failure,
+            }) as CreateProductState,
+        )
+        .with(
+          P.when(isErrorInCosmosDbAccess),
+          (failure) =>
+            ({
+              step: 'failure',
+              failure,
+            }) as CreateProductState,
+        )
+        .exhaustive(),
     )
-    .exhaustive())
-  .then(state => {
-    if (state.step === 'done') {
-      revalidatePath('')
-      revalidatePath('/admin/product')
-      revalidateTag('products')
-      redirect('/admin/product')
-    }
-    return state
-  })
+    .then((state) => {
+      if (state.step === 'done') {
+        revalidatePath('')
+        revalidatePath('/admin/product')
+        revalidateTag('products')
+        redirect('/admin/product')
+      }
+      return state
+    })

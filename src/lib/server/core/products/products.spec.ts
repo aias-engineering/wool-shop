@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { getCurrency, hasProductInfo } from '.'
+import { getCurrency } from '.'
 
 test('getCurrency with en should return $', async () => {
   const currency = getCurrency('en')
