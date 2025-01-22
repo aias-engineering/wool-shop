@@ -26,6 +26,10 @@ A small wool-shop not intended to order stuff, but to browse products done by a 
 - Azure Cosmos DB
 - Imagekit.io as CDN
 
+## Good stuff
+- Isolation of BlobStorage and DB paid out
+- shadcn/ui is awesome
+
 ## Learnings
 
 - I wouldn't do it alone anymore
