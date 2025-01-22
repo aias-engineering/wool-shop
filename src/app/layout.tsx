@@ -5,7 +5,6 @@ import './globals.css'
 import { HasChildren } from '@/lib/client/react'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages } from 'next-intl/server'
-import { SessionProvider } from 'next-auth/react'
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',

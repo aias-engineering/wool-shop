@@ -4,8 +4,14 @@ import Button from '@/app/components/atoms/button'
 import Grid from '@/app/components/atoms/grid'
 import Spinner from '@/app/components/atoms/spinner'
 import Title from '@/app/components/atoms/title'
-import { ImageCard, ImageCardState } from '@/app/components/molecules/image-card'
-import { ProductInfoCard, ProductInfoState } from '@/app/components/molecules/product-info-card'
+import {
+  ImageCard,
+  ImageCardState,
+} from '@/app/components/molecules/image-card'
+import {
+  ProductInfoCard,
+  ProductInfoState,
+} from '@/app/components/molecules/product-info-card'
 import { Save } from 'lucide-react'
 import { useActionState, useState } from 'react'
 import { match } from 'ts-pattern'
@@ -66,15 +72,13 @@ export function CreateProductWizard({}: Props) {
         >
           <>
             <Button
-                type="button"
-                variant="outline"
-                onClick={() =>
-                  setEnProductInfoState('hide')
-                }
-                disabled={pending}
-              >
-                annuleeren
-              </Button>
+              type="button"
+              variant="outline"
+              onClick={() => setEnProductInfoState('hide')}
+              disabled={pending}
+            >
+              annuleeren
+            </Button>
             <SaveButton creationState={creationState} pending={pending} />
           </>
         </ProductInfoCard>
