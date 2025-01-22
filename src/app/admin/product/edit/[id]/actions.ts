@@ -5,13 +5,13 @@ import {
   isFailure,
   ProductValidationFailed,
 } from '@/lib/server/core/failure'
-import { ProductFormSchema } from './validation'
-import { isProduct, Product, saveProduct } from '@/lib/server/core/products'
+import { isProduct, saveProduct } from '@/lib/server/core/products'
 import { withAzureDataAccess } from '@/lib/server'
 import { match, P } from 'ts-pattern'
 import { isUnit } from '@/lib/server/core/types'
 import { revalidatePath, revalidateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { validateProduct } from '@/lib/server/core/products/validation'
 
 export type SaveProductState = 'idle' | { state: 'failure'; failure: Failure }
 
@@ -19,25 +19,9 @@ export async function saveProductOnServer(
   prev: SaveProductState,
   formData: FormData,
 ): Promise<SaveProductState> {
-  return ProductFormSchema.safeParseAsync({
-    id: formData.get('id'),
-    name: formData.get('name'),
-    description: formData.get('description') || null,
-    price: formData.get('price'),
-    image: formData.get('image'),
-  })
-    .then((result) =>
-      result.success
-        ? ({
-            id: result.data.id,
-            infoNl: {
-              name: result.data.name,
-              description: result.data.description,
-              price: result.data.price,
-            },
-            image: result.data.image,
-          } as Product)
-        : ProductValidationFailed(result.error),
+  return validateProduct(formData)
+    .then((either) =>
+      either.success ? either.data : ProductValidationFailed(either.error),
     )
     .then(async (either) =>
       isProduct(either)
@@ -53,10 +37,10 @@ export async function saveProductOnServer(
           redirect('/admin/product')
           return 'idle' as SaveProductState
         })
-        .with(
-          P.when(isFailure),
-          (failure) => ({ state: 'failure', failure }) as SaveProductState,
-        )
+        .with(P.when(isFailure), (failure) => {
+          console.error('%o', failure)
+          return { state: 'failure', failure } as SaveProductState
+        })
         .exhaustive(),
     )
 }

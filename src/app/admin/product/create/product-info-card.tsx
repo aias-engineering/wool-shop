@@ -11,9 +11,13 @@ import {
   CardTitle,
 } from '@/app/components/molecules/card'
 import { HasChildren } from '@/lib/client/react'
+import { Product } from '@/lib/server/core/products'
 import { match } from 'ts-pattern'
 
-export type ProductInfoState = 'hide' | 'idle'
+export type ProductInfoState =
+  | 'hide'
+  | 'idle'
+  | { state: 'preloaded'; product: Product }
 
 interface Props extends HasChildren {
   name: 'infoNl' | 'infoEn'
@@ -58,6 +62,47 @@ export function ProductInfoCard({
                 name={`${name}.price`}
                 currency={name === 'infoEn' ? 'dollar' : 'euro'}
                 disabled={pending}
+              />
+            </CardContent>
+            <CardFooter className="flex flex-row justify-end gap-2">
+              {children}
+            </CardFooter>
+          </Card>
+        ))
+        .with({ state: 'preloaded' }, ({ product }) => (
+          <Card>
+            <CardHeader>
+              <CardTitle>
+                <Title type="h4">{title}</Title>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Label htmlFor={toId('id')}>id</Label>
+              <span>{product.id}</span>
+              <Input
+                name="id"
+                type="hidden"
+                defaultValue={product.id}
+                required
+              />
+              <Label htmlFor={toId(`${name}.name`)}>naam</Label>
+              <Input
+                name={`${name}.name`}
+                type="text"
+                disabled={pending}
+                defaultValue={product[name]?.name}
+                required
+              />
+              <Label htmlFor={toId(`${name}.description`)}>beschrijving</Label>
+              <Textarea
+                name={`${name}.description`}
+                defaultValue={product[name]?.description || undefined}
+                disabled={pending}
+              ></Textarea>
+              <Label htmlFor={toId(`${name}.price`)}>prijs in euro</Label>
+              <CurrencyInput
+                name={`${name}.price`}
+                defaultValue={product[name]?.price}
               />
             </CardContent>
             <CardFooter className="flex flex-row justify-end gap-2">

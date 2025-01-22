@@ -1,146 +1,97 @@
 'use client'
 
-import CurrencyInput from '@/app/components/atoms/currency-input'
 import Grid from '@/app/components/atoms/grid'
-import ImageUploadButton, {
-  UploadedImage,
-} from '@/app/components/atoms/image-upload-button'
-import Input, { toId } from '@/app/components/atoms/input'
-import Title from '@/app/components/atoms/title'
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
-} from '@/app/components/molecules/card'
-import { Failure } from '@/lib/client/failure'
-import { postImage } from '@/lib/client/post-image'
 import { Product } from '@/lib/server/core/products'
-import Image from 'next/image'
 import { useActionState, useState } from 'react'
-import { match, P } from 'ts-pattern'
-import { saveProductOnServer } from './actions'
-import Label from '@/app/components/atoms/label'
-import Textarea from '@/app/components/atoms/textarea'
+import { match } from 'ts-pattern'
+import { saveProductOnServer, SaveProductState } from './actions'
 import Button from '@/app/components/atoms/button'
 import Spinner from '@/app/components/atoms/spinner'
 import { Save } from 'lucide-react'
+import { ImageCard, ImageCardState } from '../../create/image-card'
+import {
+  ProductInfoCard,
+  ProductInfoState,
+} from '../../create/product-info-card'
 
 interface Props {
   product: Product
 }
 
-type ImageUploadState =
-  | { state: 'idle'; imageUrl: string }
-  | { state: 'failure'; failure: Failure }
-
 export function EditProduct({ product }: Props) {
+  const [imageCardState] = useState<ImageCardState>({
+    state: 'uploaded',
+    imageUrl: product.image,
+  })
+  const [nlProductInfoState] = useState<ProductInfoState>({
+    state: 'preloaded',
+    product,
+  })
+  const [enProductInfoState, setEnProductInfoState] =
+    useState<ProductInfoState>(
+      product.infoEn ? { state: 'preloaded', product } : 'hide',
+    )
   const [saveProductState, formAction, pending] = useActionState(
     saveProductOnServer,
     'idle',
   )
-  const [imageUploadState, setImageUploadState] = useState<ImageUploadState>({
-    state: 'idle',
-    imageUrl: product.image,
-  })
-
-  const handleImageUploaded = (image: UploadedImage) =>
-    fetch(image.dataUrl)
-      .then((response) => response.blob())
-      .then((blob) =>
-        postImage({ data: blob, name: image.name }).then((either) =>
-          match(either)
-            .with(P.string, (url) =>
-              setImageUploadState({ state: 'idle', imageUrl: url }),
-            )
-            .otherwise((failure) =>
-              setImageUploadState({ state: 'failure', failure }),
-            ),
-        ),
-      )
 
   return (
     <form action={formAction}>
       <Grid className="grid-cols-1 xl:grid-cols-3 gap-2">
-        <Card className="grid">
-          <CardHeader>
-            <CardTitle>
-              <Title type="h4">Product afbeelding</Title>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {match(imageUploadState)
-              .with({ state: 'idle' }, ({ imageUrl }) => (
-                <>
-                  <Image
-                    src={imageUrl}
-                    alt={imageUrl}
-                    sizes="(min-width:1280px) 18rem, (min-with:1028px) 26rem, (min-width: 768px) 23rem, 19rem"
-                    width={200}
-                    height={300}
-                    className="w-full"
-                    priority
-                  />
-                  <Input type="hidden" name="image" value={imageUrl} required />
-                </>
-              ))
-              .with({ state: 'failure' }, ({ failure }) => (
-                <div>
-                  {failure.code} {failure.reason}
-                </div>
-              ))
-              .exhaustive()}
-          </CardContent>
-          <CardFooter className="justify-end">
-            <ImageUploadButton
-              onImageAtomUploaded={async () => {}}
-              onImageUploaded={handleImageUploaded}
-            />
-          </CardFooter>
-        </Card>
-        <Card className="grid col-span-2">
-          <CardHeader>
-            <Title type="h4">Productinformatie in nederlands</Title>
-          </CardHeader>
-          <CardContent>
-            <Label htmlFor={toId('id')}>id</Label>
-            <span>{product.id}</span>
-            <Input name="id" type="hidden" defaultValue={product.id} required />
-            <Label htmlFor={toId('name')}>naam</Label>
-            <Input
-              name="name"
-              type="text"
-              disabled={pending}
-              defaultValue={product.infoNl.name}
-              required
-            />
-            <Label htmlFor={toId('description')}>beschrijving</Label>
-            <Textarea
-              name="description"
-              defaultValue={product.infoNl.description || undefined}
-              disabled={pending}
-            ></Textarea>
-            <Label htmlFor={toId('price')}>prijs in euro</Label>
-            <CurrencyInput name="price" defaultValue={product.infoNl.price} />
-          </CardContent>
-          <CardFooter className="justify-end">
-            {match(saveProductState)
-              .with('idle', () => (
-                <Button type="submit" disabled={pending}>
-                  {pending ? <Spinner /> : <Save />}
-                  Opslaan
-                </Button>
-              ))
-              .with({ state: 'failure' }, ({ failure }) => (
-                <div>
-                  {failure.code} {failure.reason}
-                </div>
-              ))
-              .exhaustive()}
-          </CardFooter>
-        </Card>
+        <ImageCard imageCardState={imageCardState} pending={pending} />
+        <ProductInfoCard
+          name="infoNl"
+          pending={pending}
+          productInfoState={nlProductInfoState}
+          title="Productinformatie in nederlands"
+        >
+          {enProductInfoState === 'hide' && (
+            <>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() =>
+                  setEnProductInfoState({ state: 'preloaded', product })
+                }
+                disabled={pending}
+              >
+                voeg Engelse info toe
+              </Button>
+              <SaveButton saveState={saveProductState} pending={pending} />
+            </>
+          )}
+        </ProductInfoCard>
+        <ProductInfoCard
+          name="infoEn"
+          pending={pending}
+          productInfoState={enProductInfoState}
+          title="Productinformatie in engels"
+        >
+          <SaveButton saveState={saveProductState} pending={pending} />
+        </ProductInfoCard>
       </Grid>
     </form>
   )
+}
+
+interface SaveButtonProps {
+  saveState: SaveProductState
+  pending: boolean
+}
+
+function SaveButton({ saveState, pending }: SaveButtonProps) {
+  return match(saveState)
+    .with('idle', () => (
+      <Button type="submit" disabled={pending}>
+        {pending ? <Spinner /> : <Save />}
+        Opslaan
+      </Button>
+    ))
+    .with({ state: 'failure' }, ({ failure }) => (
+      <div>
+        {failure.code} {failure.reason}
+      </div>
+    ))
+    .exhaustive()
 }
