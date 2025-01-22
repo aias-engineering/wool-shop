@@ -29,7 +29,7 @@ export default function WishListItem({
     <div className={clsx('flex flex-col gap-2 py-4', className)}>
       <Title type="h3">{item.product.name}</Title>
       <Paragraph className="text-end">
-        {item.product.price} {getCurrency(locale)}
+        {item.product.price.toFixed(2)} {getCurrency(locale)}
       </Paragraph>
       <div className="grid grid-cols-3">
         {amount > 0 ? (
