@@ -30,6 +30,8 @@ A small wool-shop not intended to order stuff, but to browse products done by a 
 - Isolation of BlobStorage and DB paid out
 - shadcn/ui is awesome
 
+## Demo
+https://wool-shop.vercel.app/
 ## Learnings
 
 - I wouldn't do it alone anymore
