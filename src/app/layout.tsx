@@ -36,11 +36,9 @@ export default async function RootLayout({ children }: Readonly<HasChildren>) {
           `h-dvh bg-amber-50/10`,
         )}
       >
-        <SessionProvider>
-          <NextIntlClientProvider messages={messages}>
-            {children}
-          </NextIntlClientProvider>
-        </SessionProvider>
+        <NextIntlClientProvider messages={messages}>
+          {children}
+        </NextIntlClientProvider>
       </body>
     </html>
   )

@@ -1,7 +1,8 @@
 {
   "home": {
     "welcome": "Hi there \nWe are a small woolshop from Jordania. You cannot order stuff here, but you an browser our products - let us know about your wishes. \nThese are our products:",
-    "empty": "Oops! We haven't yet created our products. Visit us again later."
+    "empty": "Oops! We haven't yet created our products. Visit us again later.",
+    "add-to-wishlist": "Add to wishlist"
   },
   "shop": {
     "wishlist": "Wishlist",

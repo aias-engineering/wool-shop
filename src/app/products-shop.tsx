@@ -15,7 +15,7 @@ import {
   ProductInfo,
 } from '@/lib/server/core/products'
 import Image from 'next/image'
-import { Minus, Plus } from 'lucide-react'
+import { Minus, Plus, ScrollText } from 'lucide-react'
 import {
   addToLocaleWishlist,
   getLocalWishlist,
@@ -81,7 +81,7 @@ export default function ProductsShop({ products }: Props) {
                   {productInfo.name}
                 </Title>
                 <Small className="text-end">
-                  {productInfo.price} {getCurrency(locale)}
+                  {productInfo.price.toFixed(2)} {getCurrency(locale)}
                 </Small>
                 {matchingWishlistItem ? (
                   <div className="flex flex-row">
@@ -116,7 +116,24 @@ export default function ProductsShop({ products }: Props) {
                     </Button>
                   </div>
                 ) : (
-                  <div></div>
+                  <Button
+                    onClick={() =>
+                      setWishlistContainer((draft) =>
+                        addToLocaleWishlist(
+                          draft,
+                          locale,
+                          toWishlistProduct(
+                            product.id,
+                            productInfo.name,
+                            productInfo.price,
+                          ),
+                        ),
+                      )
+                    }
+                  >
+                    {translations('add-to-wishlist')}
+                    <ScrollText />
+                  </Button>
                 )}
               </div>
             )

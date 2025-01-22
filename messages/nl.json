@@ -1,7 +1,8 @@
 {
   "home": {
     "welcome": "Hoi \nWij zijn een kleine wolfabriek uit Jordanië. Je kunt hier niets bestellen, maar bekijk in ieder geval onze producten - en vertel ons over je wensen. \nDit zijn onze producten:",
-    "empty": "Oeps, we hebben onze producten nog niet gedefinieerd. Kom later nog eens bij ons terug."
+    "empty": "Oeps, we hebben onze producten nog niet gedefinieerd. Kom later nog eens bij ons terug.",
+    "add-to-wishlist": "naar wensenlijst"
   },
   "shop": {
     "wishlist": "wensenlijst",

@@ -2,14 +2,14 @@
 
 import Button from '@/app/components/atoms/button'
 import Grid from '@/app/components/atoms/grid'
+import Spinner from '@/app/components/atoms/spinner'
 import Title from '@/app/components/atoms/title'
+import { ImageCard, ImageCardState } from '@/app/components/molecules/image-card'
+import { ProductInfoCard, ProductInfoState } from '@/app/components/molecules/product-info-card'
 import { Save } from 'lucide-react'
 import { useActionState, useState } from 'react'
 import { match } from 'ts-pattern'
 import { createProductOnServer, CreateProductState } from './actions'
-import Spinner from '@/app/components/atoms/spinner'
-import { ImageCard, ImageCardState } from './image-card'
-import { ProductInfoCard, ProductInfoState } from './product-info-card'
 
 interface Props {
   urls: string[]
@@ -64,7 +64,19 @@ export function CreateProductWizard({}: Props) {
           productInfoState={enProductInfoState}
           pending={pending}
         >
-          <SaveButton creationState={creationState} pending={pending} />
+          <>
+            <Button
+                type="button"
+                variant="outline"
+                onClick={() =>
+                  setEnProductInfoState('hide')
+                }
+                disabled={pending}
+              >
+                annuleeren
+              </Button>
+            <SaveButton creationState={creationState} pending={pending} />
+          </>
         </ProductInfoCard>
       </Grid>
     </form>

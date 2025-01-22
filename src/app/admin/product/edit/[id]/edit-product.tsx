@@ -7,12 +7,9 @@ import { match } from 'ts-pattern'
 import { saveProductOnServer, SaveProductState } from './actions'
 import Button from '@/app/components/atoms/button'
 import Spinner from '@/app/components/atoms/spinner'
+import { ImageCard, ImageCardState } from '@/app/components/molecules/image-card'
+import { ProductInfoCard, ProductInfoState } from '@/app/components/molecules/product-info-card'
 import { Save } from 'lucide-react'
-import { ImageCard, ImageCardState } from '../../create/image-card'
-import {
-  ProductInfoCard,
-  ProductInfoState,
-} from '../../create/product-info-card'
 
 interface Props {
   product: Product
@@ -68,7 +65,20 @@ export function EditProduct({ product }: Props) {
           productInfoState={enProductInfoState}
           title="Productinformatie in engels"
         >
-          <SaveButton saveState={saveProductState} pending={pending} />
+          <>
+            <Button
+                type="button"
+                variant="outline"
+                onClick={() =>
+                  setEnProductInfoState('hide')
+                }
+                disabled={pending}
+              >
+                annuleeren
+              </Button>
+            <SaveButton saveState={saveProductState} pending={pending} />
+          </>
+          
         </ProductInfoCard>
       </Grid>
     </form>
