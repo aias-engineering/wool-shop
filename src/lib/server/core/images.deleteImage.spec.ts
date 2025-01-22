@@ -13,7 +13,7 @@ const product: Product = {
   infoNl: {
     name: 'wool sheep',
     description: null,
-    price: 80.00
+    price: 80.0,
   },
   image: `/api/image/${ID_OF_IMAGE_WITH_PRODUCT}`,
 }

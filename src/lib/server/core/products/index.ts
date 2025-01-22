@@ -96,8 +96,7 @@ export const createProduct = async (
   dataAccess: CreateProduct,
 ): Promise<
   CreateProductResponse | ProductValidationFailed | ErrorInCosmosDbAccess
-> =>
-  dataAccess.createProduct(request)
+> => dataAccess.createProduct(request)
 
 export const deleteProduct = (
   id: string,

@@ -23,10 +23,8 @@ const extractInfo = (name: string, formData: FormData) => ({
 
 const extractInfoOrUndefined = (name: string, formData: FormData) => {
   const data = extractInfo(name, formData)
-  if (data.name || data.description || data.price)
-      return data
-  else
-    return undefined
+  if (data.name || data.description || data.price) return data
+  else return undefined
 }
 
 export const validateCreateProductRequest = (
