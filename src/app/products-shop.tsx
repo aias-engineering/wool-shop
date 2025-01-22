@@ -77,7 +77,7 @@ export default function ProductsShop({ products }: Props) {
                     />
                   </ImageFrame>
                 </Link>
-                <Title type="h3" className="text-base">
+                <Title type="h3" className="text-sm h-10 overflow-hidden">
                   {productInfo.name}
                 </Title>
                 <Small className="text-end">
