@@ -18,13 +18,15 @@ export function isAzureProductV1(x: unknown): x is AzureProductV1 {
 }
 
 export interface AzureCreateProductRequestV1 {
-    readonly name: string,
-    readonly description: string | null,
-    readonly price: number,
-    readonly image: string,
+  readonly name: string
+  readonly description: string | null
+  readonly price: number
+  readonly image: string
 }
 
-export function isAzureCreateProductRequestV1(x: unknown): x is AzureCreateProductRequestV1 {
+export function isAzureCreateProductRequestV1(
+  x: unknown,
+): x is AzureCreateProductRequestV1 {
   const request = x as AzureCreateProductRequestV1
   return (
     request.name !== undefined &&
@@ -43,5 +45,7 @@ export function isAzureCreateProductResponseV1(
   x: unknown,
 ): x is AzureCreateProductResponseV1 {
   const response = x as AzureCreateProductResponseV1
-  return response.id !== undefined && isAzureCreateProductRequestV1(response.request)
+  return (
+    response.id !== undefined && isAzureCreateProductRequestV1(response.request)
+  )
 }

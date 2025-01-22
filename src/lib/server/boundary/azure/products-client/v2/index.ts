@@ -1,10 +1,12 @@
 import { woolshopDatabase } from '../../cosmos-db-client'
-import {
-  ErrorInCosmosDbAccess,
-} from '@/lib/server/core/failure'
+import { ErrorInCosmosDbAccess } from '@/lib/server/core/failure'
 import { Unit } from '@/lib/server/core/types'
 import { Container } from '@azure/cosmos'
-import { AzureCreateProductRequestV2, AzureCreateProductResponseV2, AzureProductInfoV2, AzureProductV2 } from './types'
+import {
+  AzureCreateProductRequestV2,
+  AzureCreateProductResponseV2,
+  AzureProductV2,
+} from './types'
 import { CreateProductRequest } from '@/lib/server/core/data-access'
 
 async function products(): Promise<Container> {
@@ -39,4 +41,6 @@ const azureProductV2Client = {
 
 export default azureProductV2Client
 
-export const toAzureCreateProductRequestV2 = (request: CreateProductRequest): AzureCreateProductRequestV2 => (request)
+export const toAzureCreateProductRequestV2 = (
+  request: CreateProductRequest,
+): AzureCreateProductRequestV2 => request

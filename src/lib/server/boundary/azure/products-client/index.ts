@@ -32,46 +32,50 @@ async function products(): Promise<Container> {
   return container
 }
 
-const toProducts = (resources: unknown[]): Product[] => 
-  resources.map(toProduct).filter(x => x !== null)
+const toProducts = (resources: unknown[]): Product[] =>
+  resources.map(toProduct).filter((x) => x !== null)
 
-const toProduct = (resource: unknown): Product | null => 
+const toProduct = (resource: unknown): Product | null =>
   match(resource)
-    .with(P.when(isAzureProductV2), (product => (product as Product)))
-    .with(P.when(isAzureProductV1), (product => ({
-      id: product.id,
-      infoNl: {
-        name: product.name,
-        description: product.description,
-        price: product.price
-      },
-      infoEn: undefined,
-      image: product.image
-    } as Product)))
-    .otherwise(() => (null))
+    .with(P.when(isAzureProductV2), (product) => product as Product)
+    .with(
+      P.when(isAzureProductV1),
+      (product) =>
+        ({
+          id: product.id,
+          infoNl: {
+            name: product.name,
+            description: product.description,
+            price: product.price,
+          },
+          infoEn: undefined,
+          image: product.image,
+        }) as Product,
+    )
+    .otherwise(() => null)
 
 const readAllProducts = (): Promise<ErrorInCosmosDbAccess | Product[]> =>
   products()
-      .then((container) => container.items.readAll().fetchAll())
-      .then(
-        (response) => toProducts(response.resources),
-        (error) => ErrorInCosmosDbAccess(error),
-      )
+    .then((container) => container.items.readAll().fetchAll())
+    .then(
+      (response) => toProducts(response.resources),
+      (error) => ErrorInCosmosDbAccess(error),
+    )
 
 const readProductsWithImage = (
   imagename: string,
 ): Promise<Product[] | ErrorInCosmosDbAccess> =>
   products()
-      .then((container) =>
-        container.items
-          .query({
-            query: 'SELECT * FROM Products p WHERE p.image = @imagename',
-            parameters: [{ name: '@imagename', value: imagename }],
-          })
-          .fetchAll(),
-      )
-      .then((response) => toProducts(response.resources))
-      .catch((err) => ErrorInCosmosDbAccess(err))
+    .then((container) =>
+      container.items
+        .query({
+          query: 'SELECT * FROM Products p WHERE p.image = @imagename',
+          parameters: [{ name: '@imagename', value: imagename }],
+        })
+        .fetchAll(),
+    )
+    .then((response) => toProducts(response.resources))
+    .catch((err) => ErrorInCosmosDbAccess(err))
 
 const readProduct = (
   id: string,
@@ -79,25 +83,24 @@ const readProduct = (
   products()
     .then((container) => container.item(id, id).read())
     .then((response) => toProduct(response.resource))
-    .then(either => either !== null 
-      ? either 
-      : ProductWithIdNotFound(id))
+    .then((either) => (either !== null ? either : ProductWithIdNotFound(id)))
     .catch((error) => ErrorInCosmosDbAccess(error))
 
 const deleteProduct = (id: string): Promise<Unit | ErrorInCosmosDbAccess> =>
   products()
-      .then((container) => container.item(id, id).delete())
-      .then(() => Unit.done)
-      .catch((error) => ErrorInCosmosDbAccess(error))
+    .then((container) => container.item(id, id).delete())
+    .then(() => Unit.done)
+    .catch((error) => ErrorInCosmosDbAccess(error))
 
 const createProduct = (
   request: CreateProductRequest,
 ): Promise<CreateProductResponse | ErrorInCosmosDbAccess> =>
-  azureProductV2Client.createProduct(toAzureCreateProductRequestV2(request))
-    .then(either => 
+  azureProductV2Client
+    .createProduct(toAzureCreateProductRequestV2(request))
+    .then((either) =>
       isErrorInCosmosDbAccess(either)
         ? either
-        : ({ id: either.id }) as CreateProductResponse
+        : ({ id: either.id } as CreateProductResponse),
     )
 
 const upsertProduct = (

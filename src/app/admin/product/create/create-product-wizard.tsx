@@ -16,9 +16,11 @@ interface Props {
 }
 
 export function CreateProductWizard({}: Props) {
-  const [imageCardState, ] = useState<ImageCardState>('idle')
-  const [nlProductInfoState, setNlProductInfoState] = useState<ProductInfoState>('hide')
-  const [enProductInfoState, setEnProductInfoState] = useState<ProductInfoState>('hide')
+  const [imageCardState] = useState<ImageCardState>('idle')
+  const [nlProductInfoState, setNlProductInfoState] =
+    useState<ProductInfoState>('hide')
+  const [enProductInfoState, setEnProductInfoState] =
+    useState<ProductInfoState>('hide')
   const [creationState, formAction, pending] = useActionState(
     createProductOnServer,
     { step: 'idle' },
@@ -30,18 +32,38 @@ export function CreateProductWizard({}: Props) {
         Een product creëren
       </Title>
       <Grid className="grid-rows-2 grid-cols-1 xl:grid-cols-2 gap-2">
-        <ImageCard className='row-span-2' imageCardState={imageCardState} initialUploadDone={() => setNlProductInfoState('idle')} pending={pending} />
-        <ProductInfoCard name='infoNl' title='Productinformatie in nederlands' productInfoState={nlProductInfoState} pending={pending} >
+        <ImageCard
+          className="row-span-2"
+          imageCardState={imageCardState}
+          initialUploadDone={() => setNlProductInfoState('idle')}
+          pending={pending}
+        />
+        <ProductInfoCard
+          name="infoNl"
+          title="Productinformatie in nederlands"
+          productInfoState={nlProductInfoState}
+          pending={pending}
+        >
           {enProductInfoState === 'hide' && (
             <>
-              <Button type='button' variant='outline' onClick={() => setEnProductInfoState('idle')} disabled={pending}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setEnProductInfoState('idle')}
+                disabled={pending}
+              >
                 voeg Engelse info toe
               </Button>
               <SaveButton creationState={creationState} pending={pending} />
             </>
           )}
         </ProductInfoCard>
-        <ProductInfoCard name='infoEn' title='Productinformatie in engels' productInfoState={enProductInfoState} pending={pending}>
+        <ProductInfoCard
+          name="infoEn"
+          title="Productinformatie in engels"
+          productInfoState={enProductInfoState}
+          pending={pending}
+        >
           <SaveButton creationState={creationState} pending={pending} />
         </ProductInfoCard>
       </Grid>
@@ -50,7 +72,7 @@ export function CreateProductWizard({}: Props) {
 }
 
 interface SaveButtonProps {
-  creationState: CreateProductState,
+  creationState: CreateProductState
   pending: boolean
 }
 

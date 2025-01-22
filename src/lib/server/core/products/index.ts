@@ -20,7 +20,7 @@ import { HasPrice } from '../wishlists'
 
 export interface Product {
   id: string
-  infoNl: ProductInfo,
+  infoNl: ProductInfo
   infoEn?: ProductInfo
   image: string
 }
@@ -55,20 +55,31 @@ export const hasProductInfo = (product: Product, locale: string): boolean =>
     .with('en', () => !!product.infoEn)
     .otherwise(() => false)
 
-export const getProductInfo = (product: Product, locale: string): ProductInfo | ProductInfoNotPresent => 
+export const getProductInfo = (
+  product: Product,
+  locale: string,
+): ProductInfo | ProductInfoNotPresent =>
   match(locale)
     .with('nl', () => product.infoNl)
-    .with('en', () => product.infoEn || ProductInfoNotPresent(product.id, locale))
+    .with(
+      'en',
+      () => product.infoEn || ProductInfoNotPresent(product.id, locale),
+    )
     .otherwise(() => ProductInfoNotPresent(product.id, locale))
 
-export const getProductInfoOrDefault = (product: Product, locale: string): ProductInfo => 
-  {
-    const either = getProductInfo(product, locale)
-    if (isProductInfoNotPresent(either))
-      return product.infoNl
-    else 
-      return either
-  }
+export const getProductInfoOrDefault = (
+  product: Product,
+  locale: string,
+): ProductInfo => {
+  const either = getProductInfo(product, locale)
+  if (isProductInfoNotPresent(either)) return product.infoNl
+  else return either
+}
+
+export const getCurrency = (locale: string | undefined): string =>
+  match(locale)
+    .with('en', () => '$')
+    .otherwise(() => '€')
 
 export const getAllProducts = (
   dataAccess: ReadAllProducts,
@@ -87,15 +98,13 @@ export const createProduct = async (
   CreateProductResponse | ProductValidationFailed | ErrorInCosmosDbAccess
 > =>
   validateCreateProductRequest(formData)
-    .then(either => 
-      either.success 
-        ? either.data
-        : ProductValidationFailed(either.error)
+    .then((either) =>
+      either.success ? either.data : ProductValidationFailed(either.error),
     )
-    .then(async either => 
+    .then(async (either) =>
       isCreateProductRequest(either)
         ? dataAccess.createProduct(either)
-        : either
+        : either,
     )
 
 export const deleteProduct = (

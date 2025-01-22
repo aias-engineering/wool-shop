@@ -1,11 +1,11 @@
-import { z } from "zod"
-import { zfd } from "zod-form-data"
-import { CreateProductRequest } from "../data-access"
+import { SafeParseReturnType, z } from 'zod'
+import { zfd } from 'zod-form-data'
+import { CreateProductRequest } from '../data-access'
 
 const infoSchema = z.object({
   name: zfd.text(z.string().min(1)),
   description: zfd.text().nullable(),
-  price: zfd.numeric(z.number().gte(0))
+  price: zfd.numeric(z.number().gte(0)),
 })
 
 const createProductRequestFormSchema = z.object({
@@ -17,10 +17,12 @@ const createProductRequestFormSchema = z.object({
 const extractInfo = (name: string, formData: FormData) => ({
   name: formData.get(`${name}.name`),
   description: formData.get(`${name}.description`),
-  price: formData.get(`${name}.price`)
-}) 
+  price: formData.get(`${name}.price`),
+})
 
-export const validateCreateProductRequest = (formData: FormData): Promise<z.SafeParseReturnType<CreateProductRequest, CreateProductRequest>> =>
+export const validateCreateProductRequest = (
+  formData: FormData,
+): Promise<SafeParseReturnType<CreateProductRequest, CreateProductRequest>> =>
   createProductRequestFormSchema.safeParseAsync({
     infoNl: extractInfo('infoNl', formData),
     infoEn: extractInfo('infoEn', formData),

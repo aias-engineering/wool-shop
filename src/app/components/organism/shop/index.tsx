@@ -17,7 +17,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/app/components/molecules/sheet'
-import { PrimitiveAtom, Provider, useAtomValue } from 'jotai'
+import { Provider, useAtom } from 'jotai'
 import { ScrollText } from 'lucide-react'
 import { FormEvent, useState } from 'react'
 import { saveWishlistOnServer, SaveWishlistState } from './server-actions'
@@ -25,7 +25,7 @@ import { match, P } from 'ts-pattern'
 import { CreateWishlistRequest } from '@/lib/server/core/wishlists'
 import {
   sumWishlist,
-  WishlistsContainer,
+  wishlistContainerAtom,
   getLocalWishlist,
   addToLocaleWishlist,
   removeFromLocaleWishlist,
@@ -34,15 +34,14 @@ import {
 import WishListItem from './wish-list-item'
 import { HasChildren } from '@/lib/client/react'
 import { useLocale, useTranslations } from 'next-intl'
+import { getCurrency } from '@/lib/server/core/products'
 
-interface Props extends HasChildren {
-  wishlistsContainerAtom: PrimitiveAtom<WishlistsContainer>
-}
-
-export default function Shop({ children, wishlistsContainerAtom }: Props) {
+export default function Shop({ children }: HasChildren) {
   const locale = useLocale()
   const [email, setEmail] = useState('')
-  const wishlistsContainer = useAtomValue(wishlistsContainerAtom)
+  const [wishlistsContainer, setWishlistContainer] = useAtom(
+    wishlistContainerAtom,
+  )
   const [saveWishlistState, setSaveWishlistState] =
     useState<SaveWishlistState>('idle')
   const translations = useTranslations('shop')
@@ -51,6 +50,7 @@ export default function Shop({ children, wishlistsContainerAtom }: Props) {
     event.preventDefault()
     const request: CreateWishlistRequest = {
       email,
+      locale,
       items: getLocalWishlist(wishlistsContainer, locale).map((x) => ({
         amount: x.amount,
         productId: x.product.id,
@@ -63,7 +63,7 @@ export default function Shop({ children, wishlistsContainerAtom }: Props) {
     setSaveWishlistState(result)
 
     if (result === 'submitted') {
-      setLocalWishlist(wishlistsContainer, locale, [])
+      setWishlistContainer((draft) => setLocalWishlist(draft, locale, []))
     }
   }
 
@@ -103,22 +103,29 @@ export default function Shop({ children, wishlistsContainerAtom }: Props) {
                 ))
                 .with(P.array(), (wishlist) => (
                   <>
-                    {wishlist
-                      .map((item) => (
+                    {wishlist.map((item) => (
                       <WishListItem
                         key={item.product.id}
                         item={item}
                         add={() =>
-                          addToLocaleWishlist(wishlistsContainer, locale, item.product)
+                          setWishlistContainer((draft) =>
+                            addToLocaleWishlist(draft, locale, item.product),
+                          )
                         }
                         remove={() =>
-                          removeFromLocaleWishlist(wishlistsContainer, locale, item.product.id)
+                          setWishlistContainer((draft) =>
+                            removeFromLocaleWishlist(
+                              draft,
+                              locale,
+                              item.product.id,
+                            ),
+                          )
                         }
                       />
                     ))}
                     <Separator className="my-4" />
                     <Paragraph className="text-end">
-                      {sumWishlist(wishlist).toFixed(2)} €
+                      {sumWishlist(wishlist).toFixed(2)} {getCurrency(locale)}
                     </Paragraph>
                   </>
                 ))
@@ -132,7 +139,9 @@ export default function Shop({ children, wishlistsContainerAtom }: Props) {
                     {match(saveWishlistState)
                       .with(P.union('idle', 'pending'), (state) => (
                         <>
-                          <Title type="h3">{translations('do-a-wish.title')}</Title>
+                          <Title type="h3">
+                            {translations('do-a-wish.title')}
+                          </Title>
                           <Paragraph>
                             {translations('do-a-wish.description')}
                           </Paragraph>
@@ -147,7 +156,9 @@ export default function Shop({ children, wishlistsContainerAtom }: Props) {
                             />
                             {match(state)
                               .with('idle', () => (
-                                <Button type="submit">{translations('do-a-wish.save')}</Button>
+                                <Button type="submit">
+                                  {translations('do-a-wish.save')}
+                                </Button>
                               ))
                               .with('pending', () => (
                                 <Button type="submit" disabled>
@@ -161,8 +172,12 @@ export default function Shop({ children, wishlistsContainerAtom }: Props) {
                       ))
                       .with('submitted', () => (
                         <>
-                          <Title type="h3">{translations('thank-you.title')}</Title>
-                          <Paragraph>{translations('thank-you.description')}</Paragraph>
+                          <Title type="h3">
+                            {translations('thank-you.title')}
+                          </Title>
+                          <Paragraph>
+                            {translations('thank-you.description')}
+                          </Paragraph>
                           <SheetClose asChild>
                             <Button
                               type="button"

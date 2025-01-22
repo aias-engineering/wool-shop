@@ -4,7 +4,12 @@ import Button from '@/app/components/atoms/button'
 import ImageFrame from '@/app/components/atoms/image-frame'
 import Paragraph from '@/app/components/atoms/paragraph'
 import Title from '@/app/components/atoms/title'
-import { getProductInfo, isProductInfo, Product } from '@/lib/server/core/products'
+import {
+  getCurrency,
+  getProductInfo,
+  isProductInfo,
+  Product,
+} from '@/lib/server/core/products'
 import Image from 'next/image'
 import {
   addToLocaleWishlist,
@@ -14,7 +19,7 @@ import {
   wishlistContainerAtom,
 } from '@/app/components/organism/shop/store'
 import { Minus, MoveLeft, Plus, ScrollText } from 'lucide-react'
-import { useAtomValue } from 'jotai'
+import { useAtom } from 'jotai'
 import Link from 'next/link'
 import Shop from '@/app/components/organism/shop'
 import Space from '@/app/components/atoms/space'
@@ -22,7 +27,11 @@ import Small from '@/app/components/atoms/small'
 import { useLocale, useTranslations } from 'next-intl'
 import { isProductInfoNotPresent } from '@/lib/server/core/products/failure'
 import { match, P } from 'ts-pattern'
-import { Error, ErrorMessage, ErrorTitle } from '@/app/components/molecules/error'
+import {
+  Error,
+  ErrorMessage,
+  ErrorTitle,
+} from '@/app/components/molecules/error'
 
 interface Props {
   product: Product
@@ -33,12 +42,14 @@ export default function ProductDetail({ product }: Props) {
   const eitherProductInfoOrNone = getProductInfo(product, locale)
 
   const translations = useTranslations('shop')
-  const wishlistContainer = useAtomValue(wishlistContainerAtom)
+  const [wishlistContainer, setWishlistContainer] = useAtom(
+    wishlistContainerAtom,
+  )
   const wishlist = getLocalWishlist(wishlistContainer, locale)
   const matchingWishlistItem = wishlist.find((x) => x.product.id === product.id)
 
   return (
-    <Shop wishlistsContainerAtom={wishlistContainerAtom}>
+    <Shop>
       <Link href={'/'}>
         <div className="flex gap-1 pb-4 items-center">
           <MoveLeft className="h-4" /> <Small>{translations('back')}</Small>
@@ -62,15 +73,19 @@ export default function ProductDetail({ product }: Props) {
                 />
               </ImageFrame>
               <div className="flex flex-col gap-4">
-                <Paragraph>{productInfo.price} €</Paragraph>
+                <Paragraph>
+                  {productInfo.price} {getCurrency(locale)}
+                </Paragraph>
                 <Paragraph className="whitespace-pre-line">
                   {productInfo.description}
                 </Paragraph>
                 {matchingWishlistItem ? (
                   <div className="flex flex-row">
                     <Button
-                      onClick={() =>
-                        removeFromLocaleWishlist(wishlistContainer, locale, product.id)
+                      onClick={() => () =>
+                        setWishlistContainer((draft) =>
+                          removeFromLocaleWishlist(draft, locale, product.id),
+                        )
                       }
                       variant="counter"
                     >
@@ -79,7 +94,17 @@ export default function ProductDetail({ product }: Props) {
                     <div className="m-auto">{matchingWishlistItem.amount}</div>
                     <Button
                       onClick={() =>
-                        addToLocaleWishlist(wishlistContainer, locale, toWishlistProduct(product.id, productInfo.name, productInfo.price))
+                        setWishlistContainer((draft) =>
+                          addToLocaleWishlist(
+                            draft,
+                            locale,
+                            toWishlistProduct(
+                              product.id,
+                              productInfo.name,
+                              productInfo.price,
+                            ),
+                          ),
+                        )
                       }
                       variant="counter"
                     >
@@ -89,7 +114,17 @@ export default function ProductDetail({ product }: Props) {
                 ) : (
                   <Button
                     onClick={() =>
-                      addToLocaleWishlist(wishlistContainer, locale, toWishlistProduct(product.id, productInfo.name, productInfo.price))
+                      setWishlistContainer((draft) =>
+                        addToLocaleWishlist(
+                          draft,
+                          locale,
+                          toWishlistProduct(
+                            product.id,
+                            productInfo.name,
+                            productInfo.price,
+                          ),
+                        ),
+                      )
                     }
                   >
                     {translations('add-to-wishlist')}
@@ -103,13 +138,9 @@ export default function ProductDetail({ product }: Props) {
         ))
         .with(P.when(isProductInfoNotPresent), (failure) => (
           <Error>
-            <ErrorTitle>
-              {translations('no-product-info.title')}
-            </ErrorTitle>
+            <ErrorTitle>{translations('no-product-info.title')}</ErrorTitle>
             <ErrorMessage>
-              <div>
-                {translations('no-product-info.message')}
-              </div>
+              <div>{translations('no-product-info.message')}</div>
               <Small>{failure.code}</Small>
               <Small> {failure.reason}</Small>
             </ErrorMessage>

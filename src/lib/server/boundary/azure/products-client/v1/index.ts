@@ -1,11 +1,12 @@
 import { woolshopDatabase } from '../../cosmos-db-client'
-import {
-  ErrorInCosmosDbAccess,
-  ProductWithIdNotFound,
-} from '@/lib/server/core/failure'
+import { ErrorInCosmosDbAccess } from '@/lib/server/core/failure'
 import { Unit } from '@/lib/server/core/types'
 import { Container } from '@azure/cosmos'
-import { AzureCreateProductRequestV1, AzureCreateProductResponseV1, AzureProductV1 } from './types'
+import {
+  AzureCreateProductRequestV1,
+  AzureCreateProductResponseV1,
+  AzureProductV1,
+} from './types'
 
 async function products(): Promise<Container> {
   const database = await woolshopDatabase()

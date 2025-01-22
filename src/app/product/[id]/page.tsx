@@ -13,8 +13,8 @@ export default async function Page({ params }: PromisesParams<HasId>) {
     getProduct(id, dataAccess),
   )
 
-  if (isFailure(eitherProductOrError)){
-    return (<ErrorPage failure={eitherProductOrError} />)
+  if (isFailure(eitherProductOrError)) {
+    return <ErrorPage failure={eitherProductOrError} />
   }
 
   const product = eitherProductOrError

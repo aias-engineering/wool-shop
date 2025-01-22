@@ -112,17 +112,17 @@ export function EditProduct({ product }: Props) {
               name="name"
               type="text"
               disabled={pending}
-              defaultValue={product.name}
+              defaultValue={product.infoNl.name}
               required
             />
             <Label htmlFor={toId('description')}>beschrijving</Label>
             <Textarea
               name="description"
-              defaultValue={product.description || undefined}
+              defaultValue={product.infoNl.description || undefined}
               disabled={pending}
             ></Textarea>
             <Label htmlFor={toId('price')}>prijs in euro</Label>
-            <CurrencyInput name="price" defaultValue={product.price} />
+            <CurrencyInput name="price" defaultValue={product.infoNl.price} />
           </CardContent>
           <CardFooter className="justify-end">
             {match(saveProductState)

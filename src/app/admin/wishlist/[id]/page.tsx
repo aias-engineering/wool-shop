@@ -16,6 +16,7 @@ import {
 import { HasId, PromisesParams } from '@/lib/client/react'
 import { withAzureDataAccess } from '@/lib/server'
 import { isFailure } from '@/lib/server/core/failure'
+import { getCurrency } from '@/lib/server/core/products'
 import {
   calculatePositionPrice,
   calculateTotal,
@@ -60,8 +61,13 @@ export default async function Page({ params }: PromisesParams<HasId>) {
                     <TableRow key={item.productId}>
                       <TableCell>{item.amount}</TableCell>
                       <TableCell>{item.name}</TableCell>
-                      <TableCell>{item.price} €</TableCell>
-                      <TableCell>{calculatePositionPrice(item)} €</TableCell>
+                      <TableCell>
+                        {item.price.toFixed(2)} {getCurrency(wishlist.locale)}
+                      </TableCell>
+                      <TableCell>
+                        {calculatePositionPrice(item).toFixed(2)}{' '}
+                        {getCurrency(wishlist.locale)}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -70,7 +76,10 @@ export default async function Page({ params }: PromisesParams<HasId>) {
                     <TableCell />
                     <TableCell />
                     <TableCell>Total</TableCell>
-                    <TableCell>{calculateTotal(wishlist.items)} €</TableCell>
+                    <TableCell>
+                      {calculateTotal(wishlist.items).toFixed(2)}{' '}
+                      {getCurrency(wishlist.locale)}
+                    </TableCell>
                   </TableRow>
                 </TableFooter>
               </Table>

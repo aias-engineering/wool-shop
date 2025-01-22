@@ -30,9 +30,11 @@ export async function saveProductOnServer(
       result.success
         ? ({
             id: result.data.id,
-            name: result.data.name,
-            description: result.data.description,
-            price: result.data.price,
+            infoNl: {
+              name: result.data.name,
+              description: result.data.description,
+              price: result.data.price,
+            },
             image: result.data.image,
           } as Product)
         : ProductValidationFailed(result.error),

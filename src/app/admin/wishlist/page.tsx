@@ -14,6 +14,7 @@ import {
 } from '@/app/components/molecules/table'
 import { withAzureDataAccess } from '@/lib/server'
 import { isErrorInCosmosDbAccess } from '@/lib/server/core/failure'
+import { getCurrency } from '@/lib/server/core/products'
 import { calculateTotal, getAllWishlists } from '@/lib/server/core/wishlists'
 import { MoveRight } from 'lucide-react'
 import Link from 'next/link'
@@ -66,7 +67,10 @@ export default async function Page() {
                       <TableCell className="hidden md:table-cell">
                         {wishlist.items.length}
                       </TableCell>
-                      <TableCell>{calculateTotal(wishlist.items)} €</TableCell>
+                      <TableCell>
+                        {calculateTotal(wishlist.items).toFixed(2)}{' '}
+                        {getCurrency(wishlist.locale)}
+                      </TableCell>
                       <TableCell>{wishlist.submitDate.toUTCString()}</TableCell>
                       <TableCell>
                         <Link href={`/admin/wishlist/${wishlist.id}`}>

@@ -17,7 +17,7 @@ export function isCreateProductRequest(x: unknown): x is CreateProductRequest {
   const request = x as CreateProductRequest
   return (
     isProductInfo(request.infoNl) &&
-    (request.infoEn === undefined  || isProductInfo(request.infoEn)) &&  
+    (request.infoEn === undefined || isProductInfo(request.infoEn)) &&
     request.image !== undefined
   )
 }

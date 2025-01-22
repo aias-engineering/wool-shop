@@ -33,7 +33,7 @@ export default function CurrencyInput({
   disabled,
   id,
   name,
-  currency = 'euro'
+  currency = 'euro',
 }: Props) {
   const [defaultLeft, defaultRight, defaultFull] =
     parseDefaultValue(defaultValue)
@@ -92,8 +92,8 @@ export default function CurrencyInput({
       />
       <div className="flex items-end py-1">
         {match(currency)
-          .with('euro', () => (<Euro />))
-          .with('dollar', () => (<DollarSign />))
+          .with('euro', () => <Euro />)
+          .with('dollar', () => <DollarSign />)
           .exhaustive()}
       </div>
       <input id={id || toId(name)} type="hidden" name={name} value={full} />

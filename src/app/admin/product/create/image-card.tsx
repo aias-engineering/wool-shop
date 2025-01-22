@@ -1,22 +1,35 @@
-import Button from "@/app/components/atoms/button"
-import ImageUploadButton, { UploadedImage } from "@/app/components/atoms/image-upload-button"
-import Input from "@/app/components/atoms/input"
-import Title from "@/app/components/atoms/title"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/app/components/molecules/card"
-import { Error, ErrorMessage, ErrorTitle } from "@/app/components/molecules/error"
-import { Failure } from "@/lib/client/failure"
-import { postImage } from "@/lib/client/post-image"
-import { MightHaveClassName } from "@/lib/client/react"
-import clsx from "clsx"
-import { MoveLeft } from "lucide-react"
+import Button from '@/app/components/atoms/button'
+import ImageUploadButton, {
+  UploadedImage,
+} from '@/app/components/atoms/image-upload-button'
+import Input from '@/app/components/atoms/input'
+import Title from '@/app/components/atoms/title'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/app/components/molecules/card'
+import {
+  Error,
+  ErrorMessage,
+  ErrorTitle,
+} from '@/app/components/molecules/error'
+import { Failure } from '@/lib/client/failure'
+import { postImage } from '@/lib/client/post-image'
+import { MightHaveClassName } from '@/lib/client/react'
+import clsx from 'clsx'
+import { MoveLeft } from 'lucide-react'
 import Image from 'next/image'
-import { useState } from "react"
-import { match, P } from "ts-pattern"
+import { useState } from 'react'
+import { match, P } from 'ts-pattern'
 
-export type ImageCardState = 
-  | 'idle' 
-  | { state: 'uploaded', imageUrl: string } 
-  | { state: 'error', failure: Failure }
+export type ImageCardState =
+  | 'idle'
+  | { state: 'uploaded'; imageUrl: string }
+  | { state: 'error'; failure: Failure }
 
 interface Props extends MightHaveClassName {
   imageCardState: ImageCardState
@@ -24,23 +37,26 @@ interface Props extends MightHaveClassName {
   pending: boolean
 }
 
-export function ImageCard({ className, imageCardState, initialUploadDone, pending }: Props) {
+export function ImageCard({
+  className,
+  imageCardState,
+  initialUploadDone,
+  pending,
+}: Props) {
   const [state, setState] = useState<ImageCardState>(imageCardState)
-  
+
   const handleImageUploaded = (image: UploadedImage) =>
-      fetch(image.dataUrl)
-        .then((response) => response.blob())
-        .then((blob) => postImage({ data: blob, name: image.name }))
-        .then((either) =>
-          match(either)
-            .with(P.string, (url) =>
-              {
-                setState({ state: 'uploaded', imageUrl: url })
-                initialUploadDone && initialUploadDone()
-              },
-            )
-            .otherwise((failure) => setState({ state: 'error', failure })),
-        )
+    fetch(image.dataUrl)
+      .then((response) => response.blob())
+      .then((blob) => postImage({ data: blob, name: image.name }))
+      .then((either) =>
+        match(either)
+          .with(P.string, (url) => {
+            setState({ state: 'uploaded', imageUrl: url })
+            if (initialUploadDone) initialUploadDone()
+          })
+          .otherwise((failure) => setState({ state: 'error', failure })),
+      )
 
   return (
     <>
@@ -64,7 +80,7 @@ export function ImageCard({ className, imageCardState, initialUploadDone, pendin
             </CardContent>
           </Card>
         ))
-        .with({state: 'uploaded'}, ({imageUrl}) => (
+        .with({ state: 'uploaded' }, ({ imageUrl }) => (
           <Card className={clsx(className)}>
             <CardHeader>
               <CardTitle>
@@ -94,7 +110,7 @@ export function ImageCard({ className, imageCardState, initialUploadDone, pendin
             </CardFooter>
           </Card>
         ))
-        .with({state: 'error'}, ({failure}) => (
+        .with({ state: 'error' }, ({ failure }) => (
           <Card>
             <CardHeader>
               <CardTitle>
@@ -103,7 +119,9 @@ export function ImageCard({ className, imageCardState, initialUploadDone, pendin
               <CardDescription>
                 <Error>
                   <ErrorTitle>
-                    <ErrorMessage>{failure.code} {failure.reason}</ErrorMessage>
+                    <ErrorMessage>
+                      {failure.code} {failure.reason}
+                    </ErrorMessage>
                   </ErrorTitle>
                 </Error>
               </CardDescription>
@@ -114,7 +132,7 @@ export function ImageCard({ className, imageCardState, initialUploadDone, pendin
                 onImageUploaded={handleImageUploaded}
               />
             </CardContent>
-          </Card>         
+          </Card>
         ))
         .exhaustive()}
     </>

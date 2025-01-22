@@ -19,17 +19,13 @@ const get = unstable_cache(
 export default async function Home() {
   const products = await get()
   const translations = await getTranslations('home')
-  
+
   return (
     <>
       <HeaderLayout />
       <Main>
         {match(products)
-          .with([], () => (
-            <Small>
-              {translations('empty')}
-            </Small>
-          ))
+          .with([], () => <Small>{translations('empty')}</Small>)
           .with(P.array(), (products) => (
             <>
               <ProductsShop products={products} />

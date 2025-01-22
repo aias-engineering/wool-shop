@@ -23,6 +23,7 @@ export interface WishlistItem extends HasAmount, HasPrice {
 
 export interface Wishlist {
   id: string
+  locale?: string
   email: string
   items: WishlistItem[]
   submitDate: Date
@@ -82,6 +83,7 @@ export const createWithlist = (
 
 export interface CreateWishlistRequest {
   email: string
+  locale: string
   items: WishlistItem[]
   submitDate?: Date
 }

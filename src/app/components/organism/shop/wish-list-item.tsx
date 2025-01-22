@@ -7,6 +7,8 @@ import { MightHaveClassName } from '@/lib/client/react'
 import clsx from 'clsx'
 import { Minus, Plus } from 'lucide-react'
 import { WishlistItem, WishlistProduct } from './store'
+import { useLocale } from 'next-intl'
+import { getCurrency } from '@/lib/server/core/products'
 
 export interface WishListItemProps extends MightHaveClassName {
   item: WishlistItem
@@ -21,11 +23,14 @@ export default function WishListItem({
   className,
 }: WishListItemProps) {
   const amount = item.amount
+  const locale = useLocale()
 
   return (
     <div className={clsx('flex flex-col gap-2 py-4', className)}>
       <Title type="h3">{item.product.name}</Title>
-      <Paragraph className="text-end">{item.product.price} €</Paragraph>
+      <Paragraph className="text-end">
+        {item.product.price} {getCurrency(locale)}
+      </Paragraph>
       <div className="grid grid-cols-3">
         {amount > 0 ? (
           <Button

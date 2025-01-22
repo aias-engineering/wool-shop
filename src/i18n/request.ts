@@ -1,13 +1,14 @@
-import { auth } from '@/auth';
-import { getRequestConfig } from 'next-intl/server';
- 
-export default getRequestConfig(async () => {
+import { getRequestConfig } from 'next-intl/server'
+import { cookies } from 'next/headers'
 
-  const session = await auth()
-  const locale = session?.lang || 'nl';
- 
+export default getRequestConfig(async () => {
+  const cookieStore = await cookies()
+  const localeCookie = cookieStore.get('locale')
+
+  const locale = localeCookie?.value || 'nl'
+
   return {
     locale,
-    messages: (await import(`../../messages/${locale}.json`)).default
-  };
-});
+    messages: (await import(`../../messages/${locale}.json`)).default,
+  }
+})

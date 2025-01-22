@@ -34,10 +34,12 @@ export function isAzureProductInfoV2(x: unknown): x is AzureProductInfoV2 {
 export interface AzureCreateProductRequestV2 {
   readonly infoNl: AzureProductInfoV2
   readonly infoEn?: AzureProductInfoV2
-  readonly image: string,
+  readonly image: string
 }
 
-export function isAzureCreateProductRequestV2(x: unknown): x is AzureCreateProductRequestV2 {
+export function isAzureCreateProductRequestV2(
+  x: unknown,
+): x is AzureCreateProductRequestV2 {
   const request = x as AzureCreateProductRequestV2
   return (
     isAzureProductInfoV2(request.infoNl) &&
@@ -55,5 +57,7 @@ export function isAzureCreateProductResponseV2(
   x: unknown,
 ): x is AzureCreateProductResponseV2 {
   const response = x as AzureCreateProductResponseV2
-  return response.id !== undefined && isAzureCreateProductRequestV2(response.request)
+  return (
+    response.id !== undefined && isAzureCreateProductRequestV2(response.request)
+  )
 }
