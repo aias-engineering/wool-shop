@@ -10,9 +10,11 @@ const ID_OF_NOT_EXISTING_IMAGE = 'not-existing.avif'
 
 const product: Product = {
   id: '1',
-  name: 'wool sheep',
-  descripiton: null,
-  price: '80.00 €',
+  infoNl: {
+    name: 'wool sheep',
+    description: null,
+    price: 80.00
+  },
   image: `/api/image/${ID_OF_IMAGE_WITH_PRODUCT}`,
 }
 
@@ -54,7 +56,7 @@ test('delete image with image referenced by products should report failure', asy
 
   expect(result).toMatchObject({
     type: 'failure',
-    productnames: ['wool sheep'],
+    productnames: ['1'],
   })
 })
 

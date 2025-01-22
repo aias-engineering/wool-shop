@@ -5,7 +5,7 @@ import {
   ReadAllProducts,
   ReadProduct,
   DeleteProduct,
-  isCreateProductRequest,
+  CreateProductRequest,
 } from '../data-access'
 import { UpsertProduct } from '../data-access/products'
 import {
@@ -14,7 +14,6 @@ import {
   ProductWithIdNotFound,
 } from '../failure'
 import { Unit } from '../types'
-import { validateCreateProductRequest } from './validation'
 import { isProductInfoNotPresent, ProductInfoNotPresent } from './failure'
 import { HasPrice } from '../wishlists'
 
@@ -43,6 +42,7 @@ export interface ProductInfo extends HasPrice {
 export function isProductInfo(x: unknown): x is ProductInfo {
   const info = x as ProductInfo
   return (
+    info !== undefined &&
     info.name !== undefined &&
     info.description !== undefined &&
     info.price !== undefined
@@ -92,20 +92,12 @@ export const getProduct = (
   dataAccess.readProduct(id)
 
 export const createProduct = async (
-  formData: FormData,
+  request: CreateProductRequest,
   dataAccess: CreateProduct,
 ): Promise<
   CreateProductResponse | ProductValidationFailed | ErrorInCosmosDbAccess
 > =>
-  validateCreateProductRequest(formData)
-    .then((either) =>
-      either.success ? either.data : ProductValidationFailed(either.error),
-    )
-    .then(async (either) =>
-      isCreateProductRequest(either)
-        ? dataAccess.createProduct(either)
-        : either,
-    )
+  dataAccess.createProduct(request)
 
 export const deleteProduct = (
   id: string,
