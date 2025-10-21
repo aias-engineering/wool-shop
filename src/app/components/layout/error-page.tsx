@@ -18,7 +18,10 @@ export default function ErrorPage({ failure }: Props) {
         <ErrorTitle />
         <ErrorMessage>
           <Paragraph>De server reageerde met:</Paragraph>
-          <Small>{failure.code}</Small>
+          <Small className='mr-1'>{failure.code}</Small>
+          {process.env.NODE_ENV !== "production" &&
+            (<Small>{failure.reason}</Small>)
+          }
         </ErrorMessage>
       </Error>
     </>
