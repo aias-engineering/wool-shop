@@ -6,6 +6,8 @@ import {
   ErrorTitle,
 } from '@/app/components/molecules/error'
 import { Failure } from '@/lib/client/failure'
+import Large from '../atoms/large'
+import Space from '../atoms/space'
 
 interface Props {
   failure: Failure
@@ -17,10 +19,21 @@ export default function ErrorPage({ failure }: Props) {
       <Error>
         <ErrorTitle />
         <ErrorMessage>
-          <Paragraph>De server reageerde met:</Paragraph>
-          <Small className='mr-1'>{failure.code}</Small>
+          <Paragraph>
+            <Large className="mr-1">{failure.code}</Large>
+            <Large>{failure.reason}</Large> 
+          </Paragraph>
           {process.env.NODE_ENV !== "production" &&
-            (<Small>{failure.reason}</Small>)
+           failure.error &&
+            (
+              <div className='flex flex-col'>
+                <pre>{failure.error.name}: {failure.error.message}</pre>
+                <Space />
+                <pre>
+                  {failure.error.stack}
+                </pre>
+              </div>
+            )
           }
         </ErrorMessage>
       </Error>
