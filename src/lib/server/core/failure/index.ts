@@ -1,5 +1,5 @@
-import { type Failure } from './failure'
-export { type Failure, isFailure } from './failure'
+import { type Failure } from '@/lib/failure'
+export { type Failure, isFailure } from '@/lib/failure'
 export {
   EmailValidationFailed,
   isEmailValidationFailed,

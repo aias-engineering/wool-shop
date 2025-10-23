@@ -17,4 +17,6 @@ I would like to have the clearness, that the return types bring.
 But I cannot go only this way, as exceptions are a reality in every way.
 The way I go is two prone:
     1. Identifiable exception cases will be handled as Return Types
+       These identifiable error cases are handled as Failures.
+       
     2. There must be overreaching exception handling for unidentified exceptions.
