@@ -1,4 +1,4 @@
-import { type Failure } from './failure'
+import { type Failure } from '@/lib/failure'
 
 export interface UserWithEmailNotFound extends Failure {
   readonly code: 'cdb-02'

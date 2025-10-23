@@ -1,4 +1,4 @@
-import { Failure } from './failure'
+import { Failure } from '@/lib/failure'
 
 export interface EmailValidationFailed extends Failure {
   readonly code: 'cur-00'

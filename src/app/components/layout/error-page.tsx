@@ -1,5 +1,4 @@
 import Paragraph from '@/app/components/atoms/paragraph'
-import Small from '@/app/components/atoms/small'
 import {
   Error,
   ErrorMessage,

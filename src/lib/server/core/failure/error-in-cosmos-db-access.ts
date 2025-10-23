@@ -1,4 +1,4 @@
-import { Failure } from './failure'
+import { Failure } from '@/lib/failure'
 
 export interface ErrorInCosmosDbAccess extends Failure {
   readonly code: 'cdb-00'
