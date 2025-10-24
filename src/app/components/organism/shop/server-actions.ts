@@ -10,6 +10,7 @@ import {
   CreateWishlistRequest,
   createWithlist,
 } from '@/lib/server/core/wishlists'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { match, P } from 'ts-pattern'
 
 export type SaveWishlistState =
@@ -24,7 +25,16 @@ export async function saveWishlistOnServer(
 ): Promise<SaveWishlistState> {
   return withAzureDataAccess((dataAccess) =>
     createWithlist(request, dataAccess),
-  ).then((either) =>
+  )
+  .then((either) =>
+    {
+      if (isUnit(either)){
+        revalidatePath('wishlists')
+        revalidateTag('wishlists')
+      }
+      return either
+    })
+  .then((either) =>
     match(either)
       .with(P.when(isUnit), () => 'submitted' as SaveWishlistState)
       .with(

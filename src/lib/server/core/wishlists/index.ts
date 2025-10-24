@@ -5,7 +5,7 @@ import {
   ReadWishlist,
 } from '../data-access/wishlists'
 import { ErrorInCosmosDbAccess } from '../failure'
-import { isUnit, revalidateAndReturn, Unit } from '../types'
+import { Unit } from '../types'
 import { WishlistWithIdNotFound } from './failure'
 
 export interface HasAmount {
@@ -77,9 +77,6 @@ export const createWithlist = (
 ): Promise<Unit | ErrorInCosmosDbAccess> =>
   setSubmitDate(request)
     .then((request) => dataAccess.createWishlist(request))
-    .then((either) =>
-      isUnit(either) ? revalidateAndReturn('wishlists', either) : either,
-    )
 
 export interface CreateWishlistRequest {
   email: string
